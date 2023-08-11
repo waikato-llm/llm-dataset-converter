@@ -37,6 +37,7 @@ setup(
         "jsonlines",
         "pyarrow",
         "datasets",
+        "pyzstd",
     ],
     version="0.0.1",
     author='Peter Reutemann',
