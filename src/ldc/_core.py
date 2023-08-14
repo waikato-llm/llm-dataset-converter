@@ -3,8 +3,11 @@ import logging
 
 from typing import List, Dict, Iterable
 
-ALL_DOMAINS = "all domains"
+ANY_DOMAIN = "any"
 PAIRS_DOMAIN = "pairs"
+DOMAINS = [
+    PAIRS_DOMAIN,
+]
 
 
 class CommandlineHandler(object):
@@ -254,7 +257,7 @@ class MultiFilter(Filter):
         :return: the domain
         :rtype: str
         """
-        return [ALL_DOMAINS]
+        return [ANY_DOMAIN]
 
     def accepts(self) -> List:
         """
