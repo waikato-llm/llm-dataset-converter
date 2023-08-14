@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from ldc._filter import KeywordFilter, ACTION_KEEP
+from ldc.filter import KeywordFilter, KEYWORD_ACTION_KEEP
 from ldc.supervised.pairs import PairFilter
 
 
@@ -16,7 +16,7 @@ class Keyword(KeywordFilter, PairFilter):
     Keeps or discards data records based on keyword(s).
     """
 
-    def __init__(self, keywords=None, action=ACTION_KEEP, location=LOCATION_ANY, verbose=False):
+    def __init__(self, keywords=None, action=KEYWORD_ACTION_KEEP, location=LOCATION_ANY, verbose=False):
         """
         Initializes the filter.
 

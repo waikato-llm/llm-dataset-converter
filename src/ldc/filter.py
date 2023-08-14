@@ -2,12 +2,111 @@ import argparse
 
 from typing import List, Set
 
-from ldc import Filter
+from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, ANY_DOMAIN
 
 
-ACTION_KEEP = "keep"
-ACTION_DISCARD = "discard"
-ACTIONS = [ACTION_KEEP, ACTION_DISCARD]
+class Filter(CommandlineHandler, InputConsumer, OutputProducer):
+    """
+    Base class for filters.
+    """
+
+    def keep(self, data) -> bool:
+        """
+        Whether to keep the data record or not.
+
+        :param data: the record to check
+        :return: True if to keep
+        :rtype: bool
+        """
+        raise NotImplemented()
+
+
+class MultiFilter(Filter):
+    """
+    Combines multiple filters.
+    """
+
+    def __init__(self, filters: List[Filter], verbose=False):
+        """
+        Initialize with the specified filters.
+
+        :param filters: the filters to use
+        :type filters: list
+        :param verbose: whether to be more verbose in the output
+        :type verbose: bool
+        """
+        super().__init__(verbose=verbose)
+        self.filters = filters[:]
+
+    def name(self) -> str:
+        """
+        Returns the name of the handler, used as sub-command.
+
+        :return: the name
+        :rtype: str
+        """
+        return "multi-filter"
+
+    def description(self) -> str:
+        """
+        Returns a description of the handler.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Combines multiple filters."
+
+    def domains(self) -> List[str]:
+        """
+        Returns the domain of the handler.
+
+        :return: the domain
+        :rtype: str
+        """
+        return [ANY_DOMAIN]
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        if len(self.filters) > 0:
+            return self.filters[0].accepts()
+        else:
+            return list()
+
+    def generates(self) -> List:
+        """
+        Returns the list of classes that get produced.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        if len(self.filters) > 0:
+            return self.filters[-1].accepts()
+        else:
+            return list()
+
+    def keep(self, data):
+        """
+        Whether to keep the data record or not.
+
+        :param data: the record to check
+        :return: True if to keep
+        """
+        result = True
+        for f in self.filters:
+            if not f.keep(data):
+                result = False
+                break
+        return result
+
+
+KEYWORD_ACTION_KEEP = "keep"
+KEYWORD_ACTION_DISCARD = "discard"
+KEYWORD_ACTIONS = [KEYWORD_ACTION_KEEP, KEYWORD_ACTION_DISCARD]
 
 
 class KeywordFilter(Filter):
@@ -15,7 +114,7 @@ class KeywordFilter(Filter):
     Keeps or discards data records based on keyword(s).
     """
 
-    def __init__(self, keywords=None, action=ACTION_KEEP, location=None, verbose=False):
+    def __init__(self, keywords=None, action=KEYWORD_ACTION_KEEP, location=None, verbose=False):
         """
         Initializes the filter.
 
@@ -30,7 +129,7 @@ class KeywordFilter(Filter):
         """
         super().__init__(verbose=verbose)
 
-        if action not in ACTIONS:
+        if action not in KEYWORD_ACTIONS:
             raise Exception("Invalid action: %s" % action)
         if location not in self._get_locations():
             raise Exception("Invalid location: %s" % location)
@@ -76,7 +175,7 @@ class KeywordFilter(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for", required=True, nargs="+")
         parser.add_argument("-l", "--location", choices=self._get_locations(), default=self._get_default_location(), help="Where to look for the keywords")
-        parser.add_argument("-a", "--action", choices=ACTIONS, default=ACTION_KEEP, help="How to react when a keyword is encountered")
+        parser.add_argument("-a", "--action", choices=KEYWORD_ACTIONS, default=KEYWORD_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -126,10 +225,10 @@ class KeywordFilter(Filter):
                 found = True
                 break
 
-        if self.action == ACTION_KEEP:
+        if self.action == KEYWORD_ACTION_KEEP:
             result = found
             info = "keeping" if result else "discarding"
-        elif self.action == ACTION_DISCARD:
+        elif self.action == KEYWORD_ACTION_DISCARD:
             result = not found
             info = "discarding" if result else "keeping"
         else:

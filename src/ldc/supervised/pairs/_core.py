@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import Iterable, List
 
-from ldc import Reader, Writer, StreamWriter, BatchWriter, Filter, PAIRS_DOMAIN
+from ldc.core import PAIRS_DOMAIN
+from ldc.io import Reader, Writer, StreamWriter, BatchWriter
+from ldc.filter import Filter
 
 
 @dataclass
