@@ -4,7 +4,7 @@ import logging
 from typing import List, Dict, Iterable
 
 ALL_DOMAINS = "all domains"
-PAIRS_DOMAIN = "supervised/pairs"
+PAIRS_DOMAIN = "pairs"
 
 
 class CommandlineHandler(object):
@@ -115,7 +115,40 @@ class CommandlineHandler(object):
             self.logger().info("Finalizing...")
 
 
-class Reader(CommandlineHandler):
+class OutputProducer(object):
+    """
+    Mixin for classes that generate output.
+    """
+
+    def generates(self) -> List:
+        """
+        Returns the list of classes that get produced.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        raise NotImplemented()
+
+
+class InputConsumer(object):
+    """
+    Mixin for classes that consume input.
+    """
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        raise NotImplemented()
+
+
+class Reader(CommandlineHandler, OutputProducer):
+    """
+    Ancestor of classes that read data.
+    """
 
     def read(self) -> Iterable:
         """
@@ -127,11 +160,17 @@ class Reader(CommandlineHandler):
         raise NotImplemented()
 
 
-class Writer(CommandlineHandler):
+class Writer(CommandlineHandler, InputConsumer):
+    """
+    Ancestor of classes that write data.
+    """
     pass
 
 
 class StreamWriter(Writer):
+    """
+    Ancestor for classes that write data one record at a time.
+    """
 
     def write_stream(self, data):
         """
@@ -143,6 +182,9 @@ class StreamWriter(Writer):
 
 
 class BatchWriter(Writer):
+    """
+    Ancestor of classes that write data all at once.
+    """
 
     def write_batch(self, data: Iterable):
         """
@@ -154,7 +196,7 @@ class BatchWriter(Writer):
         raise NotImplemented()
 
 
-class Filter(CommandlineHandler):
+class Filter(CommandlineHandler, InputConsumer, OutputProducer):
     """
     Base class for filters.
     """
@@ -213,6 +255,30 @@ class MultiFilter(Filter):
         :rtype: str
         """
         return [ALL_DOMAINS]
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        if len(self.filters) > 0:
+            return self.filters[0].accepts()
+        else:
+            return list()
+
+    def generates(self) -> List:
+        """
+        Returns the list of classes that get produced.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        if len(self.filters) > 0:
+            return self.filters[-1].accepts()
+        else:
+            return list()
 
     def keep(self, data):
         """
@@ -278,6 +344,21 @@ def is_help_requested(args: List[str]):
     return result
 
 
+def classes_to_str(classes: List):
+    """
+    Turns a list of classes into a string.
+
+    :param classes: the list of classes to convert
+    :type classes: list
+    :return: the generated string
+    :rtype: str
+    """
+    classes_str = list()
+    for cls in classes:
+        classes_str.append(cls.__name__)
+    return ", ".join(classes_str)
+
+
 def ensure_valid_domains(handler: CommandlineHandler):
     """
     Checks whether valid domains are specified.
@@ -311,15 +392,18 @@ def check_compatibility(handlers: List[CommandlineHandler]):
         handler2 = handlers[i + 1]
         ensure_valid_domains(handler1)
         ensure_valid_domains(handler2)
-        domains1 = handler1.domains()
-        domains2 = handler2.domains()
-        if (ALL_DOMAINS in domains1) or (ALL_DOMAINS in domains2):
-            continue
+        if not isinstance(handler1, OutputProducer):
+            raise Exception(handler1.name() + " is not an OutputProducer!")
+        if not isinstance(handler2, InputConsumer):
+            raise Exception(handler2.name() + " is not an InputConsumer!")
+        classes1 = handler1.generates()
+        classes2 = handler2.accepts()
         compatible = False
-        for domain1 in domains1:
-            if domain1 in domains2:
+        for class1 in classes1:
+            if class1 in classes2:
                 compatible = True
+                break
         if not compatible:
             raise Exception(
-                "Domain(s) of " + handler1.name() + " not compatible with " + handler2.name() + ": "
-                + str(domains1) + " != " + str(domains2))
+                "Output(s) of " + handler1.name() + " not compatible with input(s) of " + handler2.name() + ": "
+                + classes_to_str(classes1) + " != " + classes_to_str(classes2))

@@ -60,6 +60,15 @@ class PairReader(Reader):
         """
         return [PAIRS_DOMAIN]
 
+    def generates(self) -> List:
+        """
+        Returns the list of classes that get produced.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [PairData]
+
     def read(self) -> Iterable[PairData]:
         """
         Loads the data and returns the items one by one.
@@ -83,6 +92,15 @@ class PairWriter(Writer):
         :rtype: list
         """
         return [PAIRS_DOMAIN]
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [PairData]
 
 
 class StreamPairWriter(PairWriter, StreamWriter):
@@ -128,3 +146,21 @@ class PairFilter(Filter):
         :rtype: list
         """
         return [PAIRS_DOMAIN]
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [PairData]
+
+    def generates(self) -> List:
+        """
+        Returns the list of classes that get produced.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [PairData]

@@ -5,8 +5,9 @@ import traceback
 
 from typing import Tuple, Dict
 
-from ldc import CommandlineHandler, Reader, Writer, StreamWriter, BatchWriter, Filter, MultiFilter
-from ldc import is_help_requested, split_args, check_compatibility
+from ldc import CommandlineHandler, InputConsumer, OutputProducer
+from ldc import Reader, Writer, StreamWriter, BatchWriter, Filter, MultiFilter
+from ldc import is_help_requested, split_args, check_compatibility, classes_to_str
 from ldc.supervised.pairs import AlpacaReader, AlpacaWriter, Keyword
 
 
@@ -96,9 +97,15 @@ def print_usage():
     print()
     plugins = available_plugins()
     for k in sorted(plugins.keys()):
-        header = k + " (" + "|".join(plugins[k].domains()) + ")"
-        print("\n" + header + "\n" + "="*len(header))
-        plugins[k].print_help()
+        plugin = plugins[k]
+        print("\n" + k + "\n" + "="*len(k))
+        print("domain(s): " + ", ".join(plugin.domains()))
+        if isinstance(plugin, OutputProducer):
+            print("generates: " + classes_to_str(plugin.generates()))
+        if isinstance(plugin, InputConsumer):
+            print("accepts: " + classes_to_str(plugin.accepts()))
+        print()
+        plugin.print_help()
 
 
 def parse_args(args) -> Tuple[Reader, Filter, Writer, argparse.Namespace]:
