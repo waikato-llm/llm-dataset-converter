@@ -72,6 +72,8 @@ class AlpacaReader(PairReader):
             self._input = self.source
         else:
             raise Exception("Invalid source, must be filename or file-like object!")
+        if self.verbose:
+            self.logger().info("Reading from: " + self.source)
 
     def read(self) -> Iterable[PairData]:
         """
@@ -153,6 +155,8 @@ class AlpacaWriter(BatchPairWriter):
         Initializes the writing, e.g., for opening files or databases.
         """
         self._output = open(self.target, "w")
+        if self.verbose:
+            self.logger().info("Writing to: " + self.target)
 
     def finalize(self):
         """
