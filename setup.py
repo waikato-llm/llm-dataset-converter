@@ -42,4 +42,9 @@ setup(
     version="0.0.1",
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
+    entry_points={
+        "console_scripts": [
+            "llm-convert=ldc.convert:sys_main",
+        ]
+    },
 )
