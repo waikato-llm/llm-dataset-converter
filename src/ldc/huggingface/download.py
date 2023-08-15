@@ -38,9 +38,10 @@ def download(repo_id: str, repo_type: str = None, filename: str = None, revision
         print("Output: %s" % ("default cache dir" if (output_dir is None) else output_dir))
 
     if filename is None:
-        snapshot_download(repo_id, revision=revision, local_dir=output_dir, repo_type=repo_type)
+        path = snapshot_download(repo_id, revision=revision, local_dir=output_dir, repo_type=repo_type, local_dir_use_symlinks=False)
     else:
-        hf_hub_download(repo_id, filename=filename, revision=revision, local_dir=output_dir, repo_type=repo_type)
+        path = hf_hub_download(repo_id, filename=filename, revision=revision, local_dir=output_dir, repo_type=repo_type, local_dir_use_symlinks=False)
+    print("Downloaded: %s" % path)
 
 
 def main(args=None):
