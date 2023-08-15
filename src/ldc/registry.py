@@ -9,7 +9,7 @@ from ldc.supervised.pairs import AlpacaReader, AlpacaWriter, Keyword
 def _add_to_dict(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
     """
     Adds the plugin to the dictionary under its name.
-    Raises an execption if plugin name already present.
+    Raises an exception if plugin name already present.
 
     :param d: the dictionary to extend
     :type d: dict
