@@ -57,7 +57,7 @@ def main(args=None):
             else:
                 raise Exception("Neither BatchWriter nor StreamWriter!")
     except:
-        traceback.format_exc()
+        traceback.print_exc()
 
     # clean up
     reader.finalize()
