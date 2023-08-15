@@ -79,7 +79,7 @@ class CsvPairsReader(PairReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source)
+        self._inputs = locate_files(self.source, fail_if_empty=True)
 
     def read(self) -> Iterable[PairData]:
         """

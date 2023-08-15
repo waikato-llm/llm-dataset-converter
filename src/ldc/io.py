@@ -10,12 +10,14 @@ from typing import Union, Iterable, List
 from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, Session, SessionHandler
 
 
-def locate_files(inputs: Union[str, List[str]]) -> List[str]:
+def locate_files(inputs: Union[str, List[str]], fail_if_empty: bool = False) -> List[str]:
     """
     Locates all the files from the specified inputs, which may contain globs.
 
     :param inputs: the input path(s) with optional globs
     :type inputs: list
+    :param fail_if_empty: whether to throw an exception if no files were located
+    :type fail_if_empty: bool
     :return: the expanded list of files
     :rtype: list
     """
@@ -29,6 +31,10 @@ def locate_files(inputs: Union[str, List[str]]) -> List[str]:
     result = []
     for inp in inputs:
         result.extend(glob.glob(inp))
+
+    if fail_if_empty and (len(result) == 0):
+        raise Exception("Failed to locate any files using: %s" % str(inputs))
+
     return result
 
 
