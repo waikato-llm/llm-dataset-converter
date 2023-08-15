@@ -36,8 +36,8 @@ setup(
         "pandas",
         "jsonlines",
         "pyarrow",
-        "datasets",
         "pyzstd",
+        "huggingface-hub",
     ],
     version="0.0.1",
     author='Peter Reutemann',
@@ -45,6 +45,7 @@ setup(
     entry_points={
         "console_scripts": [
             "llm-convert=ldc.convert:sys_main",
+            "llm-hf-download=ldc.huggingface.download:sys_main",
         ]
     },
 )

@@ -3,9 +3,10 @@ import sys
 import traceback
 
 from ldc.io import StreamWriter, BatchWriter
-from ldc.args import print_usage, parse_args, PROG
+from ldc.args import print_usage, parse_args
+from ldc.core import CONVERT
 
-_logger = logging.getLogger(PROG)
+_logger = logging.getLogger(CONVERT)
 
 
 def main(args=None):

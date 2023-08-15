@@ -7,7 +7,8 @@ from typing import List
 ANY_DOMAIN = "any"
 PAIRS_DOMAIN = "pairs"
 
-PROG = "llm-convert"
+CONVERT = "llm-convert"
+HUGGINGFACE_DOWNLOAD = "llm-hf-download"
 
 
 @dataclass
@@ -18,7 +19,7 @@ class Session:
     options: argparse.Namespace = None
     """ global options. """
 
-    logger: logging.Logger = logging.getLogger(PROG)
+    logger: logging.Logger = logging.getLogger(CONVERT)
     """ the global logger. """
 
     count: int = 0

@@ -3,7 +3,7 @@ import logging
 import sys
 from typing import List, Dict, Tuple
 
-from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str, Session, PROG
+from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str, Session, CONVERT
 from ldc.io import Reader, Writer
 from ldc.filter import Filter, MultiFilter
 from ldc.registry import available_readers, available_filters, available_writers, available_plugins
@@ -63,12 +63,13 @@ def print_usage():
     Prints the program usage to stdout.
     Ensure global options are in sync with parser in parse_args method below.
     """
-    cmd = "usage: " + PROG
+    cmd = "usage: " + CONVERT
     prefix = " " * (len(cmd) + 1)
     print(cmd + " [-h] [-v]")
     print(prefix + "{%s}" % "|".join(available_readers().keys()))
     print(prefix + "[%s, ...]" % "|".join(available_filters().keys()))
     print(prefix + "{%s}" % "|".join(available_writers().keys()))
+    print("\nTool for converting between large language model (LLM) dataset formats.")
     print("\noptional arguments:")
     print("  -h, --help            show this help message and exit")
     print("  -v, --verbose         Whether to be more verbose with the output (default: False)")
