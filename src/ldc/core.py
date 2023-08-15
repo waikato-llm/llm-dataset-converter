@@ -134,7 +134,7 @@ class CommandlineHandler(object):
         :rtype: argparse.ArgumentParser
         """
         parser = argparse.ArgumentParser(
-            description=self.description() + "\nDomain(s): " + "|".join(self.domains()),
+            description=self.description(),
             prog=self.name(),
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-v", "--verbose", action="store_true", help="Whether to be more verbose with the output")
