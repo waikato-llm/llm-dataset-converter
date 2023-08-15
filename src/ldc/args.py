@@ -3,12 +3,10 @@ import logging
 import sys
 from typing import List, Dict, Tuple
 
-from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str
+from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str, Session, PROG
 from ldc.io import Reader, Writer
 from ldc.filter import Filter, MultiFilter
 from ldc.registry import available_readers, available_filters, available_writers, available_plugins
-
-PROG = "llm-convert"
 
 
 def split_args(args: List[str], handlers: List[str]) -> Dict[str, List[str]]:
@@ -63,12 +61,13 @@ def is_help_requested(args: List[str]):
 def print_usage():
     """
     Prints the program usage to stdout.
+    Ensure global options are in sync with parser in parse_args method below.
     """
     cmd = "usage: " + PROG
-    prefix = " " * len(cmd)
+    prefix = " " * (len(cmd) + 1)
     print(cmd + " [-h] [-v]")
     print(prefix + "{%s}" % "|".join(available_readers().keys()))
-    print(prefix + "[{%s}, ...]" % "|".join(available_filters().keys()))
+    print(prefix + "[%s, ...]" % "|".join(available_filters().keys()))
     print(prefix + "{%s}" % "|".join(available_writers().keys()))
     print("\noptional arguments:")
     print("  -h, --help            show this help message and exit")
@@ -87,13 +86,13 @@ def print_usage():
         plugin.print_help()
 
 
-def parse_args(args) -> Tuple[Reader, Filter, Writer, argparse.Namespace]:
+def parse_args(args) -> Tuple[Reader, Filter, Writer, Session]:
     """
     Parses the arguments.
 
     :param args: the arguments to parse
     :type args: list
-    :return: tuple of (reader, filter, writer, global_options), the filter can be None
+    :return: tuple of (reader, filter, writer, session), the filter can be None
     :rtype: tuple
     """
     # help requested?
@@ -147,13 +146,12 @@ def parse_args(args) -> Tuple[Reader, Filter, Writer, argparse.Namespace]:
         check_compatibility([reader, writer])
 
     # global options?
-    global_parser = argparse.ArgumentParser()
-    global_parser.add_argument("-v", "--verbose", action="store_true")
-    global_options = global_parser.parse_args(parsed[""] if ("" in parsed) else [])
+    # see print_usage() method above
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose", action="store_true")
+    session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
+    logging.basicConfig(level=logging.WARNING)
+    if session.options.verbose:
+        session.logger.setLevel(logging.INFO)
 
-    if global_options.verbose:
-        logging.basicConfig(level=logging.INFO)
-    else:
-        logging.basicConfig(level=logging.WARNING)
-
-    return reader, filter_, writer, global_options
+    return reader, filter_, writer, session

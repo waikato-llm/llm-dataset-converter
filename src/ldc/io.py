@@ -1,12 +1,42 @@
 from typing import Iterable
 
-from ldc.core import CommandlineHandler, OutputProducer, InputConsumer
+from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, Session, SessionHandler
 
 
-class Reader(CommandlineHandler, OutputProducer):
+class Reader(CommandlineHandler, OutputProducer, SessionHandler):
     """
     Ancestor of classes that read data.
     """
+
+    def __init__(self, verbose=False):
+        """
+        Initializes the handler.
+
+        :param verbose: whether to be more verbose in the output
+        :type verbose: bool
+        """
+        super().__init__(verbose=verbose)
+        self._session = None
+
+    @property
+    def session(self) -> Session:
+        """
+        Returns the current session object
+
+        :return: the session object
+        :rtype: Session
+        """
+        return self._session
+
+    @session.setter
+    def session(self, s: Session):
+        """
+        Sets the session object to use.
+
+        :param s: the session object
+        :type s: Session
+        """
+        self._session = s
 
     def read(self) -> Iterable:
         """
@@ -17,12 +47,50 @@ class Reader(CommandlineHandler, OutputProducer):
         """
         raise NotImplemented()
 
+    def has_finished(self) -> bool:
+        """
+        Returns whether reading has finished.
 
-class Writer(CommandlineHandler, InputConsumer):
+        :return: True if finished
+        :rtype: bool
+        """
+        raise NotImplemented()
+
+
+class Writer(CommandlineHandler, InputConsumer, SessionHandler):
     """
     Ancestor of classes that write data.
     """
-    pass
+
+    def __init__(self, verbose=False):
+        """
+        Initializes the handler.
+
+        :param verbose: whether to be more verbose in the output
+        :type verbose: bool
+        """
+        super().__init__(verbose=verbose)
+        self._session = None
+
+    @property
+    def session(self) -> Session:
+        """
+        Returns the current session object
+
+        :return: the session object
+        :rtype: Session
+        """
+        return self._session
+
+    @session.setter
+    def session(self, s: Session):
+        """
+        Sets the session object to use.
+
+        :param s: the session object
+        :type s: Session
+        """
+        self._session = s
 
 
 class StreamWriter(Writer):

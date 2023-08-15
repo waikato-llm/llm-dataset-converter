@@ -1,10 +1,75 @@
 import argparse
 import logging
+import os
 
+from dataclasses import dataclass
 from typing import List
 
 ANY_DOMAIN = "any"
 PAIRS_DOMAIN = "pairs"
+
+PROG = "llm-convert"
+
+
+@dataclass
+class Session:
+    """
+    Session object shared among reader, filter(s), writer.
+    """
+    options: argparse.Namespace = None
+    """ global options. """
+
+    logger: logging.Logger = logging.getLogger(PROG)
+    """ the global logger. """
+
+    count: int = 0
+    """ the record counter. """
+
+    current_input = None
+    """ the current input etc. """
+
+    input_changed: bool = False
+    """ whether the input has changed. """
+
+    def generate_output(self, output_dir: str, ext: str) -> str:
+        """
+        Generates a new output filename based on the current input, the output dir and extension.
+
+        :param output_dir: the output directory to use
+        :type output_dir: str
+        :param ext: the extension to use
+        :type ext: str
+        :return: the generated output file
+        :rtype: str
+        """
+        base = os.path.basename(self.current_input)
+        return os.path.join(output_dir, os.path.splitext(base)[0] + ext)
+
+
+class SessionHandler(object):
+    """
+    Mixing for classes that support session objects.
+    """
+
+    @property
+    def session(self) -> Session:
+        """
+        Returns the current session object
+
+        :return: the session object
+        :rtype: Session
+        """
+        raise NotImplemented()
+
+    @session.setter
+    def session(self, s: Session):
+        """
+        Sets the session object to use.
+
+        :param s: the session object
+        :type s: Session
+        """
+        raise NotImplemented()
 
 
 class CommandlineHandler(object):

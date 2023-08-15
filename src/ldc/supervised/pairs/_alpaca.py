@@ -1,8 +1,8 @@
 import argparse
-import io
 import json
-
+import os
 from typing import Iterable
+
 from ._core import PairData, PairReader, BatchPairWriter
 
 
@@ -15,13 +15,14 @@ class AlpacaReader(PairReader):
         """
         Initializes the reader.
 
-        :param source: the filename or file like object
+        :param source: the filename(s)
         :param verbose: whether to be more verbose in the output
         :type verbose: bool
         """
         super().__init__(verbose=verbose)
         self.source = source
-        self._input = None
+        self._inputs = None
+        self._current_input = None
 
     def name(self) -> str:
         """
@@ -49,7 +50,7 @@ class AlpacaReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file to read", required=True)
+        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file to read", required=True, nargs="+")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -66,14 +67,13 @@ class AlpacaReader(PairReader):
         """
         Initializes the reading, e.g., for opening files or databases.
         """
+        super().initialize()
         if isinstance(self.source, str):
-            self._input = open(self.source, "r")
-        elif isinstance(self.source, io.IOBase):
-            self._input = self.source
+            self._inputs = [self.source]
+        elif isinstance(self.source, list):
+            self._inputs = self.source[:]
         else:
-            raise Exception("Invalid source, must be filename or file-like object!")
-        if self.verbose:
-            self.logger().info("Reading from: " + self.source)
+            raise Exception("Invalid source, must be string(s)!")
 
     def read(self) -> Iterable[PairData]:
         """
@@ -82,16 +82,36 @@ class AlpacaReader(PairReader):
         :return: the data
         :rtype: PairData
         """
-        array = json.load(self._input)
+        self.finalize()
+
+        self._current_input = self._inputs.pop(0)
+        self.session.current_input = self._current_input
+        if self.verbose:
+            self.logger().info("Reading from: " + str(self.session.current_input))
+        self._current_input = open(self._current_input, "r")
+        self.session.input_changed = True
+
+        array = json.load(self._current_input)
         for item in array:
             yield PairData.parse(item)
+
+    def has_finished(self) -> bool:
+        """
+        Returns whether reading has finished.
+
+        :return: True if finished
+        :rtype: bool
+        """
+        return (len(self._inputs) == 0) and (self._current_input is None)
 
     def finalize(self):
         """
         Finishes the reading, e.g., for closing files or databases.
         """
-        if self._input is not None:
-            self._input.close()
+        if self._current_input is not None:
+            super().finalize()
+            self._current_input.close()
+            self._current_input = None
 
 
 class AlpacaWriter(BatchPairWriter):
@@ -103,7 +123,8 @@ class AlpacaWriter(BatchPairWriter):
         """
         Initializes the writer.
 
-        :param target: the filename or file like object to write to
+        :param target: the filename/dir to write to
+        :type target: str
         :param verbose: whether to be more verbose in the output
         :type verbose: bool
         """
@@ -137,7 +158,7 @@ class AlpacaWriter(BatchPairWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path to the Alpaca file to write", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path of the Alpaca file to write (directory when processing multiple files)", required=True)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -150,21 +171,6 @@ class AlpacaWriter(BatchPairWriter):
         super()._apply_args(ns)
         self.target = ns.output
 
-    def initialize(self):
-        """
-        Initializes the writing, e.g., for opening files or databases.
-        """
-        self._output = open(self.target, "w")
-        if self.verbose:
-            self.logger().info("Writing to: " + self.target)
-
-    def finalize(self):
-        """
-        Finishes the writing, e.g., for closing files or databases.
-        """
-        if self._output is not None:
-            self._output.close()
-
     def write_batch(self, data: Iterable[PairData]):
         """
         Saves the data in one go.
@@ -172,4 +178,23 @@ class AlpacaWriter(BatchPairWriter):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
+        if self.session.input_changed:
+            self.finalize()
+            if os.path.isdir(self.target):
+                output = self.session.generate_output(self.target, ".json")
+            else:
+                output = self.target
+            if self.verbose:
+                self.logger().info("Writing to: " + output)
+            self._output = open(output, "w")
+
         json.dump([x.to_dict() for x in data], self._output)
+
+    def finalize(self):
+        """
+        Finishes the writing, e.g., for closing files or databases.
+        """
+        if self._output is not None:
+            super().finalize()
+            self._output.close()
+            self._output = None

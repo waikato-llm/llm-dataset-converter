@@ -16,40 +16,49 @@ def main(args=None):
     :type args: list
     """
     try:
-        reader, filter_, writer, global_opts = parse_args(sys.argv[1:] if (args is None) else args)
+        reader, filter_, writer, session = parse_args(sys.argv[1:] if (args is None) else args)
     except Exception as e:
         print(e)
         print_usage()
         sys.exit(1)
 
+    # propagate session
+    reader.session = session
+    if filter_ is not None:
+        filter_.session = session
+    writer.session = session
+
+    # initialize
     reader.initialize()
     if filter_ is not None:
         filter_.initialize()
     writer.initialize()
 
+    # process data
     try:
-        count = 0
-        if isinstance(writer, BatchWriter):
-            data = []
-            for item in reader.read():
-                count += 1
-                if (filter_ is None) or (filter_.keep(item)):
-                    data.append(item)
-                if global_opts.verbose and (count % 1000 == 0):
-                    _logger.info("%d records processed..." % count)
-            writer.write_batch(data)
-        elif isinstance(writer, StreamWriter):
-            for item in reader.read():
-                count += 1
-                if (filter_ is None) or filter_.keep(item):
-                    writer.write_stream(item)
-                if global_opts.verbose and (count % 1000 == 0):
-                    _logger.info("%d records processed..." % count)
-        else:
-            raise Exception("Neither BatchWriter nor StreamWriter!")
+        while not reader.has_finished():
+            if isinstance(writer, BatchWriter):
+                data = []
+                for item in reader.read():
+                    session.count += 1
+                    if (filter_ is None) or (filter_.keep(item)):
+                        data.append(item)
+                    if session.options.verbose and (session.count % 1000 == 0):
+                        _logger.info("%d records processed..." % session.count)
+                writer.write_batch(data)
+            elif isinstance(writer, StreamWriter):
+                for item in reader.read():
+                    session.count += 1
+                    if (filter_ is None) or filter_.keep(item):
+                        writer.write_stream(item)
+                    if session.options.verbose and (session.count % 1000 == 0):
+                        _logger.info("%d records processed..." % session.count)
+            else:
+                raise Exception("Neither BatchWriter nor StreamWriter!")
     except:
         traceback.format_exc()
 
+    # clean up
     reader.finalize()
     if filter_ is not None:
         filter_.finalize()

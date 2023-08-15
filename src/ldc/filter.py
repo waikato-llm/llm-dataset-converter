@@ -2,13 +2,43 @@ import argparse
 
 from typing import List, Set
 
-from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, ANY_DOMAIN
+from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, Session, SessionHandler, ANY_DOMAIN
 
 
-class Filter(CommandlineHandler, InputConsumer, OutputProducer):
+class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler):
     """
     Base class for filters.
     """
+
+    def __init__(self, verbose=False):
+        """
+        Initializes the handler.
+
+        :param verbose: whether to be more verbose in the output
+        :type verbose: bool
+        """
+        super().__init__(verbose=verbose)
+        self._session = None
+
+    @property
+    def session(self) -> Session:
+        """
+        Returns the current session object
+
+        :return: the session object
+        :rtype: Session
+        """
+        return self._session
+
+    @session.setter
+    def session(self, s: Session):
+        """
+        Sets the session object to use.
+
+        :param s: the session object
+        :type s: Session
+        """
+        self._session = s
 
     def keep(self, data) -> bool:
         """
@@ -88,6 +118,14 @@ class MultiFilter(Filter):
             return self.filters[-1].accepts()
         else:
             return list()
+
+    def initialize(self):
+        """
+        Initializes the processing, e.g., for opening files or databases.
+        """
+        super().initialize()
+        for f in self.filters:
+            f.session = self.session
 
     def keep(self, data):
         """

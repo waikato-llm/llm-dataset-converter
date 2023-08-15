@@ -14,7 +14,7 @@ class PairData:
     instruction: str
     input: str
     output: str
-    meta: dict
+    meta: dict = None
 
     @classmethod
     def parse(cls, d):
@@ -30,7 +30,6 @@ class PairData:
             instruction=d.get("instruction", None),
             input=d.get("input", None),
             output=d.get("output", None),
-            meta=None
         )
 
     def to_dict(self):
