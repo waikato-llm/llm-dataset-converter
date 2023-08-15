@@ -69,7 +69,7 @@ def remove_compression_suffix(path: str):
         return path
 
 
-def open_file(path: str, mode: str = "rt", encoding: str = None, compression: str = None):
+def open_file(path: str, mode: str = None, encoding: str = None, compression: str = None):
     """
     Opens the file and returns a file-like object.
     Automatically decompresses: .gz, bz2, .xz, .zst/.zstd
