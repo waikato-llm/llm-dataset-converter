@@ -1,6 +1,30 @@
-from typing import Iterable
+import glob
+
+from typing import Union, Iterable, List
 
 from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, Session, SessionHandler
+
+
+def locate_files(inputs: Union[str, List[str]]) -> List[str]:
+    """
+    Locates all the files from the specified inputs, which may contain globs.
+
+    :param inputs: the input path(s) with optional globs
+    :type inputs: list
+    :return: the expanded list of files
+    :rtype: list
+    """
+    if isinstance(inputs, str):
+        inputs = [inputs]
+    elif isinstance(inputs, list):
+        inputs = inputs
+    else:
+        raise Exception("Invalid inputs, must be string(s)!")
+
+    result = []
+    for inp in inputs:
+        result.extend(glob.glob(inp))
+    return result
 
 
 class Reader(CommandlineHandler, OutputProducer, SessionHandler):
@@ -8,7 +32,7 @@ class Reader(CommandlineHandler, OutputProducer, SessionHandler):
     Ancestor of classes that read data.
     """
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose: bool = False):
         """
         Initializes the handler.
 
@@ -62,7 +86,7 @@ class Writer(CommandlineHandler, InputConsumer, SessionHandler):
     Ancestor of classes that write data.
     """
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose: bool = False):
         """
         Initializes the handler.
 

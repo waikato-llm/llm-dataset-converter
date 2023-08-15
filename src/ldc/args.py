@@ -86,7 +86,7 @@ def print_usage():
         plugin.print_help()
 
 
-def parse_args(args) -> Tuple[Reader, Filter, Writer, Session]:
+def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
     """
     Parses the arguments.
 

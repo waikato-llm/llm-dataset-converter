@@ -10,7 +10,7 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler):
     Base class for filters.
     """
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose: bool = False):
         """
         Initializes the handler.
 
@@ -56,7 +56,7 @@ class MultiFilter(Filter):
     Combines multiple filters.
     """
 
-    def __init__(self, filters: List[Filter], verbose=False):
+    def __init__(self, filters: List[Filter], verbose: bool = False):
         """
         Initialize with the specified filters.
 
@@ -152,7 +152,8 @@ class KeywordFilter(Filter):
     Keeps or discards data records based on keyword(s).
     """
 
-    def __init__(self, keywords=None, action=KEYWORD_ACTION_KEEP, location=None, verbose=False):
+    def __init__(self, keywords: List[str] = None, action: str = KEYWORD_ACTION_KEEP,
+                 location: str = None, verbose: bool = False):
         """
         Initializes the filter.
 

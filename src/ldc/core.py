@@ -77,7 +77,7 @@ class CommandlineHandler(object):
     Base class for objects handle arguments.
     """
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose: bool = False):
         """
         Initializes the handler.
 

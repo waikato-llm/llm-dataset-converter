@@ -1,9 +1,10 @@
 import argparse
 import json
 import os
-from typing import Iterable
+from typing import Iterable, List, Union
 
 from ._core import PairData, PairReader, BatchPairWriter
+from ldc.io import locate_files
 
 
 class AlpacaReader(PairReader):
@@ -11,7 +12,7 @@ class AlpacaReader(PairReader):
     Reader for the Alpaca JSON format.
     """
 
-    def __init__(self, source=None, verbose=False):
+    def __init__(self, source: Union[str, List[str]] = None, verbose: bool = False):
         """
         Initializes the reader.
 
@@ -50,7 +51,7 @@ class AlpacaReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file to read", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; global syntax is supported", required=True, nargs="+")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -68,12 +69,7 @@ class AlpacaReader(PairReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        if isinstance(self.source, str):
-            self._inputs = [self.source]
-        elif isinstance(self.source, list):
-            self._inputs = self.source[:]
-        else:
-            raise Exception("Invalid source, must be string(s)!")
+        self._inputs = locate_files(self.source)
 
     def read(self) -> Iterable[PairData]:
         """
@@ -119,7 +115,7 @@ class AlpacaWriter(BatchPairWriter):
     Writer for the Alpaca JSON format.
     """
 
-    def __init__(self, target=None, verbose=False):
+    def __init__(self, target: str = None, verbose: bool = False):
         """
         Initializes the writer.
 
