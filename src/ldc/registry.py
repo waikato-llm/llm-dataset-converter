@@ -3,7 +3,8 @@ from typing import Dict
 from ldc.core import CommandlineHandler
 from ldc.io import Reader, Writer
 from ldc.filter import Filter
-from ldc.supervised.pairs import AlpacaReader, AlpacaWriter, Keyword
+from ldc.supervised.pairs import AlpacaReader, AlpacaWriter, CsvPairsReader, CsvPairsWriter
+from ldc.supervised.pairs import Keyword as KeywordPairs
 
 
 def _add_to_dict(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
@@ -30,6 +31,7 @@ def available_readers() -> Dict[str, Reader]:
     """
     result = dict()
     _add_to_dict(result, AlpacaReader())
+    _add_to_dict(result, CsvPairsReader())
     return result
 
 
@@ -42,6 +44,7 @@ def available_writers() -> Dict[str, Writer]:
     """
     result = dict()
     _add_to_dict(result, AlpacaWriter())
+    _add_to_dict(result, CsvPairsWriter())
     return result
 
 
@@ -53,7 +56,7 @@ def available_filters() -> Dict[str, Filter]:
     :rtype: dict
     """
     result = dict()
-    _add_to_dict(result, Keyword())
+    _add_to_dict(result, KeywordPairs())
     return result
 
 
