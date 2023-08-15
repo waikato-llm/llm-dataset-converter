@@ -4,7 +4,7 @@ import os
 from typing import Iterable, List, Union
 
 from ._core import PairData, PairReader, BatchPairWriter
-from ldc.io import locate_files
+from ldc.io import locate_files, open_file, generate_output
 
 
 class CsvPairsReader(PairReader):
@@ -94,7 +94,7 @@ class CsvPairsReader(PairReader):
         self.session.current_input = self._current_input
         if self.verbose:
             self.logger().info("Reading from: " + str(self.session.current_input))
-        self._current_input = open(self._current_input, "r")
+        self._current_input = open_file(self._current_input)
         self._current_reader = csv.DictReader(self._current_input)
         self.session.input_changed = True
 
@@ -202,7 +202,7 @@ class CsvPairsWriter(BatchPairWriter):
         if self.session.input_changed:
             self.finalize()
             if os.path.isdir(self.target):
-                output = self.session.generate_output(self.target, ".csv")
+                output = generate_output(self.session.current_input, self.target, ".csv")
             else:
                 output = self.target
             if self.verbose:

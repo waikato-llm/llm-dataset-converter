@@ -1,6 +1,5 @@
 import argparse
 import logging
-import os
 
 from dataclasses import dataclass
 from typing import List
@@ -30,20 +29,6 @@ class Session:
 
     input_changed: bool = False
     """ whether the input has changed. """
-
-    def generate_output(self, output_dir: str, ext: str) -> str:
-        """
-        Generates a new output filename based on the current input, the output dir and extension.
-
-        :param output_dir: the output directory to use
-        :type output_dir: str
-        :param ext: the extension to use
-        :type ext: str
-        :return: the generated output file
-        :rtype: str
-        """
-        base = os.path.basename(self.current_input)
-        return os.path.join(output_dir, os.path.splitext(base)[0] + ext)
 
 
 class SessionHandler(object):

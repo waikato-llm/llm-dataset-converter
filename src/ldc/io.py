@@ -1,4 +1,9 @@
+import bz2
 import glob
+import gzip
+import lzma
+import os
+import pyzstd
 
 from typing import Union, Iterable, List
 
@@ -25,6 +30,93 @@ def locate_files(inputs: Union[str, List[str]]) -> List[str]:
     for inp in inputs:
         result.extend(glob.glob(inp))
     return result
+
+
+def is_compressed(path: str):
+    """
+    Returns whether the file represents a compression that we can handle,
+    based on the file extension: .gz, bz2, .xz, .zst/.zstd
+
+    :param path: the file to check
+    :type path: str
+    :return: True if supported compression
+    """
+    path_lc = path.lower()
+    if path_lc.endswith(".gz"):
+        return True
+    elif path_lc.endswith(".bz2"):
+        return True
+    elif path_lc.endswith(".xz"):
+        return True
+    elif path_lc.endswith(".zst") or path_lc.endswith(".zstd"):
+        return True
+    else:
+        return False
+
+
+def remove_compression_suffix(path: str):
+    """
+    Removes the compression suffix from the file.
+
+    :param path: the path to remove the suffix from
+    :type path: str
+    :return: the cleaned up path
+    :rtype: str
+    """
+    if is_compressed(path):
+        return os.path.splitext(path)[0]
+    else:
+        return path
+
+
+def open_file(path: str, mode: str = "rt", encoding: str = None, compression: str = None):
+    """
+    Opens the file and returns a file-like object.
+    Automatically decompresses: .gz, bz2, .xz, .zst/.zstd
+
+    :param path: the file to open
+    :type path: str
+    :param mode: the mode to use for opening the file
+    :type mode: str
+    :param encoding: the encoding to use, use None for default
+    :type encoding: str
+    :param compression: the explicit compression to use (gz/bz2/xz/zstd)
+    :type compression: str
+    :return: the file-like object
+    """
+    path_lc = path.lower()
+    if path_lc.endswith(".gz") or (compression == "gz"):
+        return gzip.open(path, mode=mode, encoding=encoding)
+    elif path_lc.endswith(".bz2") or (compression == "bz2"):
+        return bz2.open(path, mode=mode, encoding=encoding)
+    elif path_lc.endswith(".xz") or (compression == "xz"):
+        return lzma.open(path, mode=mode, encoding=encoding)
+    elif path_lc.endswith(".zst") or path_lc.endswith(".zstd") or (compression == "zstd"):
+        return pyzstd.open(path, mode=mode, encoding=encoding)
+    else:
+        if compression is not None:
+            raise Exception("Unhandled compression: %s" % compression)
+        else:
+            return open(path, mode)
+
+
+def generate_output(path: str, output_dir: str, ext: str) -> str:
+    """
+    Generates a new output filename based on the current input, the output dir and extension.
+
+    :param path: the input filename to generate an output filename for
+    :type path: str
+    :param output_dir: the output directory to use
+    :type output_dir: str
+    :param ext: the extension to use
+    :type ext: str
+    :return: the generated output file
+    :rtype: str
+    """
+    if is_compressed(path):
+        path = remove_compression_suffix(path)
+    base = os.path.basename(path)
+    return os.path.join(output_dir, os.path.splitext(base)[0] + ext)
 
 
 class Reader(CommandlineHandler, OutputProducer, SessionHandler):
