@@ -1,5 +1,6 @@
 from typing import List, Set
 
+from ldc.core import LOGGING_WARN
 from ldc.filter import KeywordFilter, KEYWORD_ACTION_KEEP
 from ldc.supervised.pairs import PairFilter
 
@@ -16,7 +17,7 @@ class Keyword(KeywordFilter, PairFilter):
     Keeps or discards data records based on keyword(s).
     """
 
-    def __init__(self, keywords=None, action=KEYWORD_ACTION_KEEP, location=LOCATION_ANY, verbose=False):
+    def __init__(self, keywords=None, action=KEYWORD_ACTION_KEEP, location=LOCATION_ANY, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -26,10 +27,10 @@ class Keyword(KeywordFilter, PairFilter):
         :type action: str
         :param location: in which part of the data to look for the keywords
         :type location: str
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(keywords=keywords, action=action, location=location, verbose=verbose)
+        super().__init__(keywords=keywords, action=action, location=location, logging_level=logging_level)
 
     def name(self) -> str:
         """

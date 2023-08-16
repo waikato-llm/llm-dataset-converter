@@ -2,6 +2,7 @@ import argparse
 from typing import List
 
 from ldc.core import PAIRS_DOMAIN, PRETRAIN_DOMAIN
+from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -17,16 +18,16 @@ class PairsToPretrain(Filter):
     Converts records of prompt/output pairs to pretrain ones.
     """
 
-    def __init__(self, data_fields: List[str] = None, verbose: bool = False):
+    def __init__(self, data_fields: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
         :param data_fields: the list of data fields to turn into pretrain content
         :type data_fields: list
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
 
         if data_fields is not None:
             for data_field in data_fields:

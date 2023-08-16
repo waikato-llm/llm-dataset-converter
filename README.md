@@ -43,7 +43,7 @@ are automatically supported for loading/saving files:
 ## Tools
 
 ```
-usage: llm-convert [-h|--help|--help-all] [-v] [-c]
+usage: llm-convert [-h|--help|--help-all] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-c]
                    reader
                    [filter [filter [...]]]
                    writer
@@ -62,7 +62,8 @@ writers:
 optional arguments:
   -h, --help            show basic help message and exit
   --help-all            show basic help message plus help on all plugins and exit
-  -v, --verbose         Whether to be more verbose with the output (default: False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -c, --compression     {None|bz2|gz|xz|zstd}
                         the type of compression to use when only providing an output
                         directory to the writer (default: None)
@@ -70,7 +71,8 @@ optional arguments:
 
 ```
 usage: llm-hf-download [-h] -i REPO_ID [-t {None,model,dataset,space}]
-                       [-f FILENAME] [-r REVISION] [-o OUTPUT_DIR] [-v]
+                       [-f FILENAME] [-r REVISION] [-o OUTPUT_DIR]
+                       [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool for downloading files or datasets from huggingface for local conversion.
 
@@ -91,8 +93,8 @@ optional arguments:
                         The directory to store the data in, stores it in the
                         default huggingface cache directory when omitted.
                         (default: None)
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: INFO)
 ```
 
 
@@ -104,14 +106,15 @@ from-alpaca
 domain(s): pairs
 generates: PairData
 
-usage: from-alpaca [-h] [-v] -i INPUT [INPUT ...]
+usage: from-alpaca [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                   [INPUT ...]
 
 Reads prompt/output pairs in Alpaca-like JSON format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the Alpaca file(s) to read; global syntax is
                         supported (default: None)
@@ -121,15 +124,16 @@ from-csv-pairs
 domain(s): pairs
 generates: PairData
 
-usage: from-csv-pairs [-h] [-v] -i INPUT [INPUT ...] [--col_instruction COL]
-                      [--col_input COL] [--col_output COL]
+usage: from-csv-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                      [INPUT ...] [--col_instruction COL] [--col_input COL]
+                      [--col_output COL]
 
 Reads prompt/output pairs in CSV format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the CSV file(s) to read; global syntax is
                         supported (default: None)
@@ -145,16 +149,16 @@ from-jsonlines-pairs
 domain(s): pairs
 generates: PairData
 
-usage: from-jsonlines-pairs [-h] [-v] -i INPUT [INPUT ...]
-                            [--att_instruction COL] [--att_input COL]
-                            [--att_output COL]
+usage: from-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
+                            INPUT [INPUT ...] [--att_instruction COL]
+                            [--att_input COL] [--att_output COL]
 
 Reads prompt/output pairs in JsonLines-like JSON format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the JsonLines file(s) to read; global syntax
                         is supported (default: None)
@@ -168,16 +172,16 @@ from-parquet-pairs
 domain(s): pairs
 generates: PairData
 
-usage: from-parquet-pairs [-h] [-v] -i INPUT [INPUT ...]
-                          [--col_instruction COL] [--col_input COL]
-                          [--col_output COL]
+usage: from-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                          [INPUT ...] [--col_instruction COL]
+                          [--col_input COL] [--col_output COL]
 
 Reads prompt/output pairs from Parquet database files.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the parquet file(s) to read; global syntax is
                         supported (default: None)
@@ -193,15 +197,15 @@ from-parquet-pretrain
 domain(s): pretrain
 generates: PretrainData
 
-usage: from-parquet-pretrain [-h] [-v] -i INPUT [INPUT ...]
-                             [--col_content COL]
+usage: from-parquet-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
+                             INPUT [INPUT ...] [--col_content COL]
 
 Reads text from Parquet database files to use for pretraining.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the parquet file(s) to read; global syntax is
                         supported (default: None)
@@ -214,18 +218,19 @@ domain(s): pairs
 accepts: PairData
 generates: PairData
 
-usage: keyword-pairs [-h] [-v] -k KEYWORD [KEYWORD ...]
-                     [-l {any,instruction,input,output}] [-a {keep,discard}]
+usage: keyword-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -k KEYWORD
+                     [KEYWORD ...] [-L {any,instruction,input,output}]
+                     [-a {keep,discard}]
 
 Keeps or discards data records based on keyword(s).
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -k KEYWORD [KEYWORD ...], --keyword KEYWORD [KEYWORD ...]
                         The keywords to look for (default: None)
-  -l {any,instruction,input,output}, --location {any,instruction,input,output}
+  -L {any,instruction,input,output}, --location {any,instruction,input,output}
                         Where to look for the keywords (default: any)
   -a {keep,discard}, --action {keep,discard}
                         How to react when a keyword is encountered (default:
@@ -237,15 +242,15 @@ domain(s): pairs, pretrain
 accepts: PairData
 generates: PretrainData
 
-usage: pairs-to-pretrain [-h] [-v]
+usage: pairs-to-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                          [-f {instruction,input,output} [{instruction,input,output} ...]]
 
 Converts records of prompt/output pairs to pretrain ones.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -f {instruction,input,output} [{instruction,input,output} ...], --data_fields {instruction,input,output} [{instruction,input,output} ...]
                         The data fields to use for the pretrain content
                         (default: None)
@@ -255,14 +260,14 @@ to-alpaca
 domain(s): pairs
 accepts: PairData
 
-usage: to-alpaca [-h] [-v] -o OUTPUT
+usage: to-alpaca [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
 
 Writes prompt/output pairs in Alpaca-like JSON format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -o OUTPUT, --output OUTPUT
                         Path of the Alpaca file to write (directory when
                         processing multiple files) (default: None)
@@ -272,15 +277,16 @@ to-csv-pairs
 domain(s): pairs
 accepts: PairData
 
-usage: to-csv-pairs [-h] [-v] -o OUTPUT [--col_instruction COL]
-                    [--col_input COL] [--col_output COL]
+usage: to-csv-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
+                    [--col_instruction COL] [--col_input COL]
+                    [--col_output COL]
 
 Writes prompt/output pairs in CSV format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -o OUTPUT, --output OUTPUT
                         Path of the CSV file to write (directory when
                         processing multiple files) (default: None)
@@ -296,15 +302,16 @@ to-jsonlines-pairs
 domain(s): pairs
 accepts: PairData
 
-usage: to-jsonlines-pairs [-h] [-v] -o OUTPUT [--att_instruction COL]
-                          [--att_input COL] [--att_output COL]
+usage: to-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
+                          [--att_instruction COL] [--att_input COL]
+                          [--att_output COL]
 
 Writes prompt/output pairs in JsonLines-like JSON format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -o OUTPUT, --output OUTPUT
                         Path of the JsonLines file to write (directory when
                         processing multiple files) (default: None)
@@ -318,15 +325,16 @@ to-parquet-pairs
 domain(s): pairs
 accepts: PairData
 
-usage: to-parquet-pairs [-h] [-v] -o OUTPUT [--col_instruction COL]
-                        [--col_input COL] [--col_output COL]
+usage: to-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
+                        [--col_instruction COL] [--col_input COL]
+                        [--col_output COL]
 
 Writes prompt/output pairs in Parquet database format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -o OUTPUT, --output OUTPUT
                         Path of the CSV file to write (directory when
                         processing multiple files) (default: None)
@@ -341,14 +349,15 @@ to-parquet-pretrain
 domain(s): pretrain
 accepts: PretrainData
 
-usage: to-parquet-pretrain [-h] [-v] -o OUTPUT [--col_content COL]
+usage: to-parquet-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o
+                           OUTPUT [--col_content COL]
 
 Writes text used for pretraining in Parquet database format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
   -o OUTPUT, --output OUTPUT
                         Path of the CSV file to write (directory when
                         processing multiple files) (default: None)

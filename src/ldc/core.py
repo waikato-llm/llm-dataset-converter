@@ -12,6 +12,45 @@ CONVERT = "llm-convert"
 HUGGINGFACE_DOWNLOAD = "llm-hf-download"
 
 
+LOGGING_DEBUG = "DEBUG"
+LOGGING_INFO = "INFO"
+LOGGING_WARN = "WARN"
+LOGGING_ERROR = "ERROR"
+LOGGING_CRITICAL = "CRITICAL"
+LOGGING_LEVELS = [
+    LOGGING_DEBUG,
+    LOGGING_INFO,
+    LOGGING_WARN,
+    LOGGING_ERROR,
+    LOGGING_CRITICAL,
+]
+
+
+def set_logging_level(logger: logging.Logger, level: str):
+    """
+    Sets the logging level of the logger.
+
+    :param logger: the logger to update
+    :type logger: logging.Logger
+    :param level: the level string, see LOGGING_LEVELS
+    :type level: str
+    """
+    if level not in LOGGING_LEVELS:
+        raise Exception("Invalid logging level (%s): %s" % ("|".join(LOGGING_LEVELS), level))
+    if level == LOGGING_CRITICAL:
+        logger.setLevel(logging.CRITICAL)
+    elif level == LOGGING_ERROR:
+        logger.setLevel(logging.ERROR)
+    elif level == LOGGING_WARN:
+        logger.setLevel(logging.WARN)
+    elif level == LOGGING_INFO:
+        logger.setLevel(logging.INFO)
+    elif level == LOGGING_DEBUG:
+        logger.setLevel(logging.DEBUG)
+    else:
+        raise Exception("Unhandled logging level: %s" % level)
+
+
 @dataclass
 class Session:
     """
@@ -64,14 +103,14 @@ class CommandlineHandler(object):
     Base class for objects handle arguments.
     """
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        self.verbose = verbose
+        self.logging_level = logging_level
         self._logger = None
 
     def name(self) -> str:
@@ -110,7 +149,7 @@ class CommandlineHandler(object):
         """
         if self._logger is None:
             self._logger = logging.getLogger(self.name())
-            self._logger.setLevel(logging.INFO if self.verbose else logging.WARNING)
+            set_logging_level(self._logger, self.logging_level)
         return self._logger
 
     def _create_argparser(self) -> argparse.ArgumentParser:
@@ -124,7 +163,7 @@ class CommandlineHandler(object):
             description=self.description(),
             prog=self.name(),
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument("-v", "--verbose", action="store_true", help="Whether to be more verbose with the output")
+        parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -134,7 +173,7 @@ class CommandlineHandler(object):
         :param ns: the parsed arguments
         :type ns: argparse.Namespace
         """
-        self.verbose = ns.verbose
+        self.logging_level = ns.logging_level
 
     def parse_args(self, args: List[str]):
         """
@@ -156,14 +195,14 @@ class CommandlineHandler(object):
         """
         Initializes the processing, e.g., for opening files or databases.
         """
-        if self.verbose:
+        if self.logging_level:
             self.logger().info("Initializing...")
 
     def finalize(self):
         """
         Finishes the processing, e.g., for closing files or databases.
         """
-        if self.verbose:
+        if self.logging_level:
             self.logger().info("Finalizing...")
 
 

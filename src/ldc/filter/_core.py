@@ -1,6 +1,7 @@
 from typing import List
 
 from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, Session, ANY_DOMAIN
+from ldc.core import LOGGING_WARN
 
 
 class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler):
@@ -8,14 +9,14 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler):
     Base class for filters.
     """
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
         self._session = None
 
     @property
@@ -53,16 +54,16 @@ class MultiFilter(Filter):
     Combines multiple filters.
     """
 
-    def __init__(self, filters: List[Filter], verbose: bool = False):
+    def __init__(self, filters: List[Filter], logging_level: str = LOGGING_WARN):
         """
         Initialize with the specified filters.
 
         :param filters: the filters to use
         :type filters: list
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
         self.filters = filters[:]
 
     def name(self) -> str:

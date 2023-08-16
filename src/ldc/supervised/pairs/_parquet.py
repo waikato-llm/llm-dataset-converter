@@ -1,11 +1,11 @@
 import argparse
-import os
 from typing import Iterable, List, Union
 
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+from ldc.core import LOGGING_WARN
 from ldc.io import locate_files, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
@@ -15,15 +15,15 @@ class ParquetPairsReader(PairReader):
     Reader for Parquet database files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, verbose: bool = False):
+    def __init__(self, source: Union[str, List[str]] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
         self.source = source
         self._inputs = None
         self._current_input = None
@@ -97,7 +97,7 @@ class ParquetPairsReader(PairReader):
 
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
-        if self.verbose:
+        if self.logging_level:
             self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_table = pq.read_table(self._current_input).to_pandas()
         self.session.input_changed = True
@@ -141,16 +141,16 @@ class ParquetPairsWriter(BatchPairWriter):
     Writer for Parquet database files.
     """
 
-    def __init__(self, target: str = None, verbose: bool = False):
+    def __init__(self, target: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
         :param target: the filename/dir to write to
         :type target: str
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
         self.target = target
         self.col_instruction = None
         self.col_input = None
@@ -215,7 +215,7 @@ class ParquetPairsWriter(BatchPairWriter):
         if self.session.input_changed:
             self.finalize()
             output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
-            if self.verbose:
+            if self.logging_level:
                 self.logger().info("Writing to: " + output)
             # create dictionary
             d_instruction = []

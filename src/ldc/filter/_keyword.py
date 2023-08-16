@@ -1,7 +1,8 @@
 import argparse
 from typing import List, Set
 
-from ldc.filter._core import Filter
+from ldc.core import LOGGING_WARN
+from ldc.filter import Filter
 
 KEYWORD_ACTION_KEEP = "keep"
 KEYWORD_ACTION_DISCARD = "discard"
@@ -14,7 +15,7 @@ class KeywordFilter(Filter):
     """
 
     def __init__(self, keywords: List[str] = None, action: str = KEYWORD_ACTION_KEEP,
-                 location: str = None, verbose: bool = False):
+                 location: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -24,10 +25,10 @@ class KeywordFilter(Filter):
         :type action: str
         :param location: in which part of the data to look for the keywords
         :type location: str
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
 
         if action not in KEYWORD_ACTIONS:
             raise Exception("Invalid action: %s" % action)
@@ -74,7 +75,7 @@ class KeywordFilter(Filter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for", required=True, nargs="+")
-        parser.add_argument("-l", "--location", choices=self._get_locations(), default=self._get_default_location(), help="Where to look for the keywords")
+        parser.add_argument("-L", "--location", choices=self._get_locations(), default=self._get_default_location(), help="Where to look for the keywords")
         parser.add_argument("-a", "--action", choices=KEYWORD_ACTIONS, default=KEYWORD_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
@@ -137,7 +138,7 @@ class KeywordFilter(Filter):
         else:
             raise Exception("Unhandled action: %s" % self.action)
 
-        if self.verbose:
+        if self.logging_level:
             self.logger().info("Keyword found, %s: %s" % (info, str(data)))
 
         return result

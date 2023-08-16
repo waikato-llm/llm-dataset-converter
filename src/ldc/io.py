@@ -8,6 +8,7 @@ import pyzstd
 from typing import Union, Iterable, List
 
 from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, Session, SessionHandler
+from ldc.core import LOGGING_WARN
 
 
 COMPRESSION_BZIP2 = "bz2"
@@ -154,14 +155,14 @@ class Reader(CommandlineHandler, OutputProducer, SessionHandler):
     Ancestor of classes that read data.
     """
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
         self._session = None
 
     @property
@@ -208,14 +209,14 @@ class Writer(CommandlineHandler, InputConsumer, SessionHandler):
     Ancestor of classes that write data.
     """
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
-        :param verbose: whether to be more verbose in the output
-        :type verbose: bool
+        :param logging_level: the logging level to use
+        :type logging_level: str
         """
-        super().__init__(verbose=verbose)
+        super().__init__(logging_level=logging_level)
         self._session = None
 
     @property
