@@ -31,6 +31,12 @@ setup(
     },
     packages=[
         "ldc",
+        "ldc.filter",
+        "ldc.huggingface",
+        "ldc.pretrain",
+        "ldc.supervised.context",
+        "ldc.supervised.dialog",
+        "ldc.supervised.pairs",
     ],
     install_requires=[
         "pandas",
