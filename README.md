@@ -20,11 +20,13 @@ https://github.com/Zjh-819/LLMDataHub
 
 The following dataset formats are supported:
 
-| Domain | Format | Read  | Write | Compression |
-| :---   | :---   | :---: | :---: | :---:       |
-| pairs  | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | Y | Y | Y |    
-| pairs  | CSV | Y | Y | Y |
-| pairs  | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y | N |    
+| Domain   | Format | Read  | Write | Compression |
+| :---     | :---   | :---: | :---: | :---:       |
+| pairs    | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | Y | Y | Y |    
+| pairs    | CSV | Y | Y | Y |
+| pairs    | [Jsonlines](https://jsonlines.org/) | Y | Y | Y |
+| pairs    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y | N |    
+| pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y | N |    
 
 
 ## Compression formats
@@ -49,16 +51,13 @@ usage: llm-convert [-h|--help|--help-all] [-v]
 Tool for converting between large language model (LLM) dataset formats.
 
 readers:
-   from-alpaca, from-csv-pairs, from-parquet-pairs
+   from-alpaca, from-csv-pairs, from-jsonlines-pairs, 
+   from-parquet-pairs, from-parquet-pretrain
 filters:
    keyword-pairs
 writers:
-   to-alpaca, to-csv-pairs, to-parquet-pairs
-
-optional arguments:
-  -h, --help            show basic help message and exit
-  --help-all            show basic help message plus help on all plugins and exit
-  -v, --verbose         Whether to be more verbose with the output (default: False)
+   to-alpaca, to-csv-pairs, to-jsonlines-pairs, to-parquet-pairs, 
+   to-parquet-pretrain
 ```
 
 ```
@@ -89,7 +88,7 @@ optional arguments:
 ```
 
 
-### Plugins
+## Conversion plugins
 
 ```
 from-alpaca
@@ -133,6 +132,29 @@ optional arguments:
   --col_output COL      The name of the column with the outputs (default:
                         None)
 
+from-jsonlines-pairs
+====================
+domain(s): pairs
+generates: PairData
+
+usage: from-jsonlines-pairs [-h] [-v] -i INPUT [INPUT ...]
+                            [--att_instruction COL] [--att_input COL]
+                            [--att_output COL]
+
+Reads prompt/output pairs in JsonLines-like JSON format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         Whether to be more verbose with the output (default:
+                        False)
+  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+                        Path to the JsonLines file(s) to read; global syntax
+                        is supported (default: None)
+  --att_instruction COL
+                        The attribute with the instructions (default: None)
+  --att_input COL       The attribute with the inputs (default: None)
+  --att_output COL      The attribute with the outputs (default: None)
+
 from-parquet-pairs
 ==================
 domain(s): pairs
@@ -157,6 +179,26 @@ optional arguments:
   --col_input COL       The name of the column with the inputs (default: None)
   --col_output COL      The name of the column with the outputs (default:
                         None)
+
+from-parquet-pretrain
+=====================
+domain(s): pretrain
+generates: PretrainData
+
+usage: from-parquet-pretrain [-h] [-v] -i INPUT [INPUT ...]
+                             [--col_content COL]
+
+Reads text from Parquet database files to use for pretraining.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         Whether to be more verbose with the output (default:
+                        False)
+  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+                        Path to the parquet file(s) to read; global syntax is
+                        supported (default: None)
+  --col_content COL     The name of the column with the text to retrieve
+                        (default: None)
 
 keyword-pairs
 =============
@@ -222,6 +264,28 @@ optional arguments:
   --col_output COL      The name of the column for the outputs (default:
                         output)
 
+to-jsonlines-pairs
+==================
+domain(s): pairs
+accepts: PairData
+
+usage: to-jsonlines-pairs [-h] [-v] -o OUTPUT [--att_instruction COL]
+                          [--att_input COL] [--att_output COL]
+
+Writes prompt/output pairs in JsonLines-like JSON format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         Whether to be more verbose with the output (default:
+                        False)
+  -o OUTPUT, --output OUTPUT
+                        Path of the JsonLines file to write (directory when
+                        processing multiple files) (default: None)
+  --att_instruction COL
+                        The attribute for the instructions (default: None)
+  --att_input COL       The attribute for the inputs (default: None)
+  --att_output COL      The attribute for the outputs (default: None)
+
 to-parquet-pairs
 ================
 domain(s): pairs
@@ -244,4 +308,23 @@ optional arguments:
                         None)
   --col_input COL       The name of the column for the inputs (default: None)
   --col_output COL      The name of the column for the outputs (default: None)
+
+to-parquet-pretrain
+===================
+domain(s): pretrain
+accepts: PretrainData
+
+usage: to-parquet-pretrain [-h] [-v] -o OUTPUT [--col_content COL]
+
+Writes text used for pretraining in Parquet database format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         Whether to be more verbose with the output (default:
+                        False)
+  -o OUTPUT, --output OUTPUT
+                        Path of the CSV file to write (directory when
+                        processing multiple files) (default: None)
+  --col_content COL     The name of the column for the text content (default:
+                        None)
 ```

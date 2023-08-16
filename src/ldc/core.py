@@ -6,6 +6,7 @@ from typing import List
 
 ANY_DOMAIN = "any"
 PAIRS_DOMAIN = "pairs"
+PRETRAIN_DOMAIN = "pretrain"
 
 CONVERT = "llm-convert"
 HUGGINGFACE_DOWNLOAD = "llm-hf-download"
