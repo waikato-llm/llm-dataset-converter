@@ -45,6 +45,7 @@ setup(
     entry_points={
         "console_scripts": [
             "llm-convert=ldc.convert:sys_main",
+            "llm-help=ldc.help:sys_main",
             "llm-hf-download=ldc.huggingface.download:sys_main",
         ]
     },

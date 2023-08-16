@@ -191,6 +191,15 @@ class CommandlineHandler(object):
         """
         self._create_argparser().print_help()
 
+    def format_help(self) -> str:
+        """
+        Returns the formatted help string.
+
+        :return: the help string
+        :rtype: str
+        """
+        return self._create_argparser().format_help()
+
     def initialize(self):
         """
         Initializes the processing, e.g., for opening files or databases.

@@ -100,348 +100,46 @@ optional arguments:
                         The logging level to use (default: INFO)
 ```
 
-
-## Conversion plugins
-
 ```
-from-alpaca
-===========
-domain(s): pairs
-generates: PairData
+usage: llm-help [-h] -p NAME [-f FORMAT] [-l INT] [-o FILE]
 
-usage: from-alpaca [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                   [INPUT ...]
-
-Reads prompt/output pairs in Alpaca-like JSON format.
+Tool for outputting help for plugins in various formats.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the Alpaca file(s) to read; glob syntax is
-                        supported (default: None)
-
-from-csv-pairs
-==============
-domain(s): pairs
-generates: PairData
-
-usage: from-csv-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                      [INPUT ...] [--col_instruction COL] [--col_input COL]
-                      [--col_output COL]
-
-Reads prompt/output pairs in CSV format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the CSV file(s) to read; glob syntax is
-                        supported (default: None)
-  --col_instruction COL
-                        The name of the column with the instructions (default:
-                        None)
-  --col_input COL       The name of the column with the inputs (default: None)
-  --col_output COL      The name of the column with the outputs (default:
-                        None)
-
-from-csv-pretrain
-=================
-domain(s): pretrain
-generates: PretrainData
-
-usage: from-csv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                         [INPUT ...] [--col_content COL]
-
-Reads pretrain data in CSV format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the CSV file(s) to read; glob syntax is
-                        supported (default: None)
-  --col_content COL     The name of the column with the text content (default:
-                        None)
-
-from-jsonlines-pairs
-====================
-domain(s): pairs
-generates: PairData
-
-usage: from-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
-                            INPUT [INPUT ...] [--att_instruction ATT]
-                            [--att_input ATT] [--att_output ATT]
-
-Reads prompt/output pairs in JsonLines-like JSON format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the JsonLines file(s) to read; glob syntax is
-                        supported (default: None)
-  --att_instruction ATT
-                        The attribute with the instructions (default: None)
-  --att_input ATT       The attribute with the inputs (default: None)
-  --att_output ATT      The attribute with the outputs (default: None)
-
-from-jsonlines-pretrain
-=======================
-domain(s): pretrain
-generates: PretrainData
-
-usage: from-jsonlines-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
-                               INPUT [INPUT ...] [--att_content ATT]
-
-Reads pretrain data in JsonLines-like JSON format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the JsonLines file(s) to read; glob syntax is
-                        supported (default: None)
-  --att_content ATT     The attribute with the text content (default: None)
-
-from-parquet-pairs
-==================
-domain(s): pairs
-generates: PairData
-
-usage: from-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                          [INPUT ...] [--col_instruction COL]
-                          [--col_input COL] [--col_output COL]
-
-Reads prompt/output pairs from Parquet database files.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the parquet file(s) to read; glob syntax is
-                        supported (default: None)
-  --col_instruction COL
-                        The name of the column with the instructions (default:
-                        None)
-  --col_input COL       The name of the column with the inputs (default: None)
-  --col_output COL      The name of the column with the outputs (default:
-                        None)
-
-from-parquet-pretrain
-=====================
-domain(s): pretrain
-generates: PretrainData
-
-usage: from-parquet-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
-                             INPUT [INPUT ...] [--col_content COL]
-
-Reads text from Parquet database files to use for pretraining.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the parquet file(s) to read; glob syntax is
-                        supported (default: None)
-  --col_content COL     The name of the column with the text to retrieve
+  -p NAME, --plugin_name NAME
+                        The name of the plugin to generate the help for
                         (default: None)
-
-keyword-pairs
-=============
-domain(s): pairs
-accepts: PairData
-generates: PairData
-
-usage: keyword-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -k KEYWORD
-                     [KEYWORD ...] [-L {any,instruction,input,output}]
-                     [-a {keep,discard}]
-
-Keeps or discards data records based on keyword(s).
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -k KEYWORD [KEYWORD ...], --keyword KEYWORD [KEYWORD ...]
-                        The keywords to look for (default: None)
-  -L {any,instruction,input,output}, --location {any,instruction,input,output}
-                        Where to look for the keywords (default: any)
-  -a {keep,discard}, --action {keep,discard}
-                        How to react when a keyword is encountered (default:
-                        keep)
-
-pairs-to-pretrain
-=================
-domain(s): pairs, pretrain
-accepts: PairData
-generates: PretrainData
-
-usage: pairs-to-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                         [-f {instruction,input,output} [{instruction,input,output} ...]]
-
-Converts records of prompt/output pairs to pretrain ones.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -f {instruction,input,output} [{instruction,input,output} ...], --data_fields {instruction,input,output} [{instruction,input,output} ...]
-                        The data fields to use for the pretrain content
-                        (default: None)
-
-to-alpaca
-=========
-domain(s): pairs
-accepts: PairData
-
-usage: to-alpaca [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-
-Writes prompt/output pairs in Alpaca-like JSON format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -o OUTPUT, --output OUTPUT
-                        Path of the Alpaca file to write (directory when
-                        processing multiple files) (default: None)
-
-to-csv-pairs
-============
-domain(s): pairs
-accepts: PairData
-
-usage: to-csv-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                    [--col_instruction COL] [--col_input COL]
-                    [--col_output COL]
-
-Writes prompt/output pairs in CSV format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -o OUTPUT, --output OUTPUT
-                        Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
-  --col_instruction COL
-                        The name of the column for the instructions (default:
-                        instruction)
-  --col_input COL       The name of the column for the inputs (default: input)
-  --col_output COL      The name of the column for the outputs (default:
-                        output)
-
-to-csv-pretrain
-===============
-domain(s): pretrain
-accepts: PretrainData
-
-usage: to-csv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                       [--col_content COL]
-
-Writes pretrain data in CSV format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -o OUTPUT, --output OUTPUT
-                        Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
-  --col_content COL     The name of the column for the content (default:
-                        content)
-
-to-jsonlines-pairs
-==================
-domain(s): pairs
-accepts: PairData
-
-usage: to-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                          [--att_instruction ATT] [--att_input ATT]
-                          [--att_output ATT]
-
-Writes prompt/output pairs in JsonLines-like JSON format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -o OUTPUT, --output OUTPUT
-                        Path of the JsonLines file to write (directory when
-                        processing multiple files) (default: None)
-  --att_instruction ATT
-                        The attribute for the instructions (default: None)
-  --att_input ATT       The attribute for the inputs (default: None)
-  --att_output ATT      The attribute for the outputs (default: None)
-
-to-jsonlines-pretrain
-=====================
-domain(s): pretrain
-accepts: PretrainData
-
-usage: to-jsonlines-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o
-                             OUTPUT [--att_content ATT]
-
-Writes pretrain data in JsonLines-like JSON format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -o OUTPUT, --output OUTPUT
-                        Path of the JsonLines file to write (directory when
-                        processing multiple files) (default: None)
-  --att_content ATT     The attribute for the text content (default: None)
-
-to-parquet-pairs
-================
-domain(s): pairs
-accepts: PairData
-
-usage: to-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                        [--col_instruction COL] [--col_input COL]
-                        [--col_output COL]
-
-Writes prompt/output pairs in Parquet database format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -o OUTPUT, --output OUTPUT
-                        Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
-  --col_instruction COL
-                        The name of the column for the instructions (default:
-                        None)
-  --col_input COL       The name of the column for the inputs (default: None)
-  --col_output COL      The name of the column for the outputs (default: None)
-
-to-parquet-pretrain
-===================
-domain(s): pretrain
-accepts: PretrainData
-
-usage: to-parquet-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o
-                           OUTPUT [--col_content COL]
-
-Writes text used for pretraining in Parquet database format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -o OUTPUT, --output OUTPUT
-                        Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
-  --col_content COL     The name of the column for the text content (default:
-                        None)
+  -f FORMAT, --help_format FORMAT
+                        The output format to generate (default: text)
+  -l INT, --heading_level INT
+                        The level to use for the heading (default: 1)
+  -o FILE, --output FILE
+                        The file to store the help in, outputs it to stdout if
+                        not supplied (default: None)
 ```
+
+
+## Plugins
+
+Readers:
+* [from-alpaca](plugins/from-alpaca.md)
+* [from-csv-pairs](plugins/from-csv-pairs.md)
+* [from-csv-pretrain](plugins/from-csv-pretrain.md)
+* [from-jsonlines-pairs](plugins/from-jsonlines-pairs.md)
+* [from-jsonlines-pretrain](plugins/from-jsonlines-pretrain.md)
+* [from-parquet-pairs](plugins/from-parquet-pairs.md)
+* [from-parquet-pretrain](plugins/from-parquet-pretrain.md)
+
+Filters:  
+* [keyword-pairs](plugins/keyword-pairs.md)
+* [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
+  
+Writers:
+* [to-alpaca](plugins/to-alpaca.md)
+* [to-csv-pairs](plugins/to-csv-pairs.md)
+* [to-csv-pretrain](plugins/to-csv-pretrain.md)
+* [to-jsonlines-pairs](plugins/to-jsonlines-pairs.md)
+* [to-jsonlines-pretrain](plugins/to-jsonlines-pretrain.md)
+* [to-parquet-pairs](plugins/to-parquet-pairs.md)
+* [to-parquet-pretrain](plugins/to-parquet-pretrain.md)

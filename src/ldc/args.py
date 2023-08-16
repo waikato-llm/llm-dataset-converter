@@ -10,6 +10,14 @@ from ldc.filter import Filter, MultiFilter
 from ldc.registry import available_readers, available_filters, available_writers, available_plugins
 
 
+HELP_FORMAT_TEXT = "text"
+HELP_FORMAT_MARKDOWN = "markdown"
+HELP_FORMATS = [
+    HELP_FORMAT_TEXT,
+    HELP_FORMAT_MARKDOWN,
+]
+
+
 def split_args(args: List[str], handlers: List[str]) -> Dict[str, List[str]]:
     """
     Splits the command-line arguments into handler and their associated arguments.
@@ -92,22 +100,57 @@ def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72
     return "\n".join(result)
 
 
-def print_plugin_usage(plugin_name: str):
+def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1,
+                          output_file: str = None):
     """
-    Outputs the usage for the specified plugin.
+    Generates the usage help screen for the specified plugin.
 
-    :param plugin_name: the plugin to output the usage for (name used on command-line)
+    :param plugin_name: the plugin to generate the usage for (name used on command-line)
     :type plugin_name: str
+    :param help_format: the format to use for the output
+    :type help_format: str
+    :param heading_level: the level to use for the heading (markdown)
+    :type heading_level: int
+    :param output_file: the file to store the generated help in, uses stdout if None
+    :type output_file: str
     """
+    if help_format not in HELP_FORMATS:
+        raise Exception("Unhandled help format: %s" % help_format)
+
     plugin = available_plugins()[plugin_name]
-    print("\n" + plugin_name + "\n" + "=" * len(plugin_name))
-    print("domain(s): " + ", ".join(plugin.domains()))
-    if isinstance(plugin, InputConsumer):
-        print("accepts: " + classes_to_str(plugin.accepts()))
-    if isinstance(plugin, OutputProducer):
-        print("generates: " + classes_to_str(plugin.generates()))
-    print()
-    plugin.print_help()
+
+    result = ""
+    if help_format == HELP_FORMAT_TEXT:
+        result += "\n" + plugin_name + "\n" + "=" * len(plugin_name) + "\n"
+        result += "domain(s): " + ", ".join(plugin.domains()) + "\n"
+        if isinstance(plugin, InputConsumer):
+            result += "accepts: " + classes_to_str(plugin.accepts()) + "\n"
+        if isinstance(plugin, OutputProducer):
+            result += "generates: " + classes_to_str(plugin.generates()) + "\n"
+        result += "\n"
+        result += plugin.format_help() + "\n"
+    elif help_format == HELP_FORMAT_MARKDOWN:
+        result += "#"*heading_level + " " + plugin_name + "\n"
+        result += "\n"
+        result += "* domain(s): " + ", ".join(plugin.domains()) + "\n"
+        if isinstance(plugin, InputConsumer):
+            result += "* accepts: " + classes_to_str(plugin.accepts()) + "\n"
+        if isinstance(plugin, OutputProducer):
+            result += "* generates: " + classes_to_str(plugin.generates()) + "\n"
+        result += "\n"
+        result += plugin.description() + "\n"
+        result += "\n"
+        result += "```\n"
+        result += plugin.format_help()
+        result += "```\n"
+    else:
+        raise Exception("Unhandled help format: %s" % help_format)
+
+    if output_file is None:
+        print(result)
+    else:
+        with open(output_file, "w") as fp:
+            fp.write(result)
 
 
 def print_usage(plugin_details: bool = False):
@@ -143,7 +186,7 @@ def print_usage(plugin_details: bool = False):
     if plugin_details:
         plugins = available_plugins()
         for k in sorted(plugins.keys()):
-            print_plugin_usage(k)
+            generate_plugin_usage(k)
 
 
 def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
