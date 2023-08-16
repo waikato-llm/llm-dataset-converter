@@ -43,7 +43,7 @@ are automatically supported for loading/saving files:
 ## Tools
 
 ```
-usage: llm-convert [-h|--help|--help-all] [-v]
+usage: llm-convert [-h|--help|--help-all] [-v] [-c]
                    reader
                    [filter [filter [...]]]
                    writer
@@ -63,6 +63,9 @@ optional arguments:
   -h, --help            show basic help message and exit
   --help-all            show basic help message plus help on all plugins and exit
   -v, --verbose         Whether to be more verbose with the output (default: False)
+  -c, --compression     {None|bz2|gz|xz|zstd}
+                        the type of compression to use when only providing an output
+                        directory to the writer (default: None)
 ```
 
 ```

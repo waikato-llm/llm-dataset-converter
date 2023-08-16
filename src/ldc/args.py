@@ -4,7 +4,7 @@ import sys
 from typing import List, Dict, Tuple, Iterable
 
 from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str, Session, CONVERT
-from ldc.io import Reader, Writer
+from ldc.io import Reader, Writer, COMPRESSION_FORMATS
 from ldc.filter import Filter, MultiFilter
 from ldc.registry import available_readers, available_filters, available_writers, available_plugins
 
@@ -121,7 +121,7 @@ def print_usage(plugin_details: bool = False):
     """
     cmd = "usage: " + CONVERT
     prefix = " " * (len(cmd) + 1)
-    print(cmd + " [-h|--help|--help-all] [-v]")
+    print(cmd + " [-h|--help|--help-all] [-v] [-c]")
     print(prefix + "reader")
     print(prefix + "[filter [filter [...]]]")
     print(prefix + "writer")
@@ -136,6 +136,9 @@ def print_usage(plugin_details: bool = False):
     print("  -h, --help            show basic help message and exit")
     print("  --help-all            show basic help message plus help on all plugins and exit")
     print("  -v, --verbose         Whether to be more verbose with the output (default: False)")
+    print("  -c, --compression     {None|%s}" % "|".join(COMPRESSION_FORMATS))
+    print("                        the type of compression to use when only providing an output")
+    print("                        directory to the writer (default: None)")
     print()
     if plugin_details:
         plugins = available_plugins()
@@ -207,6 +210,7 @@ def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
     # see print_usage() method above
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
     session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
     logging.basicConfig(level=logging.WARNING)
     if session.options.verbose:

@@ -192,10 +192,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
         """
         if self.session.input_changed:
             self.finalize()
-            if os.path.isdir(self.target):
-                output = generate_output(self.session.current_input, self.target, ".parquet")
-            else:
-                output = self.target
+            output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
             if self.verbose:
                 self.logger().info("Writing to: " + output)
             # create dictionary

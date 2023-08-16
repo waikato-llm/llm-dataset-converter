@@ -201,10 +201,7 @@ class CsvPairsWriter(BatchPairWriter):
         """
         if self.session.input_changed:
             self.finalize()
-            if os.path.isdir(self.target):
-                output = generate_output(self.session.current_input, self.target, ".csv")
-            else:
-                output = self.target
+            output = generate_output(self.session.current_input, self.target, ".csv", self.session.options.compression)
             if self.verbose:
                 self.logger().info("Writing to: " + output)
             self._output = open_file(output, mode="wt")

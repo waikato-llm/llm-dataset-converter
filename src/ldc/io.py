@@ -10,6 +10,18 @@ from typing import Union, Iterable, List
 from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, Session, SessionHandler
 
 
+COMPRESSION_BZIP2 = "bz2"
+COMPRESSION_GZIP = "gz"
+COMPRESSION_XZ = "xz"
+COMPRESSION_ZSTD = "zstd"
+COMPRESSION_FORMATS = [
+    COMPRESSION_BZIP2,
+    COMPRESSION_GZIP,
+    COMPRESSION_XZ,
+    COMPRESSION_ZSTD,
+]
+
+
 def locate_files(inputs: Union[str, List[str]], fail_if_empty: bool = False) -> List[str]:
     """
     Locates all the files from the specified inputs, which may contain globs.
@@ -91,13 +103,13 @@ def open_file(path: str, mode: str = None, encoding: str = None, compression: st
     :return: the file-like object
     """
     path_lc = path.lower()
-    if path_lc.endswith(".gz") or (compression == "gz"):
+    if path_lc.endswith(".gz") or (compression == COMPRESSION_GZIP):
         return gzip.open(path, mode=mode, encoding=encoding)
-    elif path_lc.endswith(".bz2") or (compression == "bz2"):
+    elif path_lc.endswith(".bz2") or (compression == COMPRESSION_BZIP2):
         return bz2.open(path, mode=mode, encoding=encoding)
-    elif path_lc.endswith(".xz") or (compression == "xz"):
+    elif path_lc.endswith(".xz") or (compression == COMPRESSION_XZ):
         return lzma.open(path, mode=mode, encoding=encoding)
-    elif path_lc.endswith(".zst") or path_lc.endswith(".zstd") or (compression == "zstd"):
+    elif path_lc.endswith(".zst") or path_lc.endswith(".zstd") or (compression == COMPRESSION_ZSTD):
         return pyzstd.open(path, mode=mode, encoding=encoding)
     else:
         if compression is not None:
@@ -106,23 +118,35 @@ def open_file(path: str, mode: str = None, encoding: str = None, compression: st
             return open(path, mode)
 
 
-def generate_output(path: str, output_dir: str, ext: str) -> str:
+def generate_output(input_path: str, output_path: str, ext: str, compression: str) -> str:
     """
-    Generates a new output filename based on the current input, the output dir and extension.
+    Generates a new output filename based on the current input, the output and extension.
+    If the output path is not a directory, simply returns that.
+    If the output path is a directory, it will construct a filename base on the
+    output dir and the input filename (with a new extension).
 
-    :param path: the input filename to generate an output filename for
-    :type path: str
-    :param output_dir: the output directory to use
-    :type output_dir: str
+    :param input_path: the input filename to generate an output filename for
+    :type input_path: str
+    :param output_path: the output filename/dir to use
+    :type output_path: str
     :param ext: the extension to use
     :type ext: str
+    :param compression: the compression to use
+    :type compression: str
     :return: the generated output file
     :rtype: str
     """
-    if is_compressed(path):
-        path = remove_compression_suffix(path)
-    base = os.path.basename(path)
-    return os.path.join(output_dir, os.path.splitext(base)[0] + ext)
+    if compression is None:
+        compression = ""
+    else:
+        compression = "." + compression
+    if os.path.isdir(output_path):
+        if is_compressed(input_path):
+            input_path = remove_compression_suffix(input_path)
+        base = os.path.basename(input_path)
+        return os.path.join(output_path, os.path.splitext(base)[0] + ext + compression)
+    else:
+        return input_path
 
 
 class Reader(CommandlineHandler, OutputProducer, SessionHandler):
