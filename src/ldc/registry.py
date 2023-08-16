@@ -6,7 +6,7 @@ from ldc.filter import Filter
 from ldc.filter import PairsToPretrain
 from ldc.supervised.pairs import AlpacaReader, AlpacaWriter
 from ldc.supervised.pairs import CsvPairsReader, CsvPairsWriter
-from ldc.supervised.pairs import JsonLinesReader, JsonLinesWriter
+from ldc.supervised.pairs import JsonLinesPairReader, JsonLinesPairWriter
 from ldc.supervised.pairs import ParquetPairsReader, ParquetPairsWriter
 from ldc.supervised.pairs import Keyword as KeywordPairs
 from ldc.pretrain import ParquetPretrainReader, ParquetPretrainWriter
@@ -37,7 +37,7 @@ def available_readers() -> Dict[str, Reader]:
     result = dict()
     _add_to_dict(result, AlpacaReader())
     _add_to_dict(result, CsvPairsReader())
-    _add_to_dict(result, JsonLinesReader())
+    _add_to_dict(result, JsonLinesPairReader())
     _add_to_dict(result, ParquetPairsReader())
     _add_to_dict(result, ParquetPretrainReader())
     return result
@@ -53,7 +53,7 @@ def available_writers() -> Dict[str, Writer]:
     result = dict()
     _add_to_dict(result, AlpacaWriter())
     _add_to_dict(result, CsvPairsWriter())
-    _add_to_dict(result, JsonLinesWriter())
+    _add_to_dict(result, JsonLinesPairWriter())
     _add_to_dict(result, ParquetPairsWriter())
     _add_to_dict(result, ParquetPretrainWriter())
     return result

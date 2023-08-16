@@ -7,7 +7,7 @@ from ldc.io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
 
-class JsonLinesReader(PairReader):
+class JsonLinesPairReader(PairReader):
     """
     Reader for the JsonLines JSON format.
     """
@@ -136,7 +136,7 @@ class JsonLinesReader(PairReader):
             self._current_input = None
 
 
-class JsonLinesWriter(BatchPairWriter):
+class JsonLinesPairWriter(BatchPairWriter):
     """
     Writer for the JsonLines JSON format.
     """
