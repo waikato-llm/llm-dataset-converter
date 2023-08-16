@@ -56,9 +56,9 @@ class JsonLinesPairReader(PairReader):
         """
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; global syntax is supported", required=True, nargs="+")
-        parser.add_argument("--att_instruction", metavar="COL", type=str, default=None, help="The attribute with the instructions", required=False)
-        parser.add_argument("--att_input", metavar="COL", type=str, default=None, help="The attribute with the inputs", required=False)
-        parser.add_argument("--att_output", metavar="COL", type=str, default=None, help="The attribute with the outputs", required=False)
+        parser.add_argument("--att_instruction", metavar="ATT", type=str, default=None, help="The attribute with the instructions", required=False)
+        parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute with the inputs", required=False)
+        parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute with the outputs", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -185,9 +185,9 @@ class JsonLinesPairWriter(BatchPairWriter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help="Path of the JsonLines file to write (directory when processing multiple files)", required=True)
-        parser.add_argument("--att_instruction", metavar="COL", type=str, default=None, help="The attribute for the instructions", required=False)
-        parser.add_argument("--att_input", metavar="COL", type=str, default=None, help="The attribute for the inputs", required=False)
-        parser.add_argument("--att_output", metavar="COL", type=str, default=None, help="The attribute for the outputs", required=False)
+        parser.add_argument("--att_instruction", metavar="ATT", type=str, default=None, help="The attribute for the instructions", required=False)
+        parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute for the inputs", required=False)
+        parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute for the outputs", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
