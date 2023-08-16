@@ -1,7 +1,7 @@
 import argparse
 import logging
 import sys
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Iterable
 
 from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str, Session, CONVERT
 from ldc.io import Reader, Writer
@@ -58,6 +58,34 @@ def is_help_requested(args: List[str]):
     return result
 
 
+def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72) -> str:
+    """
+    Turns the list of plugin names into a string.
+
+    :param plugins: the plugin names to turn into a string
+    :type plugins: Iterable
+    :param prefix: the prefix string to use for each line
+    :type prefix: str
+    :param width: the maximum width of the string before adding a newline
+    :type width: int
+    :return: the generated string
+    :rtype: str
+    """
+    result = []
+    line = prefix
+    for plugin in plugins:
+        if (len(line) > 0) and (line[-1] != " "):
+            line += ", "
+        if len(line) + len(plugin) >= width:
+            result.append(line)
+            line = prefix + plugin
+        else:
+            line += plugin
+    if len(line) > 0:
+        result.append(line)
+    return "\n".join(result)
+
+
 def print_usage():
     """
     Prints the program usage to stdout.
@@ -66,9 +94,13 @@ def print_usage():
     cmd = "usage: " + CONVERT
     prefix = " " * (len(cmd) + 1)
     print(cmd + " [-h] [-v]")
-    print(prefix + "{%s}" % "|".join(available_readers().keys()))
-    print(prefix + "[%s, ...]" % "|".join(available_filters().keys()))
-    print(prefix + "{%s}" % "|".join(available_writers().keys()))
+    print(prefix + "reader")
+    print(prefix + "[filter [filter [...]]]")
+    print(prefix + "writer")
+    print()
+    print("readers:\n" + _enumerate_plugins(available_readers().keys(), prefix="   "))
+    print("filters:\n" + _enumerate_plugins(available_filters().keys(), prefix="   "))
+    print("writers:\n" + _enumerate_plugins(available_writers().keys(), prefix="   "))
     print("\nTool for converting between large language model (LLM) dataset formats.")
     print("\noptional arguments:")
     print("  -h, --help            show this help message and exit")
