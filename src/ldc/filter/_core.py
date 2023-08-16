@@ -123,6 +123,7 @@ class MultiFilter(Filter):
         """
         super().initialize()
         for f in self.filters:
+            f.initialize()
             f.session = self.session
 
     def process(self, data):
@@ -138,3 +139,11 @@ class MultiFilter(Filter):
             if result is None:
                 break
         return result
+
+    def finalize(self):
+        """
+        Finishes the processing, e.g., for closing files or databases.
+        """
+        super().finalize()
+        for f in self.filters:
+            f.finalize()
