@@ -41,21 +41,26 @@ def split_args(args: List[str], handlers: List[str]) -> Dict[str, List[str]]:
     return result
 
 
-def is_help_requested(args: List[str]):
+def is_help_requested(args: List[str]) -> Tuple[bool, bool]:
     """
     Checks whether help was requested.
 
     :param args: the arguments to check
     :type args: list
-    :return: True if help requested
-    :rtype: bool
+    :return: the tuple of help requested: (help_requested, plugin_details)
+    :rtype: tuple
     """
-    result = False
+    help_requested = False
+    plugin_details = False
     for arg in args:
         if (arg == "-h") or (arg == "--help"):
-            result = True
+            help_requested = True
             break
-    return result
+        if arg == "--help-all":
+            help_requested = True
+            plugin_details = True
+            break
+    return help_requested, plugin_details
 
 
 def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72) -> str:
@@ -86,14 +91,37 @@ def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72
     return "\n".join(result)
 
 
-def print_usage():
+def print_plugin_usage(plugin_name: str):
+    """
+    Outputs the usage for the specified plugin.
+
+    :param plugin_name: the plugin to output the usage for (name used on command-line)
+    :type plugin_name: str
+    """
+    plugin = available_plugins()[plugin_name]
+    print("\n" + plugin_name + "\n" + "=" * len(plugin_name))
+    print("domain(s): " + ", ".join(plugin.domains()))
+    if isinstance(plugin, InputConsumer):
+        print("accepts: " + classes_to_str(plugin.accepts()))
+    if isinstance(plugin, OutputProducer):
+        print("generates: " + classes_to_str(plugin.generates()))
+    print()
+    plugin.print_help()
+
+
+def print_usage(plugin_details: bool = False):
     """
     Prints the program usage to stdout.
     Ensure global options are in sync with parser in parse_args method below.
+
+    :param plugin_details: whether to output the plugin details as well
+    :type plugin_details: bool
+    :param plugin: the plugin to limit the help to
+    :type plugin: str
     """
     cmd = "usage: " + CONVERT
     prefix = " " * (len(cmd) + 1)
-    print(cmd + " [-h] [-v]")
+    print(cmd + " [-h|--help|--help-all] [-v]")
     print(prefix + "reader")
     print(prefix + "[filter [filter [...]]]")
     print(prefix + "writer")
@@ -105,20 +133,14 @@ def print_usage():
     print("writers:\n" + _enumerate_plugins(available_writers().keys(), prefix="   "))
     print()
     print("optional arguments:")
-    print("  -h, --help            show this help message and exit")
+    print("  -h, --help            show basic help message and exit")
+    print("  --help-all            show basic help message plus help on all plugins and exit")
     print("  -v, --verbose         Whether to be more verbose with the output (default: False)")
     print()
-    plugins = available_plugins()
-    for k in sorted(plugins.keys()):
-        plugin = plugins[k]
-        print("\n" + k + "\n" + "="*len(k))
-        print("domain(s): " + ", ".join(plugin.domains()))
-        if isinstance(plugin, OutputProducer):
-            print("generates: " + classes_to_str(plugin.generates()))
-        if isinstance(plugin, InputConsumer):
-            print("accepts: " + classes_to_str(plugin.accepts()))
-        print()
-        plugin.print_help()
+    if plugin_details:
+        plugins = available_plugins()
+        for k in sorted(plugins.keys()):
+            print_plugin_usage(k)
 
 
 def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
@@ -131,8 +153,9 @@ def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
     :rtype: tuple
     """
     # help requested?
-    if is_help_requested(args):
-        print_usage()
+    help_requested, plugin_details = is_help_requested(args)
+    if help_requested:
+        print_usage(plugin_details=plugin_details)
         sys.exit(0)
 
     parsed = split_args(args, list(available_plugins().keys()))
