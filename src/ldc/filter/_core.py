@@ -38,13 +38,12 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler):
         """
         self._session = s
 
-    def keep(self, data) -> bool:
+    def process(self, data):
         """
-        Whether to keep the data record or not.
+        Processes the data record.
 
-        :param data: the record to check
-        :return: True if to keep
-        :rtype: bool
+        :param data: the record to process
+        :return: the potentially updated record or None if to drop
         """
         raise NotImplemented()
 
@@ -125,16 +124,16 @@ class MultiFilter(Filter):
         for f in self.filters:
             f.session = self.session
 
-    def keep(self, data):
+    def process(self, data):
         """
-        Whether to keep the data record or not.
+        Processes the data record.
 
-        :param data: the record to check
-        :return: True if to keep
+        :param data: the record to process
+        :return: the potentially updated record or None if to drop
         """
-        result = True
+        result = data
         for f in self.filters:
-            if not f.keep(data):
-                result = False
+            result = f.process(result)
+            if result is None:
                 break
         return result

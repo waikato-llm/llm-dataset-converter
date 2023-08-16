@@ -42,16 +42,24 @@ def main(args=None):
                 data = []
                 for item in reader.read():
                     session.count += 1
-                    if (filter_ is None) or (filter_.keep(item)):
+                    if filter_ is None:
                         data.append(item)
+                    else:
+                        item = filter_.process(item)
+                        if item is not None:
+                            data.append(item)
                     if session.options.verbose and (session.count % 1000 == 0):
                         _logger.info("%d records processed..." % session.count)
                 writer.write_batch(data)
             elif isinstance(writer, StreamWriter):
                 for item in reader.read():
                     session.count += 1
-                    if (filter_ is None) or filter_.keep(item):
+                    if filter_ is None:
                         writer.write_stream(item)
+                    else:
+                        item = filter_.process(item)
+                        if item is not None:
+                            writer.write_stream(item)
                     if session.options.verbose and (session.count % 1000 == 0):
                         _logger.info("%d records processed..." % session.count)
             else:

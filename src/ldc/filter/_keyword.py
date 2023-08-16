@@ -107,14 +107,15 @@ class KeywordFilter(Filter):
         """
         raise NotImplemented()
 
-    def keep(self, data):
+    def process(self, data):
         """
-        Whether to keep the data record or not.
+        Processes the data record.
 
-        :param data: the record to check
-        :return: True if to keep
-        :rtype: bool
+        :param data: the record to process
+        :return: the potentially updated record or None if to drop
         """
+        result = data
+
         # prepare lookup
         words = self._to_words(data)
 
@@ -126,10 +127,12 @@ class KeywordFilter(Filter):
                 break
 
         if self.action == KEYWORD_ACTION_KEEP:
-            result = found
+            if not found:
+                result = None
             info = "keeping" if result else "discarding"
         elif self.action == KEYWORD_ACTION_DISCARD:
-            result = not found
+            if found:
+                result = None
             info = "discarding" if result else "keeping"
         else:
             raise Exception("Unhandled action: %s" % self.action)
