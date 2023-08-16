@@ -147,7 +147,7 @@ def generate_output(input_path: str, output_path: str, ext: str, compression: st
         base = os.path.basename(input_path)
         return os.path.join(output_path, os.path.splitext(base)[0] + ext + compression)
     else:
-        return input_path
+        return output_path
 
 
 class Reader(CommandlineHandler, OutputProducer, SessionHandler):
