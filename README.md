@@ -8,6 +8,16 @@ pip install git+https://github.com/waikato-datamining/llm-dataset-converter.git
 ```
 
 
+## Data formats
+
+| Domain | Format | Read  | Write |
+| :---   | :---   | :---: | :---: |
+|--------|--------|-------|-------|
+| pairs  | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | Y | Y |    
+| pairs  | CSV | Y | Y |    
+| pairs  | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y |    
+
+
 ## Compression formats
 
 The following compression formats are automatically supported for loading/saving
