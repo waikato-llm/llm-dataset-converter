@@ -32,11 +32,18 @@ are automatically supported for loading/saving files:
 
 ```
 usage: llm-convert [-h] [-v]
-                   {from-alpaca|from-csv-pairs}
-                   [pairs-keyword, ...]
-                   {to-alpaca|to-csv-pairs}
+                   reader
+                   [filter [filter [...]]]
+                   writer
 
 Tool for converting between large language model (LLM) dataset formats.
+
+readers:
+   from-alpaca, from-csv-pairs, from-parquet-pairs
+filters:
+   keyword-pairs
+writers:
+   to-alpaca, to-csv-pairs, to-parquet-pairs
 
 optional arguments:
   -h, --help            show this help message and exit
