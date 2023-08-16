@@ -26,6 +26,8 @@ The following dataset formats are supported:
 | pairs    | CSV | Y | Y | Y |
 | pairs    | [Jsonlines](https://jsonlines.org/) | Y | Y | Y |
 | pairs    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y | N |    
+| pretrain | CSV | Y | Y | Y |
+| pretrain | [Jsonlines](https://jsonlines.org/) | Y | Y | Y |
 | pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y | N |    
 
 
@@ -52,12 +54,13 @@ Tool for converting between large language model (LLM) dataset formats.
 
 readers:
    from-alpaca, from-csv-pairs, from-jsonlines-pairs, 
-   from-parquet-pairs, from-parquet-pretrain
+   from-parquet-pairs, from-csv-pretrain, from-jsonlines-pretrain, 
+   from-parquet-pretrain
 filters:
    keyword-pairs, pairs-to-pretrain
 writers:
    to-alpaca, to-csv-pairs, to-jsonlines-pairs, to-parquet-pairs, 
-   to-parquet-pretrain
+   to-csv-pretrain, to-jsonlines-pretrain, to-parquet-pretrain
 
 optional arguments:
   -h, --help            show basic help message and exit
@@ -116,7 +119,7 @@ optional arguments:
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the Alpaca file(s) to read; global syntax is
+                        Path to the Alpaca file(s) to read; glob syntax is
                         supported (default: None)
 
 from-csv-pairs
@@ -135,7 +138,7 @@ optional arguments:
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the CSV file(s) to read; global syntax is
+                        Path to the CSV file(s) to read; glob syntax is
                         supported (default: None)
   --col_instruction COL
                         The name of the column with the instructions (default:
@@ -144,14 +147,34 @@ optional arguments:
   --col_output COL      The name of the column with the outputs (default:
                         None)
 
+from-csv-pretrain
+=================
+domain(s): pretrain
+generates: PretrainData
+
+usage: from-csv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                         [INPUT ...] [--col_content COL]
+
+Reads pretrain data in CSV format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+                        Path to the CSV file(s) to read; glob syntax is
+                        supported (default: None)
+  --col_content COL     The name of the column with the text content (default:
+                        None)
+
 from-jsonlines-pairs
 ====================
 domain(s): pairs
 generates: PairData
 
 usage: from-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
-                            INPUT [INPUT ...] [--att_instruction COL]
-                            [--att_input COL] [--att_output COL]
+                            INPUT [INPUT ...] [--att_instruction ATT]
+                            [--att_input ATT] [--att_output ATT]
 
 Reads prompt/output pairs in JsonLines-like JSON format.
 
@@ -160,12 +183,31 @@ optional arguments:
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the JsonLines file(s) to read; global syntax
-                        is supported (default: None)
-  --att_instruction COL
+                        Path to the JsonLines file(s) to read; glob syntax is
+                        supported (default: None)
+  --att_instruction ATT
                         The attribute with the instructions (default: None)
-  --att_input COL       The attribute with the inputs (default: None)
-  --att_output COL      The attribute with the outputs (default: None)
+  --att_input ATT       The attribute with the inputs (default: None)
+  --att_output ATT      The attribute with the outputs (default: None)
+
+from-jsonlines-pretrain
+=======================
+domain(s): pretrain
+generates: PretrainData
+
+usage: from-jsonlines-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
+                               INPUT [INPUT ...] [--att_content ATT]
+
+Reads pretrain data in JsonLines-like JSON format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+                        Path to the JsonLines file(s) to read; glob syntax is
+                        supported (default: None)
+  --att_content ATT     The attribute with the text content (default: None)
 
 from-parquet-pairs
 ==================
@@ -183,7 +225,7 @@ optional arguments:
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the parquet file(s) to read; global syntax is
+                        Path to the parquet file(s) to read; glob syntax is
                         supported (default: None)
   --col_instruction COL
                         The name of the column with the instructions (default:
@@ -207,7 +249,7 @@ optional arguments:
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the parquet file(s) to read; global syntax is
+                        Path to the parquet file(s) to read; glob syntax is
                         supported (default: None)
   --col_content COL     The name of the column with the text to retrieve
                         (default: None)
@@ -297,14 +339,34 @@ optional arguments:
   --col_output COL      The name of the column for the outputs (default:
                         output)
 
+to-csv-pretrain
+===============
+domain(s): pretrain
+accepts: PretrainData
+
+usage: to-csv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
+                       [--col_content COL]
+
+Writes pretrain data in CSV format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+  -o OUTPUT, --output OUTPUT
+                        Path of the CSV file to write (directory when
+                        processing multiple files) (default: None)
+  --col_content COL     The name of the column for the content (default:
+                        content)
+
 to-jsonlines-pairs
 ==================
 domain(s): pairs
 accepts: PairData
 
 usage: to-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                          [--att_instruction COL] [--att_input COL]
-                          [--att_output COL]
+                          [--att_instruction ATT] [--att_input ATT]
+                          [--att_output ATT]
 
 Writes prompt/output pairs in JsonLines-like JSON format.
 
@@ -315,10 +377,29 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         Path of the JsonLines file to write (directory when
                         processing multiple files) (default: None)
-  --att_instruction COL
+  --att_instruction ATT
                         The attribute for the instructions (default: None)
-  --att_input COL       The attribute for the inputs (default: None)
-  --att_output COL      The attribute for the outputs (default: None)
+  --att_input ATT       The attribute for the inputs (default: None)
+  --att_output ATT      The attribute for the outputs (default: None)
+
+to-jsonlines-pretrain
+=====================
+domain(s): pretrain
+accepts: PretrainData
+
+usage: to-jsonlines-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o
+                             OUTPUT [--att_content ATT]
+
+Writes pretrain data in JsonLines-like JSON format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+  -o OUTPUT, --output OUTPUT
+                        Path of the JsonLines file to write (directory when
+                        processing multiple files) (default: None)
+  --att_content ATT     The attribute for the text content (default: None)
 
 to-parquet-pairs
 ================

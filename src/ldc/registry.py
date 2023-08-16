@@ -10,6 +10,8 @@ from ldc.supervised.pairs import JsonLinesPairReader, JsonLinesPairWriter
 from ldc.supervised.pairs import ParquetPairsReader, ParquetPairsWriter
 from ldc.supervised.pairs import Keyword as KeywordPairs
 from ldc.pretrain import ParquetPretrainReader, ParquetPretrainWriter
+from ldc.pretrain import CsvPretrainReader, CsvPretrainWriter
+from ldc.pretrain import JsonLinesPretrainReader, JsonLinesPretrainWriter
 
 
 def _add_to_dict(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
@@ -35,11 +37,18 @@ def available_readers() -> Dict[str, Reader]:
     :rtype: dict
     """
     result = dict()
+
+    # pairs
     _add_to_dict(result, AlpacaReader())
     _add_to_dict(result, CsvPairsReader())
     _add_to_dict(result, JsonLinesPairReader())
     _add_to_dict(result, ParquetPairsReader())
+
+    # pretrain
+    _add_to_dict(result, CsvPretrainReader())
+    _add_to_dict(result, JsonLinesPretrainReader())
     _add_to_dict(result, ParquetPretrainReader())
+
     return result
 
 
@@ -51,11 +60,18 @@ def available_writers() -> Dict[str, Writer]:
     :rtype: dict
     """
     result = dict()
+
+    # pairs
     _add_to_dict(result, AlpacaWriter())
     _add_to_dict(result, CsvPairsWriter())
     _add_to_dict(result, JsonLinesPairWriter())
     _add_to_dict(result, ParquetPairsWriter())
+
+    # pretrain
+    _add_to_dict(result, CsvPretrainWriter())
+    _add_to_dict(result, JsonLinesPretrainWriter())
     _add_to_dict(result, ParquetPretrainWriter())
+
     return result
 
 
@@ -67,8 +83,10 @@ def available_filters() -> Dict[str, Filter]:
     :rtype: dict
     """
     result = dict()
+
     _add_to_dict(result, KeywordPairs())
     _add_to_dict(result, PairsToPretrain())
+
     return result
 
 
