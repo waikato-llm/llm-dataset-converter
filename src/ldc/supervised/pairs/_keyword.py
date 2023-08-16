@@ -38,7 +38,7 @@ class Keyword(KeywordFilter, PairFilter):
         :return: the name
         :rtype: str
         """
-        return "pairs-keyword"
+        return "keyword-pairs"
 
     def _get_locations(self) -> List[str]:
         """
