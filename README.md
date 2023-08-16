@@ -19,8 +19,8 @@ pip install git+https://github.com/waikato-datamining/llm-dataset-converter.git
 
 ## Compression formats
 
-The following compression formats are automatically supported for loading/saving
-files:
+In case a format supports compression, then the following compression formats 
+are automatically supported for loading/saving files:
 
 * [bzip2](https://en.wikipedia.org/wiki/Bzip2): `.bz2`
 * [gzip](https://en.wikipedia.org/wiki/Gzip): `.gz`
