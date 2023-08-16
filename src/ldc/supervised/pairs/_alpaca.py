@@ -51,7 +51,7 @@ class AlpacaReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; global syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; glob syntax is supported", required=True, nargs="+")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
