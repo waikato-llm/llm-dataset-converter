@@ -44,6 +44,8 @@ are automatically supported for loading/saving files:
 
 ## Tools
 
+Dataset conversion:
+
 ```
 usage: llm-convert [-h|--help|--help-all] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-c]
                    reader
@@ -72,6 +74,8 @@ optional arguments:
                         directory to the writer (default: None)
 ```
 
+Download tool for [huggingface](https://huggingface.co/) datasets/files:
+
 ```
 usage: llm-hf-download [-h] -i REPO_ID [-t {None,model,dataset,space}]
                        [-f FILENAME] [-r REVISION] [-o OUTPUT_DIR]
@@ -99,6 +103,8 @@ optional arguments:
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: INFO)
 ```
+
+Tool for generating help screens for plugins:
 
 ```
 usage: llm-help [-h] -p NAME [-f FORMAT] [-l INT] [-o FILE]
