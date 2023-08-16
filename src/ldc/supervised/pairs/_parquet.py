@@ -202,6 +202,8 @@ class ParquetPairsWriter(BatchPairWriter):
         self.col_instruction = ns.col_instruction
         self.col_input = ns.col_input
         self.col_output = ns.col_output
+        if (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
+            raise Exception("No columns specified!")
 
     def write_batch(self, data: Iterable[PairData]):
         """
