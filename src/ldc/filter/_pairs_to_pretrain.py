@@ -1,7 +1,8 @@
 import argparse
 from typing import List
 
-from ldc.filter._core import Filter
+from ldc.core import PAIRS_DOMAIN, PRETRAIN_DOMAIN
+from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 
@@ -13,7 +14,7 @@ DATA_FIELDS = [DATA_FIELD_INSTRUCTION, DATA_FIELD_INPUT, DATA_FIELD_OUTPUT]
 
 class PairsToPretrain(Filter):
     """
-    Converts the data from prompt pairs to pretrain data.
+    Converts records of prompt/output pairs to pretrain ones.
     """
 
     def __init__(self, data_fields: List[str] = None, verbose: bool = False):
@@ -43,6 +44,24 @@ class PairsToPretrain(Filter):
         """
         return "pairs-to-pretrain"
 
+    def description(self) -> str:
+        """
+        Returns a description of the handler.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Converts records of prompt/output pairs to pretrain ones."
+
+    def domains(self) -> List[str]:
+        """
+        Returns the domains of the handler.
+
+        :return: the domains
+        :rtype: list
+        """
+        return [PAIRS_DOMAIN, PRETRAIN_DOMAIN]
+
     def accepts(self) -> List:
         """
         Returns the list of classes that are accepted.
@@ -60,15 +79,6 @@ class PairsToPretrain(Filter):
         :rtype: list
         """
         return [PretrainData]
-
-    def description(self) -> str:
-        """
-        Returns a description of the reader.
-
-        :return: the description
-        :rtype: str
-        """
-        return "Converts the data from prompt pairs to pretrain data."
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
