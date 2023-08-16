@@ -3,6 +3,7 @@ from typing import Dict
 from ldc.core import CommandlineHandler
 from ldc.io import Reader, Writer
 from ldc.filter import Filter
+from ldc.filter import PairsToPretrain
 from ldc.supervised.pairs import AlpacaReader, AlpacaWriter
 from ldc.supervised.pairs import CsvPairsReader, CsvPairsWriter
 from ldc.supervised.pairs import JsonLinesReader, JsonLinesWriter
@@ -67,6 +68,7 @@ def available_filters() -> Dict[str, Filter]:
     """
     result = dict()
     _add_to_dict(result, KeywordPairs())
+    _add_to_dict(result, PairsToPretrain())
     return result
 
 

@@ -54,10 +54,15 @@ readers:
    from-alpaca, from-csv-pairs, from-jsonlines-pairs, 
    from-parquet-pairs, from-parquet-pretrain
 filters:
-   keyword-pairs
+   keyword-pairs, pairs-to-pretrain
 writers:
    to-alpaca, to-csv-pairs, to-jsonlines-pairs, to-parquet-pairs, 
    to-parquet-pretrain
+
+optional arguments:
+  -h, --help            show basic help message and exit
+  --help-all            show basic help message plus help on all plugins and exit
+  -v, --verbose         Whether to be more verbose with the output (default: False)
 ```
 
 ```
@@ -223,108 +228,27 @@ optional arguments:
                         How to react when a keyword is encountered (default:
                         keep)
 
-to-alpaca
-=========
-domain(s): pairs
-accepts: PairData
+pairs-to-pretrain
+=================
+'NotImplementedType' object is not callable
+usage: llm-convert [-h|--help|--help-all] [-v]
+                   reader
+                   [filter [filter [...]]]
+                   writer
 
-usage: to-alpaca [-h] [-v] -o OUTPUT
+Tool for converting between large language model (LLM) dataset formats.
 
-Writes prompt/output pairs in Alpaca-like JSON format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
-  -o OUTPUT, --output OUTPUT
-                        Path of the Alpaca file to write (directory when
-                        processing multiple files) (default: None)
-
-to-csv-pairs
-============
-domain(s): pairs
-accepts: PairData
-
-usage: to-csv-pairs [-h] [-v] -o OUTPUT [--col_instruction COL]
-                    [--col_input COL] [--col_output COL]
-
-Writes prompt/output pairs in CSV format.
+readers:
+   from-alpaca, from-csv-pairs, from-jsonlines-pairs, 
+   from-parquet-pairs, from-parquet-pretrain
+filters:
+   keyword-pairs, pairs-to-pretrain
+writers:
+   to-alpaca, to-csv-pairs, to-jsonlines-pairs, to-parquet-pairs, 
+   to-parquet-pretrain
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
-  -o OUTPUT, --output OUTPUT
-                        Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
-  --col_instruction COL
-                        The name of the column for the instructions (default:
-                        instruction)
-  --col_input COL       The name of the column for the inputs (default: input)
-  --col_output COL      The name of the column for the outputs (default:
-                        output)
-
-to-jsonlines-pairs
-==================
-domain(s): pairs
-accepts: PairData
-
-usage: to-jsonlines-pairs [-h] [-v] -o OUTPUT [--att_instruction COL]
-                          [--att_input COL] [--att_output COL]
-
-Writes prompt/output pairs in JsonLines-like JSON format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
-  -o OUTPUT, --output OUTPUT
-                        Path of the JsonLines file to write (directory when
-                        processing multiple files) (default: None)
-  --att_instruction COL
-                        The attribute for the instructions (default: None)
-  --att_input COL       The attribute for the inputs (default: None)
-  --att_output COL      The attribute for the outputs (default: None)
-
-to-parquet-pairs
-================
-domain(s): pairs
-accepts: PairData
-
-usage: to-parquet-pairs [-h] [-v] -o OUTPUT [--col_instruction COL]
-                        [--col_input COL] [--col_output COL]
-
-Writes prompt/output pairs in Parquet database format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
-  -o OUTPUT, --output OUTPUT
-                        Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
-  --col_instruction COL
-                        The name of the column for the instructions (default:
-                        None)
-  --col_input COL       The name of the column for the inputs (default: None)
-  --col_output COL      The name of the column for the outputs (default: None)
-
-to-parquet-pretrain
-===================
-domain(s): pretrain
-accepts: PretrainData
-
-usage: to-parquet-pretrain [-h] [-v] -o OUTPUT [--col_content COL]
-
-Writes text used for pretraining in Parquet database format.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --verbose         Whether to be more verbose with the output (default:
-                        False)
-  -o OUTPUT, --output OUTPUT
-                        Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
-  --col_content COL     The name of the column for the text content (default:
-                        None)
+  -h, --help            show basic help message and exit
+  --help-all            show basic help message plus help on all plugins and exit
+  -v, --verbose         Whether to be more verbose with the output (default: False)
 ```
