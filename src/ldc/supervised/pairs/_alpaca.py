@@ -98,7 +98,7 @@ class AlpacaReader(PairReader):
         :return: True if finished
         :rtype: bool
         """
-        return (len(self._inputs) == 0) and (self._current_input is None)
+        return len(self._inputs) == 0
 
     def finalize(self):
         """
