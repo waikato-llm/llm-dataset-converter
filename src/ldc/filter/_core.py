@@ -112,7 +112,7 @@ class MultiFilter(Filter):
         :rtype: list
         """
         if len(self.filters) > 0:
-            return self.filters[-1].accepts()
+            return self.filters[-1].generates()
         else:
             return list()
 
