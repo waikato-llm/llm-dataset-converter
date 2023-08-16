@@ -51,6 +51,7 @@ def main(args=None):
                     if session.count % 1000 == 0:
                         _logger.info("%d records processed..." % session.count)
                 writer.write_batch(data)
+                _logger.info("%d records processed in total." % session.count)
             elif isinstance(writer, StreamWriter):
                 for item in reader.read():
                     session.count += 1
@@ -62,6 +63,7 @@ def main(args=None):
                             writer.write_stream(item)
                     if session.count % 1000 == 0:
                         _logger.info("%d records processed..." % session.count)
+                _logger.info("%d records processed in total." % session.count)
             else:
                 raise Exception("Neither BatchWriter nor StreamWriter!")
     except:

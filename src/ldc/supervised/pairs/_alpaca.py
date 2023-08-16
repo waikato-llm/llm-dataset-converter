@@ -82,8 +82,7 @@ class AlpacaReader(PairReader):
 
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
-        if self.logging_level:
-            self.logger().info("Reading from: " + str(self.session.current_input))
+        self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_input = open_file(self._current_input, mode="rt")
         self.session.input_changed = True
 
@@ -177,8 +176,7 @@ class AlpacaWriter(BatchPairWriter):
         if self.session.input_changed:
             self.finalize()
             output = generate_output(self.session.current_input, self.target, ".json", self.session.options.compression)
-            if self.logging_level:
-                self.logger().info("Writing to: " + output)
+            self.logger().info("Writing to: " + output)
             self._output = open_file(output, mode="wt")
 
         json.dump([x.to_dict() for x in data], self._output)

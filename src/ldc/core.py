@@ -195,15 +195,13 @@ class CommandlineHandler(object):
         """
         Initializes the processing, e.g., for opening files or databases.
         """
-        if self.logging_level:
-            self.logger().info("Initializing...")
+        self.logger().info("Initializing...")
 
     def finalize(self):
         """
         Finishes the processing, e.g., for closing files or databases.
         """
-        if self.logging_level:
-            self.logger().info("Finalizing...")
+        self.logger().info("Finalizing...")
 
 
 class OutputProducer(object):

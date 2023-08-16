@@ -91,8 +91,7 @@ class ParquetPretrainReader(PretrainReader):
 
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
-        if self.logging_level:
-            self.logger().info("Reading from: " + str(self.session.current_input))
+        self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_table = pq.read_table(self._current_input).to_pandas()
         self.session.input_changed = True
         if (self.col_content is not None) and (self.col_content not in self._current_table.columns):
@@ -193,8 +192,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
         if self.session.input_changed:
             self.finalize()
             output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
-            if self.logging_level:
-                self.logger().info("Writing to: " + output)
+            self.logger().info("Writing to: " + output)
             # create dictionary
             d_content = []
             for row in data:

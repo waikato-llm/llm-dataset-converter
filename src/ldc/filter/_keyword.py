@@ -38,6 +38,8 @@ class KeywordFilter(Filter):
         self.keywords = keywords
         self.action = action
         self.location = location
+        self.kept = 0
+        self.discarded = 0
 
     def description(self) -> str:
         """
@@ -95,9 +97,12 @@ class KeywordFilter(Filter):
         """
         Initializes the processing, e.g., for opening files or databases.
         """
+        super().initialize()
         if (self.keywords is None) or (len(self.keywords) == 0):
             raise Exception("No keywords provided!")
         self.keywords = [x.lower() for x in self.keywords]
+        self.kept = 0
+        self.discarded = 0
 
     def _to_words(self, data) -> Set[str]:
         """
@@ -130,15 +135,26 @@ class KeywordFilter(Filter):
         if self.action == KEYWORD_ACTION_KEEP:
             if not found:
                 result = None
-            info = "keeping" if result else "discarding"
         elif self.action == KEYWORD_ACTION_DISCARD:
             if found:
                 result = None
-            info = "discarding" if result else "keeping"
         else:
             raise Exception("Unhandled action: %s" % self.action)
 
-        if self.logging_level:
-            self.logger().info("Keyword found, %s: %s" % (info, str(data)))
+        if result is None:
+            self.discarded += 1
+        else:
+            self.kept += 1
+
+        info = "keeping" if (result is not None) else "discarding"
+        self.logger().debug("Keyword found, %s: %s" % (info, str(data)))
 
         return result
+
+    def finalize(self):
+        """
+        Finishes the processing, e.g., for closing files or databases.
+        """
+        super().finalize()
+        self.logger().info("# kept: %d" % self.kept)
+        self.logger().info("# discarded: %d" % self.discarded)
