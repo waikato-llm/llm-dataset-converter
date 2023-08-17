@@ -149,3 +149,122 @@ Writers:
 * [to-jsonlines-pretrain](plugins/to-jsonlines-pretrain.md)
 * [to-parquet-pairs](plugins/to-parquet-pairs.md)
 * [to-parquet-pretrain](plugins/to-parquet-pretrain.md)
+
+
+## Examples
+
+Use the [alpaca_data_cleaned.json](https://github.com/gururise/AlpacaDataCleaned/blob/main/alpaca_data_cleaned.json)
+dataset for the following examples.
+
+### Conversion
+
+```bash
+llm-convert \
+  from-alpaca \
+    --input ./alpaca_data_cleaned.json \
+  to-csv-pairs \
+    --output alpaca_data_cleaned.csv
+```
+
+If you want some logging output, e.g., on progress and what files are being 
+processed/generated:
+
+```bash
+llm-convert \
+  -l INFO \
+  from-alpaca \
+    --input ./alpaca_data_cleaned.json \
+    -l INFO \
+  to-csv-pairs \
+    --output alpaca_data_cleaned.csv
+    -l INFO
+```
+
+### Compression
+
+The output gets automatically compressed (when the format supports that), based
+on the extension that you use for the output.
+
+The following uses Gzip to compress the CSV file:
+
+```bash
+llm-convert \
+  from-alpaca \
+    --input ./alpaca_data_cleaned.json \
+  to-csv-pairs \
+    --output alpaca_data_cleaned.csv.gz
+```
+
+The input gets automatically decompressed based on its extension, provided 
+the format supports that.
+
+### Processing multiple files
+
+Provided that the reader supports, you can also process multiple files, one
+after the other. For that you either specify them explicitly (multiple 
+arguments to the `--input` option) or use a glob syntax (e.g., `--input "*.json"`).
+For the latter, you should surround the argument with double quotes to avoid
+the shell expanding the names automatically.
+
+As for specifying the output, you simply specify the output directory. An output
+file name gets automatically generated from the name of the current input file
+that is being processed.
+
+If you want to compress the output files, you need to specify your preferred
+compression format via the global `-c/--compression` option of the `llm-convert`
+tool. By default, no compression is used.
+
+### Filtering
+
+Instead of just reading and writing the data records, you can also inject
+filters in between them. E.g., the following command-line will load the
+Alpaca JSON dataset and only keep records that have the keyword `function`
+in either the `instruction`, `input` or `output` data of the record:
+
+```bash
+llm-convert \
+  -l INFO \
+  from-alpaca \
+    -l INFO \
+    --input alpaca_data_cleaned.json \
+  keyword-pairs \
+    -l INFO \
+    --keyword function \
+    --location any \
+    --action keep \
+  to-alpaca \
+    -l INFO \
+    --output alpaca_data_cleaned-filtered.json 
+```
+
+**NB:** When chaining filters, the tool checks whether accepted input and 
+generated output is compatible (including from reader/writer).
+
+### Download
+
+The following command downloads the file `vocab.json` from the Huggingface
+project `lysandre/arxiv-nlp`:
+
+```bash
+llm-hf-download \
+  -l INFO \
+  -i lysandre/arxiv-nlp \
+  -f vocab.json \
+  -o .
+```
+
+The next command gets the file `part_1_200000.parquet` from the dataset
+`nampdn-ai/tiny-codes` (if you don't specify a filename, the complete dataset
+will get downloaded):
+
+```bash
+llm-hf-download \
+  -l INFO \
+  -i nampdn-ai/tiny-codes \
+  -t dataset \
+  -f part_1_200000.parquet \
+  -o .
+```
+
+**NB:** Huggingface will cache files locally in your home directory before
+copying it to the location that you specified.
