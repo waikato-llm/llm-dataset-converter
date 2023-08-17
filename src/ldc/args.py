@@ -49,18 +49,19 @@ def split_args(args: List[str], handlers: List[str]) -> Dict[str, List[str]]:
     return result
 
 
-def is_help_requested(args: List[str]) -> Tuple[bool, bool]:
+def is_help_requested(args: List[str]) -> Tuple[bool, bool, str]:
     """
     Checks whether help was requested.
 
     :param args: the arguments to check
     :type args: list
-    :return: the tuple of help requested: (help_requested, plugin_details)
+    :return: the tuple of help requested: (help_requested, plugin_details, plugin_name)
     :rtype: tuple
     """
     help_requested = False
     plugin_details = False
-    for arg in args:
+    plugin_name = None
+    for index, arg in enumerate(args):
         if (arg == "-h") or (arg == "--help"):
             help_requested = True
             break
@@ -68,7 +69,12 @@ def is_help_requested(args: List[str]) -> Tuple[bool, bool]:
             help_requested = True
             plugin_details = True
             break
-    return help_requested, plugin_details
+        if arg == "--help-plugin":
+            help_requested = True
+            if index < len(args) - 1:
+                plugin_name = args[index + 1]
+            break
+    return help_requested, plugin_details, plugin_name
 
 
 def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72) -> str:
@@ -162,7 +168,11 @@ def print_usage(plugin_details: bool = False):
     """
     cmd = "usage: " + CONVERT
     prefix = " " * (len(cmd) + 1)
-    print(cmd + " [-h|--help|--help-all] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-c]")
+    compression_formats = "None," + ",".join(COMPRESSION_FORMATS)
+    logging_levels = ",".join(LOGGING_LEVELS)
+    print(cmd + " [-h|--help|--help-all|-help-plugin NAME]")
+    print(prefix + "[-c {%s}]" % compression_formats)
+    print(prefix + "[-l {%s}]" % logging_levels)
     print(prefix + "reader")
     print(prefix + "[filter [filter [...]]]")
     print(prefix + "writer")
@@ -176,9 +186,10 @@ def print_usage(plugin_details: bool = False):
     print("optional arguments:")
     print("  -h, --help            show basic help message and exit")
     print("  --help-all            show basic help message plus help on all plugins and exit")
-    print("  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}")
-    print("                        The logging level to use (default: WARN)")
-    print("  -c, --compression     {None|%s}" % "|".join(COMPRESSION_FORMATS))
+    print("  --help-plugin NAME    show help message for plugin NAME and exit")
+    print("  -l {%s}, --logging_level {%s}" % (logging_levels, logging_levels))
+    print("                        the logging level to use (default: WARN)")
+    print("  -c {%s}, --compression {%s}" % (compression_formats, compression_formats))
     print("                        the type of compression to use when only providing an output")
     print("                        directory to the writer (default: None)")
     print()
@@ -198,9 +209,12 @@ def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
     :rtype: tuple
     """
     # help requested?
-    help_requested, plugin_details = is_help_requested(args)
+    help_requested, plugin_details, plugin_name = is_help_requested(args)
     if help_requested:
-        print_usage(plugin_details=plugin_details)
+        if plugin_name is not None:
+            generate_plugin_usage(plugin_name)
+        else:
+            print_usage(plugin_details=plugin_details)
         sys.exit(0)
 
     parsed = split_args(args, list(available_plugins().keys()))

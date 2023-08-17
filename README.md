@@ -47,7 +47,9 @@ are automatically supported for loading/saving files:
 Dataset conversion:
 
 ```
-usage: llm-convert [-h|--help|--help-all] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-c]
+usage: llm-convert [-h|--help|--help-all|-help-plugin NAME]
+                   [-c {None,bz2,gz,xz,zstd}]
+                   [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                    reader
                    [filter [filter [...]]]
                    writer
@@ -67,9 +69,10 @@ writers:
 optional arguments:
   -h, --help            show basic help message and exit
   --help-all            show basic help message plus help on all plugins and exit
+  --help-plugin NAME    show help message for plugin NAME and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
-  -c, --compression     {None|bz2|gz|xz|zstd}
+                        the logging level to use (default: WARN)
+  -c {None,bz2,gz,xz,zstd}, --compression {None,bz2,gz,xz,zstd}
                         the type of compression to use when only providing an output
                         directory to the writer (default: None)
 ```
