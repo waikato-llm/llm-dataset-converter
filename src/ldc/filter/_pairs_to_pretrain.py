@@ -5,12 +5,7 @@ from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
 from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
-from ldc.supervised.pairs import PairData
-
-DATA_FIELD_INSTRUCTION = "instruction"
-DATA_FIELD_INPUT = "input"
-DATA_FIELD_OUTPUT = "output"
-DATA_FIELDS = [DATA_FIELD_INSTRUCTION, DATA_FIELD_INPUT, DATA_FIELD_OUTPUT]
+from ldc.supervised.pairs import PairData, PAIRDATA_FIELDS, PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT
 
 
 class PairsToPretrain(Filter):
@@ -31,7 +26,7 @@ class PairsToPretrain(Filter):
 
         if data_fields is not None:
             for data_field in data_fields:
-                if data_field not in DATA_FIELDS:
+                if data_field not in PAIRDATA_FIELDS:
                     raise Exception("Invalid data field: %s" % data_field)
 
         self.data_fields = data_fields
@@ -89,7 +84,7 @@ class PairsToPretrain(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-f", "--data_fields", choices=DATA_FIELDS, default=None, help="The data fields to use for the pretrain content", nargs="+")
+        parser.add_argument("-f", "--data_fields", choices=PAIRDATA_FIELDS, default=None, help="The data fields to use for the pretrain content", nargs="+")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -119,11 +114,11 @@ class PairsToPretrain(Filter):
         """
         content = []
         for data_field in self.data_fields:
-            if data_field == DATA_FIELD_INSTRUCTION:
+            if data_field == PAIRDATA_INSTRUCTION:
                 content.append(data.instruction)
-            elif data_field == DATA_FIELD_INPUT:
+            elif data_field == PAIRDATA_INPUT:
                 content.append(data.input)
-            elif data_field == DATA_FIELD_OUTPUT:
+            elif data_field == PAIRDATA_OUTPUT:
                 content.append(data.output)
             else:
                 raise Exception("Unhandled data field: %s" % data_field)
