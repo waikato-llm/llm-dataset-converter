@@ -1,17 +1,30 @@
-from typing import Dict
+import importlib
+
+from typing import Dict, Iterator
+from pkg_resources import working_set, EntryPoint
 
 from ldc.core import CommandlineHandler
-from ldc.io import Reader, Writer
-from ldc.filter import Filter
-from ldc.filter import PairsToPretrain
-from ldc.supervised.pairs import AlpacaReader, AlpacaWriter
-from ldc.supervised.pairs import CsvPairsReader, CsvPairsWriter
-from ldc.supervised.pairs import JsonLinesPairReader, JsonLinesPairWriter
-from ldc.supervised.pairs import ParquetPairsReader, ParquetPairsWriter
-from ldc.supervised.pairs import Keyword as KeywordPairs
-from ldc.pretrain import ParquetPretrainReader, ParquetPretrainWriter
-from ldc.pretrain import CsvPretrainReader, CsvPretrainWriter
-from ldc.pretrain import JsonLinesPretrainReader, JsonLinesPretrainWriter
+
+# the entry points defined in setup.py
+ENTRY_POINT_READERS = "ldc.readers"
+ENTRY_POINT_FILTERS = "ldc.filters"
+ENTRY_POINT_WRITERS = "ldc.writers"
+
+# dictionaries for caching the available plugins
+AVAILABLE_READERS = None
+AVAILABLE_FILTERS = None
+AVAILABLE_WRITERS = None
+AVAILABLE_PLUGINS = None
+
+
+def _plugin_entry_points(group: str) -> Iterator[EntryPoint]:
+    """
+    Iterates through all plugin entry-points with the given group name.
+
+    :param group: the group to search for
+    :return: iterator of entry-points.
+    """
+    return working_set.iter_entry_points(group, None)
 
 
 def _add_to_dict(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
@@ -29,65 +42,61 @@ def _add_to_dict(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
     d[h.name()] = h
 
 
-def available_readers() -> Dict[str, Reader]:
+def _generate_entry_point_dict(group: str) -> Dict[str, CommandlineHandler]:
+    """
+    Generates a dictionary (name/object) for the specified entry_point group.
+
+    :param group: the entry_point group to generate dictionary for
+    :type group: str
+    :return: the generated dictionary
+    :rtype: dict
+    """
+    result = dict()
+    for item in _plugin_entry_points(group):
+        module = importlib.import_module(item.module_name)
+        cls = getattr(module, item.attrs[0])
+        obj = cls()
+        _add_to_dict(result, obj)
+    return result
+
+
+def available_readers() -> Dict[str, CommandlineHandler]:
     """
     Returns all available readers.
 
     :return: the dict of reader objects
     :rtype: dict
     """
-    result = dict()
-
-    # pairs
-    _add_to_dict(result, AlpacaReader())
-    _add_to_dict(result, CsvPairsReader())
-    _add_to_dict(result, JsonLinesPairReader())
-    _add_to_dict(result, ParquetPairsReader())
-
-    # pretrain
-    _add_to_dict(result, CsvPretrainReader())
-    _add_to_dict(result, JsonLinesPretrainReader())
-    _add_to_dict(result, ParquetPretrainReader())
-
-    return result
+    global AVAILABLE_READERS
+    if AVAILABLE_READERS is None:
+        AVAILABLE_READERS = _generate_entry_point_dict(ENTRY_POINT_READERS)
+    return AVAILABLE_READERS
 
 
-def available_writers() -> Dict[str, Writer]:
+def available_writers() -> Dict[str, CommandlineHandler]:
     """
     Returns all available writers.
 
     :return: the dict of writer objects
     :rtype: dict
     """
-    result = dict()
-
-    # pairs
-    _add_to_dict(result, AlpacaWriter())
-    _add_to_dict(result, CsvPairsWriter())
-    _add_to_dict(result, JsonLinesPairWriter())
-    _add_to_dict(result, ParquetPairsWriter())
-
-    # pretrain
-    _add_to_dict(result, CsvPretrainWriter())
-    _add_to_dict(result, JsonLinesPretrainWriter())
-    _add_to_dict(result, ParquetPretrainWriter())
-
-    return result
+    global AVAILABLE_WRITERS
+    if AVAILABLE_WRITERS is None:
+        AVAILABLE_WRITERS = _generate_entry_point_dict(ENTRY_POINT_WRITERS)
+    return AVAILABLE_WRITERS
 
 
-def available_filters() -> Dict[str, Filter]:
+def available_filters() -> Dict[str, CommandlineHandler]:
     """
     Returns all available filters.
 
     :return: the dict of filter objects
     :rtype: dict
     """
-    result = dict()
-
-    _add_to_dict(result, KeywordPairs())
-    _add_to_dict(result, PairsToPretrain())
-
-    return result
+    global AVAILABLE_FILTERS
+    if AVAILABLE_FILTERS is None:
+        AVAILABLE_FILTERS = _generate_entry_point_dict(ENTRY_POINT_FILTERS)
+    return AVAILABLE_FILTERS
 
 
 def available_plugins() -> Dict[str, CommandlineHandler]:
@@ -97,8 +106,10 @@ def available_plugins() -> Dict[str, CommandlineHandler]:
     :return: the dict of plugin objects
     :rtype: dict
     """
-    result = dict()
-    result.update(available_readers())
-    result.update(available_filters())
-    result.update(available_writers())
-    return result
+    global AVAILABLE_PLUGINS
+    if AVAILABLE_PLUGINS is None:
+        AVAILABLE_PLUGINS = dict()
+        AVAILABLE_PLUGINS.update(available_readers())
+        AVAILABLE_PLUGINS.update(available_filters())
+        AVAILABLE_PLUGINS.update(available_writers())
+    return AVAILABLE_PLUGINS
