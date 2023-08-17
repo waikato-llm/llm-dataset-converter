@@ -1,5 +1,4 @@
 import argparse
-import logging
 import sys
 from typing import List, Dict, Tuple, Iterable
 
@@ -255,7 +254,6 @@ def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
     parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN)
     parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
     session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
-    logging.basicConfig(level=logging.WARNING)
     set_logging_level(session.logger, session.options.logging_level)
 
     return reader, filter_, writer, session

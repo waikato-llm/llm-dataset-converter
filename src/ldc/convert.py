@@ -4,7 +4,7 @@ import traceback
 
 from ldc.io import StreamWriter, BatchWriter
 from ldc.args import print_usage, parse_args
-from ldc.core import CONVERT
+from ldc.core import CONVERT, init_logging
 
 _logger = logging.getLogger(CONVERT)
 
@@ -16,6 +16,7 @@ def main(args=None):
     :param args: the commandline arguments, uses sys.argv if not supplied
     :type args: list
     """
+    init_logging()
     try:
         reader, filter_, writer, session = parse_args(sys.argv[1:] if (args is None) else args)
     except Exception as e:

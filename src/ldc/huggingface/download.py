@@ -2,7 +2,7 @@ import argparse
 import logging
 import traceback
 
-from ldc.core import HUGGINGFACE_DOWNLOAD
+from ldc.core import HUGGINGFACE_DOWNLOAD, init_logging
 from ldc.core import LOGGING_LEVELS, LOGGING_INFO, set_logging_level
 from huggingface_hub import hf_hub_download, snapshot_download
 from huggingface_hub.constants import REPO_TYPES
@@ -53,6 +53,7 @@ def main(args=None):
     :param args: the commandline arguments, uses sys.argv if not supplied
     :type args: list
     """
+    init_logging()
     parser = argparse.ArgumentParser(
         description="Tool for downloading files or datasets from huggingface for local conversion.",
         prog=HUGGINGFACE_DOWNLOAD,
@@ -62,8 +63,7 @@ def main(args=None):
     parser.add_argument("-f", "--filename", help="The name of the file to download rather than the full dataset", default=None, required=False)
     parser.add_argument("-r", "--revision", help="The revision of the dataset to download, omit for latest", default=None, required=False)
     parser.add_argument("-o", "--output_dir", help="The directory to store the data in, stores it in the default huggingface cache directory when omitted.", default=None, required=False)
-    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_INFO,
-                        help="The logging level to use")
+    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_INFO, help="The logging level to use")
     parsed = parser.parse_args(args=args)
     download(parsed.repo_id, repo_type=parsed.repo_type, filename=parsed.filename, revision=parsed.revision,
              output_dir=parsed.output_dir, logging_level=parsed.logging_level)

@@ -26,6 +26,13 @@ LOGGING_LEVELS = [
 ]
 
 
+def init_logging():
+    """
+    Initializes the logging.
+    """
+    logging.basicConfig(level=logging.WARNING)
+
+
 def set_logging_level(logger: logging.Logger, level: str):
     """
     Sets the logging level of the logger.
