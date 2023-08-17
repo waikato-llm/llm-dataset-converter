@@ -1,14 +1,12 @@
-import logging
 import traceback
-
 from typing import Union, List, Optional
 
-from ldc.io import Reader, Writer, StreamWriter, BatchWriter, Session
 from ldc.filter import Filter, MultiFilter
+from ldc.io import Reader, Writer, StreamWriter, BatchWriter, Session
 
 
 def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writer: Writer,
-            session: Session, _logger: logging.Logger):
+            session: Session = None):
     """
     Executes the pipeline.
 
@@ -18,10 +16,8 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
     :type filters: list or Filter
     :param writer: the writer to use
     :type writer: Writer
-    :param session: the session object to use
+    :param session: the session object to use, can be None
     :type session: Session
-    :param _logger: the logging instance to use
-    :type _logger: logging.Logger
     """
     # assemble filter
     if isinstance(filters, Filter):
@@ -34,6 +30,8 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
         raise Exception("Unhandled filter(s) type: %s" % str(type(filters)))
 
     # propagate session
+    if session is None:
+        session = Session()
     reader.session = session
     if filter_ is not None:
         filter_.session = session
@@ -59,9 +57,9 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                         if item is not None:
                             data.append(item)
                     if session.count % 1000 == 0:
-                        _logger.info("%d records processed..." % session.count)
+                        session.logger.info("%d records processed..." % session.count)
                 writer.write_batch(data)
-                _logger.info("%d records processed in total." % session.count)
+                session.logger.info("%d records processed in total." % session.count)
             elif isinstance(writer, StreamWriter):
                 for item in reader.read():
                     session.count += 1
@@ -72,8 +70,8 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                         if item is not None:
                             writer.write_stream(item)
                     if session.count % 1000 == 0:
-                        _logger.info("%d records processed..." % session.count)
-                _logger.info("%d records processed in total." % session.count)
+                        session.logger.info("%d records processed..." % session.count)
+                session.logger.info("%d records processed in total." % session.count)
             else:
                 raise Exception("Neither BatchWriter nor StreamWriter!")
     except:
