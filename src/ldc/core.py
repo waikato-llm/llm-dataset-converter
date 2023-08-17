@@ -96,8 +96,12 @@ class Session:
 
         :param level: the level
         :type level: str
+        :return: itself
+        :rtype: Session
         """
         self._add_option("logging_level", level)
+        set_logging_level(self.logger, level)
+        return self
 
     def set_compression(self, compression: str):
         """
@@ -105,8 +109,11 @@ class Session:
 
         :param compression: the type of compression
         :type compression: str
+        :return: itself
+        :rtype: Session
         """
         self._add_option("compression", compression)
+        return self
 
 
 class SessionHandler(object):
