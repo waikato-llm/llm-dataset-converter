@@ -12,22 +12,30 @@ class JsonLinesPairReader(PairReader):
     Reader for the JsonLines JSON format.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None,
+                 att_instruction: str = None, att_input: str = None, att_output: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param att_instruction: the attribute with the instruction data
+        :type att_instruction: str
+        :param att_input: the attribute with the input data
+        :type att_input: str
+        :param att_output: the attribute with the output data
+        :type att_output: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
+        self.att_instruction = att_instruction
+        self.att_input = att_input
+        self.att_output = att_output
         self._inputs = None
         self._current_input = None
         self._reader = None
-        self.att_instruction = "instruction"
-        self.att_input = "input"
-        self.att_output = "output"
 
     def name(self) -> str:
         """
@@ -141,22 +149,30 @@ class JsonLinesPairWriter(BatchPairWriter):
     Writer for the JsonLines JSON format.
     """
 
-    def __init__(self, target: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None,
+                 att_instruction: str = None, att_input: str = None, att_output: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
         :param target: the filename/dir to write to
         :type target: str
+        :param att_instruction: the attribute with the instruction data
+        :type att_instruction: str
+        :param att_input: the attribute with the input data
+        :type att_input: str
+        :param att_output: the attribute with the output data
+        :type att_output: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.target = target
+        self.att_instruction = att_instruction
+        self.att_input = att_input
+        self.att_output = att_output
         self._output = None
         self._writer = None
-        self.att_instruction = None
-        self.att_input = None
-        self.att_output = None
 
     def name(self) -> str:
         """
@@ -202,6 +218,12 @@ class JsonLinesPairWriter(BatchPairWriter):
         self.att_instruction = ns.att_instruction
         self.att_input = ns.att_input
         self.att_output = ns.att_output
+
+    def initialize(self):
+        """
+        Initializes the reading, e.g., for opening files or databases.
+        """
+        super().initialize()
         if (self.att_instruction is None) and (self.att_input is None) and (self.att_output is None):
             raise Exception("No attributes specified!")
 

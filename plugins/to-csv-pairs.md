@@ -21,8 +21,7 @@ optional arguments:
                         processing multiple files) (default: None)
   --col_instruction COL
                         The name of the column for the instructions (default:
-                        instruction)
-  --col_input COL       The name of the column for the inputs (default: input)
-  --col_output COL      The name of the column for the outputs (default:
-                        output)
+                        None)
+  --col_input COL       The name of the column for the inputs (default: None)
+  --col_output COL      The name of the column for the outputs (default: None)
 ```

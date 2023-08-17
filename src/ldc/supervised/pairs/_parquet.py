@@ -15,22 +15,30 @@ class ParquetPairsReader(PairReader):
     Reader for Parquet database files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None,
+                 col_instruction: str = None, col_input: str = None, col_output: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param col_instruction: the column with the instruction data
+        :type col_instruction: str
+        :param col_input: the column with the input data
+        :type col_input: str
+        :param col_output: the column with the output data
+        :type col_output: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
+        self.col_instruction = col_instruction
+        self.col_input = col_input
+        self.col_output = col_output
         self._inputs = None
         self._current_input = None
         self._current_table = None
-        self.col_instruction = "instruction"
-        self.col_input = "input"
-        self.col_output = "output"
 
     def name(self) -> str:
         """
@@ -140,20 +148,28 @@ class ParquetPairsWriter(BatchPairWriter):
     Writer for Parquet database files.
     """
 
-    def __init__(self, target: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None,
+                 col_instruction: str = None, col_input: str = None, col_output: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
         :param target: the filename/dir to write to
         :type target: str
+        :param col_instruction: the column with the instruction data
+        :type col_instruction: str
+        :param col_input: the column with the input data
+        :type col_input: str
+        :param col_output: the column with the output data
+        :type col_output: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.target = target
-        self.col_instruction = None
-        self.col_input = None
-        self.col_output = None
+        self.col_instruction = col_instruction
+        self.col_input = col_input
+        self.col_output = col_output
         self._output = None
         self._output_writer = None
 
@@ -201,6 +217,12 @@ class ParquetPairsWriter(BatchPairWriter):
         self.col_instruction = ns.col_instruction
         self.col_input = ns.col_input
         self.col_output = ns.col_output
+
+    def initialize(self):
+        """
+        Initializes the reading, e.g., for opening files or databases.
+        """
+        super().initialize()
         if (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
             raise Exception("No columns specified!")
 

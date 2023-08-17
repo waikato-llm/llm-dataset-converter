@@ -12,20 +12,22 @@ class CsvPretrainReader(PretrainReader):
     Reader for CSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param col_content: the column with the content
+        :type col_content: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
+        self.col_content = col_content
         self._inputs = None
         self._current_input = None
         self._current_reader = None
-        self.col_content = "content"
 
     def name(self) -> str:
         """
@@ -67,14 +69,14 @@ class CsvPretrainReader(PretrainReader):
         super()._apply_args(ns)
         self.source = ns.input
         self.col_content = ns.col_content
-        if self.col_content is None:
-            raise Exception("No content column specified!")
 
     def initialize(self):
         """
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
+        if self.col_content is None:
+            raise Exception("No content column specified!")
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
     def read(self) -> Iterable[PretrainData]:
@@ -123,18 +125,20 @@ class CsvPretrainWriter(BatchPretrainWriter):
     Writer for CSV files.
     """
 
-    def __init__(self, target: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
         :param target: the filename/dir to write to
         :type target: str
+        :param col_content: the column with the content
+        :type col_content: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.target = target
-        self.col_content = "content"
+        self.col_content = col_content
         self._output = None
         self._output_writer = None
 
@@ -165,7 +169,7 @@ class CsvPretrainWriter(BatchPretrainWriter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help="Path of the CSV file to write (directory when processing multiple files)", required=True)
-        parser.add_argument("--col_content", metavar="COL", type=str, default="content", help="The name of the column for the content", required=False)
+        parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column for the content", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -178,6 +182,12 @@ class CsvPretrainWriter(BatchPretrainWriter):
         super()._apply_args(ns)
         self.target = ns.output
         self.col_content = ns.col_content
+
+    def initialize(self):
+        """
+        Initializes the processing, e.g., for opening files or databases.
+        """
+        super().initialize()
         if self.col_content is None:
             raise Exception("No content column specified!")
 

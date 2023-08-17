@@ -12,20 +12,22 @@ class JsonLinesPretrainReader(PretrainReader):
     Reader for the JsonLines JSON format.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, att_content: str = "content", logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param att_content: the attribute with the content
+        :type att_content: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
+        self.att_content = att_content
         self._inputs = None
         self._current_input = None
         self._reader = None
-        self.att_content = "content"
 
     def name(self) -> str:
         """
@@ -127,20 +129,22 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
     Writer for the JsonLines JSON format.
     """
 
-    def __init__(self, target: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, att_content: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
         :param target: the filename/dir to write to
         :type target: str
+        :param att_content: the attribute with the content
+        :type att_content: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.target = target
+        self.att_content = att_content
         self._output = None
         self._writer = None
-        self.att_content = None
 
     def name(self) -> str:
         """
@@ -182,6 +186,12 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
         super()._apply_args(ns)
         self.target = ns.output
         self.att_content = ns.att_content
+
+    def initialize(self):
+        """
+        Initializes the processing, e.g., for opening files or databases.
+        """
+        super().initialize()
         if self.att_content is None:
             raise Exception("No content attribute specified!")
 

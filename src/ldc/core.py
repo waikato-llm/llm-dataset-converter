@@ -78,6 +78,36 @@ class Session:
     input_changed: bool = False
     """ whether the input has changed. """
 
+    def _add_option(self, name: str, value):
+        """
+        Adds the key/value to the global options.
+
+        :param name: the name of the option
+        :type name: str
+        :param value: the value of the option
+        """
+        if self.options is None:
+            self.options = argparse.Namespace()
+        setattr(self.options, name, value)
+
+    def set_logging_level(self, level: str):
+        """
+        Sets the global logging level.
+
+        :param level: the level
+        :type level: str
+        """
+        self._add_option("logging_level", level)
+
+    def set_compression(self, compression: str):
+        """
+        Sets the output compression for outputs.
+
+        :param compression: the type of compression
+        :type compression: str
+        """
+        self._add_option("compression", compression)
+
 
 class SessionHandler(object):
     """

@@ -18,6 +18,5 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         Path of the CSV file to write (directory when
                         processing multiple files) (default: None)
-  --col_content COL     The name of the column for the content (default:
-                        content)
+  --col_content COL     The name of the column for the content (default: None)
 ```
