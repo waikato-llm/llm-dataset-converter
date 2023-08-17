@@ -174,3 +174,10 @@ def available_plugins() -> Dict[str, CommandlineHandler]:
         AVAILABLE_PLUGINS.update(available_filters())
         AVAILABLE_PLUGINS.update(available_writers())
     return AVAILABLE_PLUGINS
+
+
+def register_plugins():
+    """
+    Registers all plugins.
+    """
+    available_plugins()
