@@ -1,7 +1,7 @@
 from typing import List, Set
 
 from ldc.core import LOGGING_WARN
-from ldc.filter import KeywordFilter, KEYWORD_ACTION_KEEP
+from ldc.filter import KeywordFilter, KEYWORD_ACTION_KEEP, KEYWORD_ACTION_DISCARD, KEYWORD_ACTIONS
 from ldc.supervised.pairs import PairFilter
 
 
