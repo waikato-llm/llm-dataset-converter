@@ -44,12 +44,12 @@ def _plugin_entry_points(group: str) -> Iterator[EntryPoint]:
     return working_set.iter_entry_points(group, None)
 
 
-def _add_to_dict(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
+def _register_plugin(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
     """
-    Adds the plugin to the dictionary under its name.
+    Adds the plugin to the registry dictionary under its name.
     Raises an exception if plugin name already present.
 
-    :param d: the dictionary to extend
+    :param d: the registry dictionary to extend
     :type d: dict
     :param h: the plugin to add
     :type h: CommandlineHandler
@@ -73,7 +73,7 @@ def _register_from_entry_point(group: str) -> Dict[str, CommandlineHandler]:
         module = importlib.import_module(item.module_name)
         cls = getattr(module, item.attrs[0])
         obj = cls()
-        _add_to_dict(result, obj)
+        _register_plugin(result, obj)
     return result
 
 
@@ -95,7 +95,7 @@ def _register_from_modules(cls):
             if inspect.isclass(c) and issubclass(c, cls):
                 try:
                     o = c()
-                    _add_to_dict(result, o)
+                    _register_plugin(result, o)
                 except:
                     pass
 
