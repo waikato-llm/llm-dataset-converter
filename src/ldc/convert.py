@@ -1,12 +1,9 @@
-import logging
 import sys
 import traceback
 
 from ldc.args import print_usage, parse_args
-from ldc.core import CONVERT, init_logging
+from ldc.core import init_logging
 from ldc.execution import execute
-
-_logger = logging.getLogger(CONVERT)
 
 
 def main(args=None):
@@ -24,7 +21,7 @@ def main(args=None):
         print_usage()
         sys.exit(1)
 
-    execute(reader, filter_, writer, session, _logger)
+    execute(reader, filter_, writer, session)
 
 
 def sys_main() -> int:
