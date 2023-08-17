@@ -245,7 +245,7 @@ generated output is compatible (including from reader/writer).
 ### Download
 
 The following command downloads the file `vocab.json` from the Huggingface
-project `lysandre/arxiv-nlp`:
+project [lysandre/arxiv-nlp](https://huggingface.co/lysandre/arxiv-nlp):
 
 ```bash
 llm-hf-download \
@@ -256,8 +256,8 @@ llm-hf-download \
 ```
 
 The next command gets the file `part_1_200000.parquet` from the dataset
-`nampdn-ai/tiny-codes` (if you don't specify a filename, the complete dataset
-will get downloaded):
+[nampdn-ai/tiny-codes(https://huggingface.co/datasets/nampdn-ai/tiny-codes) 
+(if you don't specify a filename, the complete dataset will get downloaded):
 
 ```bash
 llm-hf-download \
