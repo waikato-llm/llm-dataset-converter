@@ -5,6 +5,11 @@ from ldc.core import DOMAIN_PAIRS
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
+PAIRDATA_INSTRUCTION = "instruction"
+PAIRDATA_INPUT = "input"
+PAIRDATA_OUTPUT = "output"
+PAIRDATA_FIELDS = [PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT]
+
 
 @dataclass
 class PairData:
