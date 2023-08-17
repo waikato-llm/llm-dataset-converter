@@ -76,19 +76,20 @@ optional arguments:
                         directory to the writer (default: None)
 ```
 
-Download tool for [huggingface](https://huggingface.co/) datasets/files:
+Download tool for [Hugging Face](https://huggingface.co/) datasets/files:
 
 ```
 usage: llm-hf-download [-h] -i REPO_ID [-t {None,model,dataset,space}]
                        [-f FILENAME] [-r REVISION] [-o OUTPUT_DIR]
                        [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
-Tool for downloading files or datasets from huggingface for local conversion.
+Tool for downloading files or datasets from Hugging Face
+(https://huggingface.co/) for local conversion.
 
 optional arguments:
   -h, --help            show this help message and exit
   -i REPO_ID, --repo_id REPO_ID
-                        The name of the huggingface repository/dataset to
+                        The name of the Hugging Face repository/dataset to
                         download (default: None)
   -t {None,model,dataset,space}, --repo_type {None,model,dataset,space}
                         The type of the repository (default: None)
@@ -100,7 +101,7 @@ optional arguments:
                         latest (default: None)
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         The directory to store the data in, stores it in the
-                        default huggingface cache directory when omitted.
+                        default Hugging Face cache directory when omitted.
                         (default: None)
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: INFO)
@@ -244,7 +245,7 @@ generated output is compatible (including from reader/writer).
 
 ### Download
 
-The following command downloads the file `vocab.json` from the Huggingface
+The following command downloads the file `vocab.json` from the Hugging Face
 project [lysandre/arxiv-nlp](https://huggingface.co/lysandre/arxiv-nlp):
 
 ```bash
@@ -268,5 +269,5 @@ llm-hf-download \
   -o .
 ```
 
-**NB:** Huggingface will cache files locally in your home directory before
+**NB:** Hugging Face will cache files locally in your home directory before
 copying it to the location that you specified.

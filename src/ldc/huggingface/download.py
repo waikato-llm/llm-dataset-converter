@@ -24,7 +24,7 @@ def download(repo_id: str, repo_type: str = None, filename: str = None, revision
     :type filename: str
     :param revision: the revision of the dataset, None for latest
     :type revision: str
-    :param output_dir: the directory to store the data in, None for default huggingface cache dir
+    :param output_dir: the directory to store the data in, None for default Hugging Face cache dir
     :type output_dir: str
     :param logging_level: the logging level to use
     :type logging_level: str
@@ -55,14 +55,14 @@ def main(args=None):
     """
     init_logging()
     parser = argparse.ArgumentParser(
-        description="Tool for downloading files or datasets from huggingface for local conversion.",
+        description="Tool for downloading files or datasets from Hugging Face (https://huggingface.co/) for local conversion.",
         prog=HUGGINGFACE_DOWNLOAD,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-i", "--repo_id", help="The name of the huggingface repository/dataset to download", required=True)
+    parser.add_argument("-i", "--repo_id", help="The name of the Hugging Face repository/dataset to download", required=True)
     parser.add_argument("-t", "--repo_type", help="The type of the repository", choices=REPO_TYPES, default=None, required=False)
     parser.add_argument("-f", "--filename", help="The name of the file to download rather than the full dataset", default=None, required=False)
     parser.add_argument("-r", "--revision", help="The revision of the dataset to download, omit for latest", default=None, required=False)
-    parser.add_argument("-o", "--output_dir", help="The directory to store the data in, stores it in the default huggingface cache directory when omitted.", default=None, required=False)
+    parser.add_argument("-o", "--output_dir", help="The directory to store the data in, stores it in the default Hugging Face cache directory when omitted.", default=None, required=False)
     parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_INFO, help="The logging level to use")
     parsed = parser.parse_args(args=args)
     download(parsed.repo_id, repo_type=parsed.repo_type, filename=parsed.filename, revision=parsed.revision,
