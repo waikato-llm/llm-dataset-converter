@@ -257,7 +257,7 @@ llm-hf-download \
 ```
 
 The next command gets the file `part_1_200000.parquet` from the dataset
-[nampdn-ai/tiny-codes(https://huggingface.co/datasets/nampdn-ai/tiny-codes) 
+[nampdn-ai/tiny-codes](https://huggingface.co/datasets/nampdn-ai/tiny-codes) 
 (if you don't specify a filename, the complete dataset will get downloaded):
 
 ```bash
