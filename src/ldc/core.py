@@ -182,15 +182,18 @@ class CommandlineHandler(object):
         """
         self.logging_level = ns.logging_level
 
-    def parse_args(self, args: List[str]):
+    def parse_args(self, args: List[str]) -> 'CommandlineHandler':
         """
         Parses the command-line arguments.
 
         :param args: the arguments to parse
         :type args: list
+        :return: itself
+        :rtype: CommandlineHandler
         """
         parser = self._create_argparser()
         self._apply_args(parser.parse_args(args))
+        return self
 
     def print_help(self):
         """
