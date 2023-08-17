@@ -57,14 +57,13 @@ usage: llm-convert [-h|--help|--help-all|-help-plugin NAME]
 Tool for converting between large language model (LLM) dataset formats.
 
 readers:
-   from-alpaca, from-csv-pairs, from-jsonlines-pairs, 
-   from-parquet-pairs, from-csv-pretrain, from-jsonlines-pretrain, 
-   from-parquet-pretrain
+   from-alpaca, from-csv-pairs, from-csv-pretrain, from-jsonlines-pairs, 
+   from-jsonlines-pretrain, from-parquet-pairs, from-parquet-pretrain
 filters:
    keyword-pairs, pairs-to-pretrain
 writers:
-   to-alpaca, to-csv-pairs, to-jsonlines-pairs, to-parquet-pairs, 
-   to-csv-pretrain, to-jsonlines-pretrain, to-parquet-pretrain
+   to-alpaca, to-csv-pairs, to-csv-pretrain, to-jsonlines-pairs, 
+   to-jsonlines-pretrain, to-parquet-pairs, to-parquet-pretrain
 
 optional arguments:
   -h, --help            show basic help message and exit
