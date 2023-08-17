@@ -92,7 +92,7 @@ def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72
     """
     result = []
     line = prefix
-    for plugin in plugins:
+    for plugin in sorted(plugins):
         if (len(line) > 0) and (line[-1] != " "):
             line += ", "
         if len(line) + len(plugin) >= width:
