@@ -154,7 +154,7 @@ Writers:
 * [to-parquet-pretrain](plugins/to-parquet-pretrain.md)
 
 
-## Examples
+## Command-line examples
 
 Use the [alpaca_data_cleaned.json](https://github.com/gururise/AlpacaDataCleaned/blob/main/alpaca_data_cleaned.json)
 dataset for the following examples.
@@ -271,3 +271,50 @@ llm-hf-download \
 
 **NB:** Hugging Face will cache files locally in your home directory before
 copying it to the location that you specified.
+
+
+## Code example
+
+Of course, you can use the library also from Python itself.
+
+The following code sets up a pipeline that reads in a prompt/response 
+dataset in Alpaca format, filters out records that do not contain the 
+keyword `function` anywhere in the record, converts it to *pretrain* data
+and then outputs it in zstandard-compressed jsonlines format:
+
+```python
+from ldc.core import Session, LOGGING_INFO, init_logging
+from ldc.io import COMPRESSION_ZSTD
+from ldc.registry import register_plugins
+from ldc.supervised.pairs import AlpacaReader, Keyword, PAIRDATA_FIELDS
+from ldc.pretrain import JsonLinesPretrainWriter
+from ldc.filter import PairsToPretrain
+from ldc.execution import execute
+
+init_logging()
+register_plugins()
+
+execute(
+    AlpacaReader(
+        source="./alpaca_data_cleaned.json",
+        logging_level=LOGGING_INFO
+    ),
+    [
+        Keyword(
+            keywords=["function"],
+            logging_level=LOGGING_INFO
+        ),
+        PairsToPretrain(
+            data_fields=PAIRDATA_FIELDS
+        ),
+    ],
+    JsonLinesPretrainWriter(
+        target="./output",
+        att_content="text",
+        logging_level=LOGGING_INFO
+    ),
+    Session()
+        .set_logging_level(LOGGING_INFO)
+        .set_compression(COMPRESSION_ZSTD),
+)
+```
