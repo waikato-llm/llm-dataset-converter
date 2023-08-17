@@ -1,9 +1,13 @@
 import importlib
-
+import inspect
+import os
 from typing import Dict, Iterator
+
 from pkg_resources import working_set, EntryPoint
 
 from ldc.core import CommandlineHandler
+from ldc.filter import Filter
+from ldc.io import Reader, Writer
 
 # the entry points defined in setup.py
 ENTRY_POINT_READERS = "ldc.readers"
@@ -15,6 +19,19 @@ AVAILABLE_READERS = None
 AVAILABLE_FILTERS = None
 AVAILABLE_WRITERS = None
 AVAILABLE_PLUGINS = None
+
+# environment variable with comma-separated list of modules to inspect for readers, filters, writers
+ENV_LDC_MODULES = "LDC_MODULES"
+
+# the default modules to inspect (for development)
+# can be overridden with LDC_MODULES environment variable
+DEFAULT_LDC_MODULES = ",".join([
+    "ldc.filter",
+    "ldc.pretrain",
+    "ldc.supervised.context",
+    "ldc.supervised.dialog",
+    "ldc.supervised.pairs",
+])
 
 
 def _plugin_entry_points(group: str) -> Iterator[EntryPoint]:
@@ -42,7 +59,7 @@ def _add_to_dict(d: Dict[str, CommandlineHandler], h: CommandlineHandler):
     d[h.name()] = h
 
 
-def _generate_entry_point_dict(group: str) -> Dict[str, CommandlineHandler]:
+def _register_from_entry_point(group: str) -> Dict[str, CommandlineHandler]:
     """
     Generates a dictionary (name/object) for the specified entry_point group.
 
@@ -60,6 +77,41 @@ def _generate_entry_point_dict(group: str) -> Dict[str, CommandlineHandler]:
     return result
 
 
+def _register_from_modules(cls):
+    """
+    Locates all the classes implementing the specified class and adds them to the dictionary.
+
+    :param cls: the type to look for, eg Reader
+    """
+    result = dict()
+    modules = os.getenv(ENV_LDC_MODULES, default=DEFAULT_LDC_MODULES).split(",")
+
+    for m in modules:
+        module = importlib.import_module(m)
+        for att in dir(module):
+            if att.startswith("_"):
+                continue
+            c = getattr(module, att)
+            if inspect.isclass(c) and issubclass(c, cls):
+                try:
+                    o = c()
+                    _add_to_dict(result, o)
+                except:
+                    pass
+
+    return result
+
+
+def _register_from_env() -> bool:
+    """
+    Checks whether registering via environment variable should happen.
+
+    :return: True if to register via environment variable
+    :rtype: bool
+    """
+    return os.getenv(ENV_LDC_MODULES) is not None
+
+
 def available_readers() -> Dict[str, CommandlineHandler]:
     """
     Returns all available readers.
@@ -69,7 +121,10 @@ def available_readers() -> Dict[str, CommandlineHandler]:
     """
     global AVAILABLE_READERS
     if AVAILABLE_READERS is None:
-        AVAILABLE_READERS = _generate_entry_point_dict(ENTRY_POINT_READERS)
+        AVAILABLE_READERS = _register_from_entry_point(ENTRY_POINT_READERS)
+        # fallback for development
+        if (len(AVAILABLE_READERS) == 0) or _register_from_env():
+            AVAILABLE_READERS = _register_from_modules(Reader)
     return AVAILABLE_READERS
 
 
@@ -82,7 +137,10 @@ def available_writers() -> Dict[str, CommandlineHandler]:
     """
     global AVAILABLE_WRITERS
     if AVAILABLE_WRITERS is None:
-        AVAILABLE_WRITERS = _generate_entry_point_dict(ENTRY_POINT_WRITERS)
+        AVAILABLE_WRITERS = _register_from_entry_point(ENTRY_POINT_WRITERS)
+        # fallback for development
+        if (len(AVAILABLE_WRITERS) == 0) or _register_from_env():
+            AVAILABLE_WRITERS = _register_from_modules(Writer)
     return AVAILABLE_WRITERS
 
 
@@ -95,7 +153,10 @@ def available_filters() -> Dict[str, CommandlineHandler]:
     """
     global AVAILABLE_FILTERS
     if AVAILABLE_FILTERS is None:
-        AVAILABLE_FILTERS = _generate_entry_point_dict(ENTRY_POINT_FILTERS)
+        AVAILABLE_FILTERS = _register_from_entry_point(ENTRY_POINT_FILTERS)
+        # fallback for development
+        if (len(AVAILABLE_FILTERS) == 0) or _register_from_env():
+            AVAILABLE_FILTERS = _register_from_modules(Filter)
     return AVAILABLE_FILTERS
 
 
