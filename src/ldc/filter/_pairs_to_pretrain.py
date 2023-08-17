@@ -1,7 +1,7 @@
 import argparse
 from typing import List
 
-from ldc.core import PAIRS_DOMAIN, PRETRAIN_DOMAIN
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
 from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
@@ -61,7 +61,7 @@ class PairsToPretrain(Filter):
         :return: the domains
         :rtype: list
         """
-        return [PAIRS_DOMAIN, PRETRAIN_DOMAIN]
+        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN]
 
     def accepts(self) -> List:
         """

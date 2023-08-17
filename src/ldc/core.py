@@ -4,9 +4,9 @@ import logging
 from dataclasses import dataclass
 from typing import List
 
-ANY_DOMAIN = "any"
-PAIRS_DOMAIN = "pairs"
-PRETRAIN_DOMAIN = "pretrain"
+DOMAIN_ANY = "any"
+DOMAIN_PAIRS = "pairs"
+DOMAIN_PRETRAIN = "pretrain"
 
 CONVERT = "llm-convert"
 HUGGINGFACE_DOWNLOAD = "llm-hf-download"

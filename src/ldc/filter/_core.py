@@ -1,6 +1,6 @@
 from typing import List
 
-from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, Session, ANY_DOMAIN
+from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, Session, DOMAIN_ANY
 from ldc.core import LOGGING_WARN
 
 
@@ -91,7 +91,7 @@ class MultiFilter(Filter):
         :return: the domain
         :rtype: str
         """
-        return [ANY_DOMAIN]
+        return [DOMAIN_ANY]
 
     def accepts(self) -> List:
         """

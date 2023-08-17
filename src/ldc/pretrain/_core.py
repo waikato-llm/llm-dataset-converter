@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Iterable, List
 
-from ldc.core import PRETRAIN_DOMAIN
+from ldc.core import DOMAIN_PRETRAIN
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
@@ -51,7 +51,7 @@ class PretrainReader(Reader):
         :return: the domains
         :rtype: list
         """
-        return [PRETRAIN_DOMAIN]
+        return [DOMAIN_PRETRAIN]
 
     def generates(self) -> List:
         """
@@ -84,7 +84,7 @@ class PretrainWriter(Writer):
         :return: the domains
         :rtype: list
         """
-        return [PRETRAIN_DOMAIN]
+        return [DOMAIN_PRETRAIN]
 
     def accepts(self) -> List:
         """
@@ -138,7 +138,7 @@ class PretrainFilter(Filter):
         :return: the domains
         :rtype: list
         """
-        return [PRETRAIN_DOMAIN]
+        return [DOMAIN_PRETRAIN]
 
     def accepts(self) -> List:
         """

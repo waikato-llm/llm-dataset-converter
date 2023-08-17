@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Iterable, List
 
-from ldc.core import PAIRS_DOMAIN
+from ldc.core import DOMAIN_PAIRS
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
@@ -59,7 +59,7 @@ class PairReader(Reader):
         :return: the domains
         :rtype: list
         """
-        return [PAIRS_DOMAIN]
+        return [DOMAIN_PAIRS]
 
     def generates(self) -> List:
         """
@@ -92,7 +92,7 @@ class PairWriter(Writer):
         :return: the domains
         :rtype: list
         """
-        return [PAIRS_DOMAIN]
+        return [DOMAIN_PAIRS]
 
     def accepts(self) -> List:
         """
@@ -146,7 +146,7 @@ class PairFilter(Filter):
         :return: the domains
         :rtype: list
         """
-        return [PAIRS_DOMAIN]
+        return [DOMAIN_PAIRS]
 
     def accepts(self) -> List:
         """
