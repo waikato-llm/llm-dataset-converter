@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 
 
 def _read(f):
@@ -29,15 +29,7 @@ setup(
     package_dir={
         '': 'src'
     },
-    packages=[
-        "ldc",
-        "ldc.filter",
-        "ldc.huggingface",
-        "ldc.pretrain",
-        "ldc.supervised.context",
-        "ldc.supervised.dialog",
-        "ldc.supervised.pairs",
-    ],
+    packages=find_namespace_packages(where='src'),
     install_requires=[
         "pandas",
         "jsonlines",
