@@ -58,7 +58,7 @@ setup(
             "from-parquet-pretrain=ldc.pretrain:ParquetPretrainReader",
         ],
         "ldc.filters": [
-            "keyword-pairs=ldc.supervised.pairs:Keyword",
+            "keyword=ldc.filter:Keyword",
             "pairs-to-pretrain=ldc.filter:PairsToPretrain",
         ],
         "ldc.writers": [

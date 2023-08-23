@@ -134,8 +134,7 @@ optional arguments:
 ## Other plugins
 
 Filters:  
-* [keyword-pairs](plugins/keyword-pairs.md)
-* [keyword-pretrain](plugins/keyword-pretrain.md)
+* [keyword](plugins/keyword.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 
 
@@ -271,9 +270,9 @@ and then outputs it in zstandard-compressed jsonlines format:
 from ldc.core import Session, LOGGING_INFO, init_logging
 from ldc.io import COMPRESSION_ZSTD
 from ldc.registry import register_plugins
-from ldc.supervised.pairs import AlpacaReader, Keyword, PAIRDATA_FIELDS
+from ldc.supervised.pairs import AlpacaReader, PAIRDATA_FIELDS
 from ldc.pretrain import JsonLinesPretrainWriter
-from ldc.filter import PairsToPretrain
+from ldc.filter import PairsToPretrain, Keyword
 from ldc.execution import execute
 
 init_logging()

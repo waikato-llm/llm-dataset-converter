@@ -4,6 +4,3 @@ from ._alpaca import AlpacaReader, AlpacaWriter
 from ._csv import CsvPairsReader, CsvPairsWriter, TsvPairsReader, TsvPairsWriter
 from ._jsonlines import JsonLinesPairReader, JsonLinesPairWriter
 from ._parquet import ParquetPairsReader, ParquetPairsWriter
-from ._keyword import Keyword
-from ._keyword import LOCATIONS, LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT
-from ._keyword import KEYWORD_ACTIONS, KEYWORD_ACTION_KEEP, KEYWORD_ACTION_DISCARD

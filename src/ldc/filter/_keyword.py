@@ -1,21 +1,32 @@
 import argparse
 from typing import List, Set
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN
 from ldc.filter import Filter
+from ldc.pretrain import PretrainData
+from ldc.supervised.pairs import PairData
 
 KEYWORD_ACTION_KEEP = "keep"
 KEYWORD_ACTION_DISCARD = "discard"
 KEYWORD_ACTIONS = [KEYWORD_ACTION_KEEP, KEYWORD_ACTION_DISCARD]
 
+LOCATION_ANY = "any"
+LOCATION_INSTRUCTION = "instruction"
+LOCATION_INPUT = "input"
+LOCATION_OUTPUT = "output"
+LOCATION_CONTENT = "content"
+LOCATIONS = [LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT]
+LOCATIONS_PAIRS = [LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT]
+LOCATIONS_PRETRAIN = [LOCATION_ANY, LOCATION_CONTENT]
 
-class KeywordFilter(Filter):
+
+class Keyword(Filter):
     """
     Keeps or discards data records based on keyword(s).
     """
 
     def __init__(self, keywords: List[str] = None, action: str = KEYWORD_ACTION_KEEP,
-                 location: str = None, logging_level: str = LOGGING_WARN):
+                 location: str = LOCATION_ANY, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -32,7 +43,7 @@ class KeywordFilter(Filter):
 
         if action not in KEYWORD_ACTIONS:
             raise Exception("Invalid action: %s" % action)
-        if location not in self._get_locations():
+        if location not in LOCATIONS:
             raise Exception("Invalid location: %s" % location)
 
         self.keywords = keywords
@@ -40,6 +51,15 @@ class KeywordFilter(Filter):
         self.location = location
         self.kept = 0
         self.discarded = 0
+
+    def name(self) -> str:
+        """
+        Returns the name of the handler, used as sub-command.
+
+        :return: the name
+        :rtype: str
+        """
+        return "keyword"
 
     def description(self) -> str:
         """
@@ -50,23 +70,32 @@ class KeywordFilter(Filter):
         """
         return "Keeps or discards data records based on keyword(s)."
 
-    def _get_locations(self) -> List[str]:
+    def domains(self) -> List[str]:
         """
-        Returns all the possible locations.
+        Returns the domains of the filter.
 
-        :return: the locations
+        :return: the domains
         :rtype: list
         """
-        raise NotImplemented()
+        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN]
 
-    def _get_default_location(self) -> str:
+    def accepts(self) -> List:
         """
-        Return the default location to use.
+        Returns the list of classes that are accepted.
 
-        :return: the location
-        :rtype: str
+        :return: the list of classes
+        :rtype: list
         """
-        raise NotImplemented()
+        return [PairData, PretrainData]
+
+    def generates(self) -> List:
+        """
+        Returns the list of classes that get produced.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [PairData, PretrainData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -77,7 +106,7 @@ class KeywordFilter(Filter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for", required=True, nargs="+")
-        parser.add_argument("-L", "--location", choices=self._get_locations(), default=self._get_default_location(), help="Where to look for the keywords")
+        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN))
         parser.add_argument("-a", "--action", choices=KEYWORD_ACTIONS, default=KEYWORD_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
@@ -111,7 +140,22 @@ class KeywordFilter(Filter):
         :return: the compiled set of words (lower case)
         :rtype: set
         """
-        raise NotImplemented()
+        words = set()
+
+        if isinstance(data, PairData):
+            if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
+                words.update(data.instruction.lower().split())
+            if self.location in [LOCATION_INPUT, LOCATION_ANY]:
+                words.update(data.input.lower().split())
+            if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
+                words.update(data.output.lower().split())
+        elif isinstance(data, PretrainData):
+            if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
+                words.update(data.content.lower().split())
+        else:
+            raise Exception("Unhandled data type: %s" % str(type(data)))
+
+        return words
 
     def process(self, data):
         """
