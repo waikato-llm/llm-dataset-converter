@@ -12,13 +12,15 @@ class AbstractCsvLikePairsReader(PairReader):
     Ancestor for readers of CSV-like files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None,
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param no_header: whether the data files have no header
+        :type no_header: bool
         :param col_instruction: the column with the instruction data
         :type col_instruction: str
         :param col_input: the column with the input data
@@ -30,9 +32,13 @@ class AbstractCsvLikePairsReader(PairReader):
         """
         super().__init__(logging_level=logging_level)
         self.source = source
+        self.no_header = no_header
         self.col_instruction = col_instruction
         self.col_input = col_input
         self.col_output = col_output
+        self.idx_instruction = -1
+        self.idx_input = -1
+        self.idx_output = -1
         self._inputs = None
         self._current_input = None
         self._current_reader = None
@@ -55,9 +61,10 @@ class AbstractCsvLikePairsReader(PairReader):
         """
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help=self._get_input_description(), required=True, nargs="+")
-        parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column with the instructions", required=False)
-        parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column with the inputs", required=False)
-        parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column with the outputs", required=False)
+        parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column (or 1-based index if no header row) with the instructions", required=False)
+        parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column (or 1-based index if no header row) with the inputs", required=False)
+        parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column (or 1-based index if no header row) with the outputs", required=False)
+        parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -72,23 +79,38 @@ class AbstractCsvLikePairsReader(PairReader):
         self.col_instruction = ns.col_instruction
         self.col_input = ns.col_input
         self.col_output = ns.col_output
+        self.no_header = ns.no_header
 
     def initialize(self):
         """
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
+        try:
+            self.idx_instruction = int(self.col_instruction) - 1
+        except:
+            self.idx_instruction = -1
+        try:
+            self.idx_input = int(self.col_input) - 1
+        except:
+            self.idx_input = -1
+        try:
+            self.idx_output = int(self.col_output) - 1
+        except:
+            self.idx_output = -1
         self._inputs = locate_files(self.source, fail_if_empty=True)
-        if (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
-            raise Exception("No columns specified!")
+        if not self.no_header and (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
+            raise Exception("Header row expected but no columns specified!")
+        if self.no_header and (self.idx_instruction == -1) and (self.idx_input == -1) and (self.idx_output == -1):
+            raise Exception("No header row expected but no column indices specified!")
 
-    def _init_reader(self, current_input) -> csv.DictReader:
+    def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
         Initializes and returns the CSV reader to use.
 
         :param current_input: the file pointer to initialize with
         :return: the reader to use
-        :rtype: csv.DictReader
+        :rtype: csv.reader or csv.DictReader
         """
         raise NotImplemented()
 
@@ -109,10 +131,27 @@ class AbstractCsvLikePairsReader(PairReader):
         self.session.input_changed = True
 
         for row in self._current_reader:
+            val_instruction = None
+            val_input = None
+            val_output = None
+            if self.no_header:
+                if self.idx_instruction > -1:
+                    val_instruction = row[self.idx_instruction]
+                if self.idx_input > -1:
+                    val_input = row[self.idx_input]
+                if self.idx_output > -1:
+                    val_output = row[self.idx_output]
+            else:
+                if self.col_instruction is not None:
+                    val_instruction = row[self.col_instruction]
+                if self.col_input is not None:
+                    val_input = row[self.col_input]
+                if self.col_output is not None:
+                    val_output = row[self.col_output]
             yield PairData(
-                instruction=row[self.col_instruction],
-                input=row[self.col_input],
-                output=row[self.col_output],
+                instruction=val_instruction,
+                input=val_input,
+                output=val_output,
             )
 
     def has_finished(self) -> bool:
@@ -140,7 +179,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
     Ancestor for writers of CSV-like files.
     """
 
-    def __init__(self, target: str = None,
+    def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
                  logging_level: str = LOGGING_WARN):
         """
@@ -148,6 +187,8 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
 
         :param target: the filename/dir to write to
         :type target: str
+        :param no_header: whether to suppress the header row
+        :type no_header: bool
         :param col_instruction: the column with the instruction data
         :type col_instruction: str
         :param col_input: the column with the input data
@@ -159,6 +200,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
         """
         super().__init__(logging_level=logging_level)
         self.target = target
+        self.no_header = no_header
         self.col_instruction = col_instruction
         self.col_input = col_input
         self.col_output = col_output
@@ -186,6 +228,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
         parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column for the instructions", required=False)
         parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column for the inputs", required=False)
         parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column for the outputs", required=False)
+        parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -200,14 +243,15 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
         self.col_instruction = ns.col_instruction
         self.col_input = ns.col_input
         self.col_output = ns.col_output
+        self.no_header = ns.no_header
 
     def initialize(self):
         """
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        if (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
-            raise Exception("No columns specified!")
+        if not self.no_header and (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
+            raise Exception("Outputting header, but no columns specified!")
 
     def _init_writer(self, current_output) -> csv.writer:
         """
@@ -241,10 +285,27 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
             self.logger().info("Writing to: " + output)
             self._output = open_file(output, mode="wt")
             self._output_writer = self._init_writer(self._output)
-            self._output_writer.writerow([self.col_instruction, self.col_input, self.col_output])
+            if not self.no_header:
+                row = []
+                if self.col_instruction is not None:
+                    row.append(self.col_instruction)
+                if self.col_input is not None:
+                    row.append(self.col_input)
+                if self.col_output is not None:
+                    row.append(self.col_output)
+                self._output_writer.writerow(row)
 
         for item in data:
-            row = [item.instruction, item.input, item.output]
+            row = []
+            if self.no_header:
+                row = [item.instruction, item.input, item.output]
+            else:
+                if self.col_instruction is not None:
+                    row.append(item.instruction)
+                if self.col_input is not None:
+                    row.append(item.input)
+                if self.col_output is not None:
+                    row.append(item.output)
             self._output_writer.writerow(row)
 
     def finalize(self):
@@ -263,13 +324,15 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
     Reader for CSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None,
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param no_header: whether the data files have no header
+        :type no_header: bool
         :param col_instruction: the column with the instruction data
         :type col_instruction: str
         :param col_input: the column with the input data
@@ -279,7 +342,7 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(source=source, col_instruction=col_instruction, col_input=col_input,
+        super().__init__(source=source, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
                          col_output=col_output, logging_level=logging_level)
 
     def name(self) -> str:
@@ -309,15 +372,18 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
         """
         return "Path to the CSV file(s) to read; glob syntax is supported"
 
-    def _init_reader(self, current_input) -> csv.DictReader:
+    def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
         Initializes and returns the CSV reader to use.
 
         :param current_input: the file pointer to initialize with
         :return: the reader to use
-        :rtype: csv.DictReader
+        :rtype: csv.reader or csv.DictReader
         """
-        return csv.DictReader(current_input)
+        if self.no_header:
+            return csv.reader(current_input)
+        else:
+            return csv.DictReader(current_input)
 
 
 class CsvPairsWriter(AbstractCsvLikePairsWriter):
@@ -325,7 +391,7 @@ class CsvPairsWriter(AbstractCsvLikePairsWriter):
     Writer for CSV files.
     """
 
-    def __init__(self, target: str = None,
+    def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
                  logging_level: str = LOGGING_WARN):
         """
@@ -333,6 +399,8 @@ class CsvPairsWriter(AbstractCsvLikePairsWriter):
 
         :param target: the filename/dir to write to
         :type target: str
+        :param no_header: whether to suppress the header row
+        :type no_header: bool
         :param col_instruction: the column with the instruction data
         :type col_instruction: str
         :param col_input: the column with the input data
@@ -342,7 +410,7 @@ class CsvPairsWriter(AbstractCsvLikePairsWriter):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, col_instruction=col_instruction, col_input=col_input, 
+        super().__init__(target=target, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
                          col_output=col_output, logging_level=logging_level)
 
     def name(self) -> str:
@@ -397,13 +465,15 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
     Reader for TSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None,
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param no_header: whether the data files have no header
+        :type no_header: bool
         :param col_instruction: the column with the instruction data
         :type col_instruction: str
         :param col_input: the column with the input data
@@ -413,7 +483,7 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(source=source, col_instruction=col_instruction, col_input=col_input,
+        super().__init__(source=source, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
                          col_output=col_output, logging_level=logging_level)
 
     def name(self) -> str:
@@ -443,15 +513,18 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
         """
         return "Path to the TSV file(s) to read; glob syntax is supported"
 
-    def _init_reader(self, current_input) -> csv.DictReader:
+    def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
         Initializes and returns the CSV reader to use.
 
         :param current_input: the file pointer to initialize with
         :return: the reader to use
-        :rtype: csv.DictReader
+        :rtype: csv.reader or csv.DictReader
         """
-        return csv.DictReader(current_input, delimiter='\t')
+        if self.no_header:
+            return csv.reader(current_input, delimiter='\t')
+        else:
+            return csv.DictReader(current_input, delimiter='\t')
 
 
 class TsvPairsWriter(AbstractCsvLikePairsWriter):
@@ -459,7 +532,7 @@ class TsvPairsWriter(AbstractCsvLikePairsWriter):
     Writer for TSV files.
     """
 
-    def __init__(self, target: str = None,
+    def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
                  logging_level: str = LOGGING_WARN):
         """
@@ -467,6 +540,8 @@ class TsvPairsWriter(AbstractCsvLikePairsWriter):
 
         :param target: the filename/dir to write to
         :type target: str
+        :param no_header: whether to suppress the header row
+        :type no_header: bool
         :param col_instruction: the column with the instruction data
         :type col_instruction: str
         :param col_input: the column with the input data
@@ -476,7 +551,7 @@ class TsvPairsWriter(AbstractCsvLikePairsWriter):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, col_instruction=col_instruction, col_input=col_input,
+        super().__init__(target=target, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
                          col_output=col_output, logging_level=logging_level)
 
     def name(self) -> str:

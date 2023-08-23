@@ -12,19 +12,23 @@ class AbstractCsvLikePretrainReader(PretrainReader):
     Ancestor for readers of CSV-like files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, no_header: bool = False, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
         :param col_content: the column with the content
         :type col_content: str
+        :param no_header: whether the data files have no header
+        :type no_header: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
         self.col_content = col_content
+        self.idx_content = -1
+        self.no_header = no_header
         self._inputs = None
         self._current_input = None
         self._current_reader = None
@@ -47,7 +51,8 @@ class AbstractCsvLikePretrainReader(PretrainReader):
         """
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help=self._get_input_description(), required=True, nargs="+")
-        parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column with the text content", required=False)
+        parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the text content", required=False)
+        parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -60,23 +65,30 @@ class AbstractCsvLikePretrainReader(PretrainReader):
         super()._apply_args(ns)
         self.source = ns.input
         self.col_content = ns.col_content
+        self.no_header = ns.no_header
 
     def initialize(self):
         """
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        if self.col_content is None:
-            raise Exception("No content column specified!")
+        try:
+            self.idx_content = int(self.col_content) - 1
+        except:
+            self.idx_content = -1
+        if not self.no_header and (self.col_content is None):
+            raise Exception("Header row expected in files but no content column specified!")
+        if self.no_header and (self.idx_content == -1):
+            raise Exception("No Header row expected in files but no content index specified!")
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
-    def _init_reader(self, current_input) -> csv.DictReader:
+    def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
         Initializes and returns the CSV reader to use.
 
         :param current_input: the file pointer to initialize with
         :return: the reader to use
-        :rtype: csv.DictReader
+        :rtype: csv.reader or csv.DictReader
         """
         raise NotImplemented()
 
@@ -97,9 +109,14 @@ class AbstractCsvLikePretrainReader(PretrainReader):
         self.session.input_changed = True
 
         for row in self._current_reader:
-            yield PretrainData(
-                content=row[self.col_content]
-            )
+            if self.no_header:
+                yield PretrainData(
+                    content=row[self.idx_content]
+                )
+            else:
+                yield PretrainData(
+                    content=row[self.col_content]
+                )
 
     def has_finished(self) -> bool:
         """
@@ -126,7 +143,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
     Ancestor for writers of CSV-like files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -134,12 +151,15 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         :type target: str
         :param col_content: the column with the content
         :type col_content: str
+        :param no_header: whether to suppress the header row
+        :type no_header: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.target = target
         self.col_content = col_content
+        self.no_header = no_header
         self._output = None
         self._output_writer = None
 
@@ -161,7 +181,8 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help=self._get_output_description(), required=True)
-        parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column for the content", required=False)
+        parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name of the column for the content when outputting a header row", required=False)
+        parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -174,14 +195,15 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         super()._apply_args(ns)
         self.target = ns.output
         self.col_content = ns.col_content
+        self.no_header = ns.no_header
 
     def initialize(self):
         """
         Initializes the processing, e.g., for opening files or databases.
         """
         super().initialize()
-        if self.col_content is None:
-            raise Exception("No content column specified!")
+        if not self.no_header and (self.col_content is None):
+            raise Exception("Outputting header, but no content column name specified!")
 
     def _init_writer(self, current_output) -> csv.writer:
         """
@@ -215,7 +237,8 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
             self.logger().info("Writing to: " + output)
             self._output = open_file(output, mode="wt")
             self._output_writer = self._init_writer(self._output)
-            self._output_writer.writerow([self.col_content])
+            if not self.no_header:
+                self._output_writer.writerow([self.col_content])
 
         for item in data:
             row = [item.content]
@@ -237,7 +260,7 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
     Reader for CSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -247,7 +270,7 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(source=source, col_content=col_content, logging_level=logging_level)
+        super().__init__(source=source, no_header=no_header, col_content=col_content, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -276,15 +299,18 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
         """
         return "Path to the CSV file(s) to read; glob syntax is supported"
 
-    def _init_reader(self, current_input) -> csv.DictReader:
+    def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
         Initializes and returns the CSV reader to use.
 
         :param current_input: the file pointer to initialize with
         :return: the reader to use
-        :rtype: csv.DictReader
+        :rtype: csv.reader or csv.DictReader
         """
-        return csv.DictReader(current_input)
+        if self.no_header:
+            return csv.reader(current_input)
+        else:
+            return csv.DictReader(current_input)
 
 
 class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
@@ -292,7 +318,7 @@ class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
     Writer for CSV files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -300,10 +326,12 @@ class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :type target: str
         :param col_content: the column with the content
         :type col_content: str
+        :param no_header: whether to suppress the header row
+        :type no_header: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, col_content=col_content, logging_level=logging_level)
+        super().__init__(target=target, col_content=col_content, no_header=no_header, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -357,7 +385,7 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
     Reader for TSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -367,7 +395,7 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(source=source, col_content=col_content, logging_level=logging_level)
+        super().__init__(source=source, no_header=no_header, col_content=col_content, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -396,15 +424,18 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
         """
         return "Path to the TSV file(s) to read; glob syntax is supported"
 
-    def _init_reader(self, current_input) -> csv.DictReader:
+    def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
         Initializes and returns the CSV reader to use.
 
         :param current_input: the file pointer to initialize with
         :return: the reader to use
-        :rtype: csv.DictReader
+        :rtype: csv.reader or csv.DictReader
         """
-        return csv.DictReader(current_input, delimiter='\t')
+        if self.no_header:
+            return csv.reader(current_input, delimiter='\t')
+        else:
+            return csv.DictReader(current_input, delimiter='\t')
 
 
 class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
@@ -412,7 +443,7 @@ class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
     Writer for TSV files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -420,10 +451,12 @@ class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :type target: str
         :param col_content: the column with the content
         :type col_content: str
+        :param no_header: whether to suppress the header row
+        :type no_header: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, col_content=col_content, logging_level=logging_level)
+        super().__init__(target=target, col_content=col_content, no_header=no_header, logging_level=logging_level)
 
     def name(self) -> str:
         """

@@ -8,7 +8,7 @@ Writes prompt/output pairs in CSV format.
 ```
 usage: to-csv-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
                     [--col_instruction COL] [--col_input COL]
-                    [--col_output COL]
+                    [--col_output COL] [-n]
 
 Writes prompt/output pairs in CSV format.
 
@@ -24,4 +24,5 @@ optional arguments:
                         None)
   --col_input COL       The name of the column for the inputs (default: None)
   --col_output COL      The name of the column for the outputs (default: None)
+  -n, --no_header       For suppressing the header row (default: False)
 ```

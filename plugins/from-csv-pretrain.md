@@ -7,7 +7,7 @@ Reads pretrain data in CSV format.
 
 ```
 usage: from-csv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                         [INPUT ...] [--col_content COL]
+                         [INPUT ...] [-c COL] [-n]
 
 Reads pretrain data in CSV format.
 
@@ -18,6 +18,8 @@ optional arguments:
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the CSV file(s) to read; glob syntax is
                         supported (default: None)
-  --col_content COL     The name of the column with the text content (default:
-                        None)
+  -c COL, --col_content COL
+                        The name (or 1-based index if no header row) of the
+                        column with the text content (default: None)
+  -n, --no_header       For files with no header row (default: False)
 ```

@@ -7,7 +7,7 @@ Writes pretrain data in TSV format.
 
 ```
 usage: to-tsv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                       [--col_content COL]
+                       [-c COL] [-n]
 
 Writes pretrain data in TSV format.
 
@@ -18,5 +18,8 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         Path of the TSV file to write (directory when
                         processing multiple files) (default: None)
-  --col_content COL     The name of the column for the content (default: None)
+  -c COL, --col_content COL
+                        The name of the column for the content when outputting
+                        a header row (default: None)
+  -n, --no_header       For suppressing the header row (default: False)
 ```
