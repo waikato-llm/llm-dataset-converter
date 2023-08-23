@@ -7,9 +7,9 @@ from ldc.io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
 
 
-class CsvPretrainReader(PretrainReader):
+class AbstractCsvLikePretrainReader(PretrainReader):
     """
-    Reader for CSV files.
+    Ancestor for readers of CSV-like files.
     """
 
     def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
@@ -29,23 +29,14 @@ class CsvPretrainReader(PretrainReader):
         self._current_input = None
         self._current_reader = None
 
-    def name(self) -> str:
+    def _get_input_description(self) -> str:
         """
-        Returns the name of the reader, used as command-line name.
-
-        :return: the name
-        :rtype: str
-        """
-        return "from-csv-pretrain"
-
-    def description(self) -> str:
-        """
-        Returns a description of the reader.
+        Returns the description to use for the input file in the argparser.
 
         :return: the description
         :rtype: str
         """
-        return "Reads pretrain data in CSV format."
+        raise NotImplemented()
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -55,7 +46,7 @@ class CsvPretrainReader(PretrainReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the CSV file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help=self._get_input_description(), required=True, nargs="+")
         parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column with the text content", required=False)
         return parser
 
@@ -79,6 +70,16 @@ class CsvPretrainReader(PretrainReader):
             raise Exception("No content column specified!")
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
+    def _init_reader(self, current_input) -> csv.DictReader:
+        """
+        Initializes and returns the CSV reader to use.
+
+        :param current_input: the file pointer to initialize with
+        :return: the reader to use
+        :rtype: csv.DictReader
+        """
+        raise NotImplemented()
+
     def read(self) -> Iterable[PretrainData]:
         """
         Loads the data and returns the items one by one.
@@ -92,7 +93,7 @@ class CsvPretrainReader(PretrainReader):
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_input = open_file(self._current_input, mode="rt")
-        self._current_reader = csv.DictReader(self._current_input)
+        self._current_reader = self._init_reader(self._current_input)
         self.session.input_changed = True
 
         for row in self._current_reader:
@@ -107,7 +108,7 @@ class CsvPretrainReader(PretrainReader):
         :return: True if finished
         :rtype: bool
         """
-        return (len(self._inputs) == 0) and (self._current_input is None)
+        return len(self._inputs) == 0
 
     def finalize(self):
         """
@@ -120,9 +121,9 @@ class CsvPretrainReader(PretrainReader):
             self._current_input = None
 
 
-class CsvPretrainWriter(BatchPretrainWriter):
+class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
     """
-    Writer for CSV files.
+    Ancestor for writers of CSV-like files.
     """
 
     def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
@@ -142,23 +143,14 @@ class CsvPretrainWriter(BatchPretrainWriter):
         self._output = None
         self._output_writer = None
 
-    def name(self) -> str:
+    def _get_output_description(self) -> str:
         """
-        Returns the name of the reader, used as command-line name.
-
-        :return: the name
-        :rtype: str
-        """
-        return "to-csv-pretrain"
-
-    def description(self) -> str:
-        """
-        Returns a description of the reader.
+        Returns the description to use for the output file in the argparser.
 
         :return: the description
         :rtype: str
         """
-        return "Writes pretrain data in CSV format."
+        raise NotImplemented()
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -168,7 +160,7 @@ class CsvPretrainWriter(BatchPretrainWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path of the CSV file to write (directory when processing multiple files)", required=True)
+        parser.add_argument("-o", "--output", type=str, help=self._get_output_description(), required=True)
         parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column for the content", required=False)
         return parser
 
@@ -191,6 +183,25 @@ class CsvPretrainWriter(BatchPretrainWriter):
         if self.col_content is None:
             raise Exception("No content column specified!")
 
+    def _init_writer(self, current_output) -> csv.writer:
+        """
+        Initializes and returns the CSV writer to use for the output.
+
+        :param current_output: the file pointer of the output file to initialize with
+        :return: the reader
+        :rtype: csv.writer
+        """
+        raise NotImplemented()
+
+    def _get_extension(self) -> str:
+        """
+        Returns the extension to use for output files.
+
+        :return: the extension to use (incl dot)
+        :rtype: str
+        """
+        raise NotImplemented()
+
     def write_batch(self, data: Iterable[PretrainData]):
         """
         Saves the data in one go.
@@ -200,10 +211,10 @@ class CsvPretrainWriter(BatchPretrainWriter):
         """
         if self.session.input_changed:
             self.finalize()
-            output = generate_output(self.session.current_input, self.target, ".csv", self.session.options.compression)
+            output = generate_output(self.session.current_input, self.target, self._get_extension(), self.session.options.compression)
             self.logger().info("Writing to: " + output)
             self._output = open_file(output, mode="wt")
-            self._output_writer = csv.writer(self._output)
+            self._output_writer = self._init_writer(self._output)
             self._output_writer.writerow([self.col_content])
 
         for item in data:
@@ -219,3 +230,243 @@ class CsvPretrainWriter(BatchPretrainWriter):
             self._output_writer = None
             self._output.close()
             self._output = None
+
+
+class CsvPretrainReader(AbstractCsvLikePretrainReader):
+    """
+    Reader for CSV files.
+    """
+
+    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+        """
+        Initializes the reader.
+
+        :param source: the filename(s)
+        :param col_content: the column with the content
+        :type col_content: str
+        :param logging_level: the logging level to use
+        :type logging_level: str
+        """
+        super().__init__(source=source, col_content=col_content, logging_level=logging_level)
+
+    def name(self) -> str:
+        """
+        Returns the name of the reader, used as command-line name.
+
+        :return: the name
+        :rtype: str
+        """
+        return "from-csv-pretrain"
+
+    def description(self) -> str:
+        """
+        Returns a description of the reader.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Reads pretrain data in CSV format."
+
+    def _get_input_description(self) -> str:
+        """
+        Returns the description to use for the input file in the argparser.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Path to the CSV file(s) to read; glob syntax is supported"
+
+    def _init_reader(self, current_input) -> csv.DictReader:
+        """
+        Initializes and returns the CSV reader to use.
+
+        :param current_input: the file pointer to initialize with
+        :return: the reader to use
+        :rtype: csv.DictReader
+        """
+        return csv.DictReader(current_input)
+
+
+class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
+    """
+    Writer for CSV files.
+    """
+
+    def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+        """
+        Initializes the writer.
+
+        :param target: the filename/dir to write to
+        :type target: str
+        :param col_content: the column with the content
+        :type col_content: str
+        :param logging_level: the logging level to use
+        :type logging_level: str
+        """
+        super().__init__(target=target, col_content=col_content, logging_level=logging_level)
+
+    def name(self) -> str:
+        """
+        Returns the name of the reader, used as command-line name.
+
+        :return: the name
+        :rtype: str
+        """
+        return "to-csv-pretrain"
+
+    def description(self) -> str:
+        """
+        Returns a description of the reader.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Writes pretrain data in CSV format."
+
+    def _get_output_description(self) -> str:
+        """
+        Returns the description to use for the output file in the argparser.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Path of the CSV file to write (directory when processing multiple files)"
+
+    def _init_writer(self, current_output) -> csv.writer:
+        """
+        Initializes and returns the CSV writer to use for the output.
+
+        :param current_output: the file pointer of the output file to initialize with
+        :return: the reader
+        :rtype: csv.writer
+        """
+        return csv.writer(current_output)
+
+    def _get_extension(self) -> str:
+        """
+        Returns the extension to use for output files.
+
+        :return: the extension to use (incl dot)
+        :rtype: str
+        """
+        return ".csv"
+
+
+class TsvPretrainReader(AbstractCsvLikePretrainReader):
+    """
+    Reader for TSV files.
+    """
+
+    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+        """
+        Initializes the reader.
+
+        :param source: the filename(s)
+        :param col_content: the column with the content
+        :type col_content: str
+        :param logging_level: the logging level to use
+        :type logging_level: str
+        """
+        super().__init__(source=source, col_content=col_content, logging_level=logging_level)
+
+    def name(self) -> str:
+        """
+        Returns the name of the reader, used as command-line name.
+
+        :return: the name
+        :rtype: str
+        """
+        return "from-tsv-pretrain"
+
+    def description(self) -> str:
+        """
+        Returns a description of the reader.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Reads pretrain data in TSV format."
+
+    def _get_input_description(self) -> str:
+        """
+        Returns the description to use for the input file in the argparser.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Path to the TSV file(s) to read; glob syntax is supported"
+
+    def _init_reader(self, current_input) -> csv.DictReader:
+        """
+        Initializes and returns the CSV reader to use.
+
+        :param current_input: the file pointer to initialize with
+        :return: the reader to use
+        :rtype: csv.DictReader
+        """
+        return csv.DictReader(current_input, delimiter='\t')
+
+
+class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
+    """
+    Writer for TSV files.
+    """
+
+    def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+        """
+        Initializes the writer.
+
+        :param target: the filename/dir to write to
+        :type target: str
+        :param col_content: the column with the content
+        :type col_content: str
+        :param logging_level: the logging level to use
+        :type logging_level: str
+        """
+        super().__init__(target=target, col_content=col_content, logging_level=logging_level)
+
+    def name(self) -> str:
+        """
+        Returns the name of the reader, used as command-line name.
+
+        :return: the name
+        :rtype: str
+        """
+        return "to-tsv-pretrain"
+
+    def description(self) -> str:
+        """
+        Returns a description of the reader.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Writes pretrain data in TSV format."
+
+    def _get_output_description(self) -> str:
+        """
+        Returns the description to use for the output file in the argparser.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Path of the TSV file to write (directory when processing multiple files)"
+
+    def _init_writer(self, current_output) -> csv.writer:
+        """
+        Initializes and returns the CSV writer to use for the output.
+
+        :param current_output: the file pointer of the output file to initialize with
+        :return: the reader
+        :rtype: csv.writer
+        """
+        return csv.writer(current_output, delimiter='\t')
+
+    def _get_extension(self) -> str:
+        """
+        Returns the extension to use for output files.
+
+        :return: the extension to use (incl dot)
+        :rtype: str
+        """
+        return ".tsv"

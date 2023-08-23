@@ -22,13 +22,15 @@ The following dataset formats are supported:
 
 | Domain   | Format | Read  | Write | Compression |
 | :---     | :---   | :---: | :---: | :---:       |
-| pairs    | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | Y | Y | Y |    
-| pairs    | CSV | Y | Y | Y |
-| pairs    | [Jsonlines](https://jsonlines.org/) | Y | Y | Y |
-| pairs    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y | N |    
-| pretrain | CSV | Y | Y | Y |
-| pretrain | [Jsonlines](https://jsonlines.org/) | Y | Y | Y |
-| pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | Y | Y | N |    
+| pairs    | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md) | [to-alpaca](plugins/to-alpaca.md) | Y |    
+| pairs    | CSV | [from-csv-pairs](plugins/from-csv-pairs.md) | [to-csv-pairs](plugins/to-csv-pairs.md) | Y |
+| pairs    | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pairs](plugins/from-jsonlines-pairs.md) | [to-jsonlines-pairs](plugins/to-jsonlines-pairs.md) | Y |
+| pairs    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pairs](plugins/from-parquet-pairs.md) | [to-parquet-pairs](plugins/to-parquet-pairs.md) | N |    
+| pairs    | TSV | [from-tsv-pairs](plugins/from-tsv-pairs.md) | [to-tsv-pairs](plugins/to-tsv-pairs.md) | Y |
+| pretrain | CSV | [from-csv-pretrain](plugins/from-csv-pretrain.md) | [to-csv-pretrain](plugins/to-csv-pretrain.md) | Y |
+| pretrain | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pretrain](plugins/from-jsonlines-pretrain.md) | [to-jsonlines-pretrain](plugins/to-jsonlines-pretrain.md) | Y |
+| pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pretrain](plugins/from-parquet-pretrain.md) | [to-parquet-pretrain](plugins/to-parquet-pretrain.md) | N |    
+| pretrain | TSV | [from-tsv-pretrain](plugins/from-tsv-pretrain.md) | [to-tsv-pretrain](plugins/to-tsv-pretrain.md) | Y |
 
 
 ## Compression formats
@@ -80,8 +82,8 @@ Download tool for [Hugging Face](https://huggingface.co/) datasets/files:
 
 ```
 usage: llm-hf-download [-h] -i REPO_ID [-t {None,model,dataset,space}]
-                       [-f FILENAME] [-r REVISION] [-o OUTPUT_DIR]
-                       [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                       [-f [FILENAME [FILENAME ...]]] [-r REVISION]
+                       [-o OUTPUT_DIR] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool for downloading files or datasets from Hugging Face
 (https://huggingface.co/) for local conversion.
@@ -93,7 +95,7 @@ optional arguments:
                         download (default: None)
   -t {None,model,dataset,space}, --repo_type {None,model,dataset,space}
                         The type of the repository (default: None)
-  -f FILENAME, --filename FILENAME
+  -f [FILENAME [FILENAME ...]], --filename [FILENAME [FILENAME ...]]
                         The name of the file to download rather than the full
                         dataset (default: None)
   -r REVISION, --revision REVISION
@@ -129,29 +131,11 @@ optional arguments:
 ```
 
 
-## Plugins
-
-Readers:
-* [from-alpaca](plugins/from-alpaca.md)
-* [from-csv-pairs](plugins/from-csv-pairs.md)
-* [from-csv-pretrain](plugins/from-csv-pretrain.md)
-* [from-jsonlines-pairs](plugins/from-jsonlines-pairs.md)
-* [from-jsonlines-pretrain](plugins/from-jsonlines-pretrain.md)
-* [from-parquet-pairs](plugins/from-parquet-pairs.md)
-* [from-parquet-pretrain](plugins/from-parquet-pretrain.md)
+## Other plugins
 
 Filters:  
 * [keyword-pairs](plugins/keyword-pairs.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
-  
-Writers:
-* [to-alpaca](plugins/to-alpaca.md)
-* [to-csv-pairs](plugins/to-csv-pairs.md)
-* [to-csv-pretrain](plugins/to-csv-pretrain.md)
-* [to-jsonlines-pairs](plugins/to-jsonlines-pairs.md)
-* [to-jsonlines-pretrain](plugins/to-jsonlines-pretrain.md)
-* [to-parquet-pairs](plugins/to-parquet-pairs.md)
-* [to-parquet-pretrain](plugins/to-parquet-pretrain.md)
 
 
 ## Command-line examples
