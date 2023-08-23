@@ -52,10 +52,12 @@ setup(
             "from-csv-pairs=ldc.supervised.pairs:CsvPairsReader",
             "from-jsonlines-pairs=ldc.supervised.pairs:JsonLinesPairReader",
             "from-parquet-pairs=ldc.supervised.pairs:ParquetPairsReader",
+            "from-tsv-pairs=ldc.supervised.pairs:TsvPairsReader",
             # pretrain
             "from-csv-pretrain=ldc.pretrain:CsvPretrainReader",
             "from-jsonlines-pretrain=ldc.pretrain:JsonLinesPretrainReader",
             "from-parquet-pretrain=ldc.pretrain:ParquetPretrainReader",
+            "from-tsv-pretrain=ldc.pretrain:TsvPretrainReader",
         ],
         "ldc.filters": [
             "keyword=ldc.filter:Keyword",
@@ -67,10 +69,12 @@ setup(
             "to-csv-pairs=ldc.supervised.pairs:CsvPairsWriter",
             "to-jsonlines-pairs=ldc.supervised.pairs:JsonLinesPairWriter",
             "to-parquet-pairs=ldc.supervised.pairs:ParquetPairsWriter",
+            "to-tsv-pairs=ldc.supervised.pairs:TsvPairsWriter",
             # pretrain
             "to-csv-pretrain=ldc.pretrain:CsvPretrainWriter",
             "to-jsonlines-pretrain=ldc.pretrain:JsonLinesPretrainWriter",
             "to-parquet-pretrain=ldc.pretrain:ParquetPretrainWriter",
+            "to-tsv-pretrain=ldc.pretrain:TsvPretrainWriter",
         ],
     },
 )
