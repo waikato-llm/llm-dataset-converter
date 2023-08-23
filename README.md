@@ -135,6 +135,7 @@ optional arguments:
 
 Filters:  
 * [keyword-pairs](plugins/keyword-pairs.md)
+* [keyword-pretrain](plugins/keyword-pretrain.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 
 
