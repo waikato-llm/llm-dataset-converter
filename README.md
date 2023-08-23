@@ -21,7 +21,7 @@ https://github.com/Zjh-819/LLMDataHub
 The following dataset formats are supported:
 
 | Domain   | Format | Read  | Write | Compression |
-| :---     | :---   | :---: | :---: | :---:       |
+| :---     | :---   | :---  | :---  | :---:       |
 | pairs    | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md) | [to-alpaca](plugins/to-alpaca.md) | Y |    
 | pairs    | CSV | [from-csv-pairs](plugins/from-csv-pairs.md) | [to-csv-pairs](plugins/to-csv-pairs.md) | Y |
 | pairs    | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pairs](plugins/from-jsonlines-pairs.md) | [to-jsonlines-pairs](plugins/to-jsonlines-pairs.md) | Y |
