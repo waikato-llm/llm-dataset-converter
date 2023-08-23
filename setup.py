@@ -58,6 +58,7 @@ setup(
             "from-jsonlines-pretrain=ldc.pretrain:JsonLinesPretrainReader",
             "from-parquet-pretrain=ldc.pretrain:ParquetPretrainReader",
             "from-tsv-pretrain=ldc.pretrain:TsvPretrainReader",
+            "from-txt-pretrain=ldc.pretrain:TxtPretrainReader",
         ],
         "ldc.filters": [
             "keyword=ldc.filter:Keyword",
@@ -75,6 +76,7 @@ setup(
             "to-jsonlines-pretrain=ldc.pretrain:JsonLinesPretrainWriter",
             "to-parquet-pretrain=ldc.pretrain:ParquetPretrainWriter",
             "to-tsv-pretrain=ldc.pretrain:TsvPretrainWriter",
+            "to-txt-pretrain=ldc.pretrain:TxtPretrainWriter",
         ],
     },
 )
