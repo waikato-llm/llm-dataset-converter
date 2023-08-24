@@ -15,19 +15,23 @@ class ParquetPretrainReader(PretrainReader):
     Reader for Parquet database files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, col_id: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
         :param col_content: the column with the content
         :type col_content: str
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
         self.col_content = col_content
+        self.col_id = col_id
         self._inputs = None
         self._current_input = None
         self._current_table = None
@@ -60,6 +64,7 @@ class ParquetPretrainReader(PretrainReader):
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column with the text to retrieve", required=False)
+        parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -72,6 +77,7 @@ class ParquetPretrainReader(PretrainReader):
         super()._apply_args(ns)
         self.source = ns.input
         self.col_content = ns.col_content
+        self.col_id = ns.col_id
 
     def initialize(self):
         """
@@ -101,8 +107,18 @@ class ParquetPretrainReader(PretrainReader):
 
         for index, row in self._current_table.iterrows():
             val_content = None if (self.col_content is None) else row[self.col_content]
+
+            id_ = None
+            if self.col_id is not None:
+                id_ = row[self.col_id]
+
+            meta = None
+            if id_ is not None:
+                meta = {"id": id_}
+
             yield PretrainData(
                 content=val_content,
+                meta=meta,
             )
 
     def has_finished(self) -> bool:

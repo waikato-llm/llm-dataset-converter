@@ -13,7 +13,7 @@ class JsonLinesPairReader(PairReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None,
-                 att_instruction: str = None, att_input: str = None, att_output: str = None,
+                 att_instruction: str = None, att_input: str = None, att_output: str = None, att_id: str = None,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
@@ -25,6 +25,8 @@ class JsonLinesPairReader(PairReader):
         :type att_input: str
         :param att_output: the attribute with the output data
         :type att_output: str
+        :param att_id: the (optional) attribute the ID
+        :type att_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -33,6 +35,7 @@ class JsonLinesPairReader(PairReader):
         self.att_instruction = att_instruction
         self.att_input = att_input
         self.att_output = att_output
+        self.att_id = att_id
         self._inputs = None
         self._current_input = None
         self._reader = None
@@ -67,6 +70,7 @@ class JsonLinesPairReader(PairReader):
         parser.add_argument("--att_instruction", metavar="ATT", type=str, default=None, help="The attribute with the instructions", required=False)
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute with the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute with the outputs", required=False)
+        parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The attribute the record ID (gets stored under 'id' in meta-data)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -81,6 +85,7 @@ class JsonLinesPairReader(PairReader):
         self.att_instruction = ns.att_instruction
         self.att_input = ns.att_input
         self.att_output = ns.att_output
+        self.att_id = ns.att_id
 
     def initialize(self):
         """
@@ -117,10 +122,20 @@ class JsonLinesPairReader(PairReader):
             val_output = None
             if self.att_output is not None:
                 val_output = item[self.att_output]
+
+            id_ = None
+            if self.att_id is not None:
+                id_ = item[self.att_id]
+
+            meta = None
+            if id_ is not None:
+                meta = {"id": id_}
+
             yield PairData(
                 instruction=val_instruction,
                 input=val_input,
                 output=val_output,
+                meta=meta,
             )
 
     def has_finished(self) -> bool:

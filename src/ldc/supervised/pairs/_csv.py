@@ -14,7 +14,7 @@ class AbstractCsvLikePairsReader(PairReader):
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -27,6 +27,8 @@ class AbstractCsvLikePairsReader(PairReader):
         :type col_input: str
         :param col_output: the column with the output data
         :type col_output: str
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -36,9 +38,11 @@ class AbstractCsvLikePairsReader(PairReader):
         self.col_instruction = col_instruction
         self.col_input = col_input
         self.col_output = col_output
+        self.col_id = col_id
         self.idx_instruction = -1
         self.idx_input = -1
         self.idx_output = -1
+        self.idx_id = -1
         self._inputs = None
         self._current_input = None
         self._current_reader = None
@@ -64,6 +68,7 @@ class AbstractCsvLikePairsReader(PairReader):
         parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column (or 1-based index if no header row) with the instructions", required=False)
         parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column (or 1-based index if no header row) with the inputs", required=False)
         parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column (or 1-based index if no header row) with the outputs", required=False)
+        parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
         return parser
 
@@ -79,6 +84,7 @@ class AbstractCsvLikePairsReader(PairReader):
         self.col_instruction = ns.col_instruction
         self.col_input = ns.col_input
         self.col_output = ns.col_output
+        self.col_id = ns.col_id
         self.no_header = ns.no_header
 
     def initialize(self):
@@ -98,11 +104,17 @@ class AbstractCsvLikePairsReader(PairReader):
             self.idx_output = int(self.col_output) - 1
         except:
             self.idx_output = -1
-        self._inputs = locate_files(self.source, fail_if_empty=True)
         if not self.no_header and (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
             raise Exception("Header row expected but no columns specified!")
         if self.no_header and (self.idx_instruction == -1) and (self.idx_input == -1) and (self.idx_output == -1):
             raise Exception("No header row expected but no column indices specified!")
+
+        try:
+            self.idx_id = int(self.col_id) - 1
+        except:
+            self.idx_id = -1
+
+        self._inputs = locate_files(self.source, fail_if_empty=True)
 
     def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
@@ -148,10 +160,23 @@ class AbstractCsvLikePairsReader(PairReader):
                     val_input = row[self.col_input]
                 if self.col_output is not None:
                     val_output = row[self.col_output]
+
+            id_ = None
+            if self.col_id is not None:
+                if self.no_header:
+                    id_ = row[self.idx_id]
+                else:
+                    id_ = row[self.col_id]
+
+            meta = None
+            if id_ is not None:
+                meta = {"id": id_}
+
             yield PairData(
                 instruction=val_instruction,
                 input=val_input,
                 output=val_output,
+                meta=meta,
             )
 
     def has_finished(self) -> bool:
@@ -326,6 +351,7 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
+                 col_id: str = None, skip_duplicate_ids: bool = False,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
@@ -339,11 +365,15 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
         :type col_input: str
         :param col_output: the column with the output data
         :type col_output: str
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
+        :param skip_duplicate_ids: with a ID column defined, duplicate rows can be skipped
+        :type skip_duplicate_ids: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, logging_level=logging_level)
+                         col_output=col_output, col_id=col_id, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -467,6 +497,7 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
+                 col_id: str = None, skip_duplicate_ids: bool = False,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
@@ -480,11 +511,15 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
         :type col_input: str
         :param col_output: the column with the output data
         :type col_output: str
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
+        :param skip_duplicate_ids: with a ID column defined, duplicate rows can be skipped
+        :type skip_duplicate_ids: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, logging_level=logging_level)
+                         col_output=col_output, col_id=col_id, logging_level=logging_level)
 
     def name(self) -> str:
         """

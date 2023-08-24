@@ -12,19 +12,23 @@ class JsonLinesPretrainReader(PretrainReader):
     Reader for the JsonLines JSON format.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, att_content: str = "content", logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, att_content: str = None, att_id: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
         :param att_content: the attribute with the content
         :type att_content: str
+        :param att_id: the (optional) attribute the ID
+        :type att_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
         self.att_content = att_content
+        self.att_id = att_id
         self._inputs = None
         self._current_input = None
         self._reader = None
@@ -57,6 +61,7 @@ class JsonLinesPretrainReader(PretrainReader):
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("--att_content", metavar="ATT", type=str, default=None, help="The attribute with the text content", required=False)
+        parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The attribute the record ID (gets stored under 'id' in meta-data)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -69,6 +74,7 @@ class JsonLinesPretrainReader(PretrainReader):
         super()._apply_args(ns)
         self.source = ns.input
         self.att_content = ns.att_content
+        self.att_id = ns.att_id
 
     def initialize(self):
         """
@@ -99,8 +105,18 @@ class JsonLinesPretrainReader(PretrainReader):
             val_content = None
             if self.att_content is not None:
                 val_content = item[self.att_content]
+
+            id_ = None
+            if self.att_id is not None:
+                id_ = item[self.att_id]
+
+            meta = None
+            if id_ is not None:
+                meta = {"id": id_}
+
             yield PretrainData(
-                content=val_content
+                content=val_content,
+                meta=meta,
             )
 
     def has_finished(self) -> bool:

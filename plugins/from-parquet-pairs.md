@@ -8,7 +8,7 @@ Reads prompt/output pairs from Parquet database files.
 ```
 usage: from-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
                           [INPUT ...] [--col_instruction COL]
-                          [--col_input COL] [--col_output COL]
+                          [--col_input COL] [--col_output COL] [--col_id COL]
 
 Reads prompt/output pairs from Parquet database files.
 
@@ -25,4 +25,6 @@ optional arguments:
   --col_input COL       The name of the column with the inputs (default: None)
   --col_output COL      The name of the column with the outputs (default:
                         None)
+  --col_id COL          The name of the column with the row IDs (gets stored
+                        under 'id' in meta-data) (default: None)
 ```
