@@ -5,7 +5,7 @@
 
 Writes pretrain data to plain text files.
 When providing an output directory, uses the current session counter as the filename.
-When providing an output file, all incoming content will be concatenated in this one file.
+When providing an output file, all incoming content will be concatenated in this one file. Compression is not available in this case due to the streaming context.
 
 ```
 usage: to-txt-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
@@ -13,7 +13,8 @@ usage: to-txt-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
 
 Writes pretrain data to plain text files. When providing an output directory,
 uses the current session counter as the filename. When providing an output
-file, all incoming content will be concatenated in this one file.
+file, all incoming content will be concatenated in this one file. Compression
+is not available in this case due to the streaming context.
 
 optional arguments:
   -h, --help            show this help message and exit

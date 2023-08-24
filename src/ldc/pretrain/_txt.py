@@ -143,7 +143,8 @@ class TxtPretrainWriter(StreamPretrainWriter):
         """
         return "Writes pretrain data to plain text files.\n" \
                + "When providing an output directory, uses the current session counter as the filename.\n" \
-               + "When providing an output file, all incoming content will be concatenated in this one file."
+               + "When providing an output file, all incoming content will be concatenated in this one file. " \
+               + "Compression is not available in this case due to the streaming context."
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
