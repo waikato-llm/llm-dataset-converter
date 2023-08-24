@@ -124,6 +124,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         self._writer = None
         self._concatenate = False
         self._first_item = True
+        self._fname_format = None
 
     def name(self) -> str:
         """
@@ -142,7 +143,8 @@ class TxtPretrainWriter(StreamPretrainWriter):
         :rtype: str
         """
         return "Writes pretrain data to plain text files.\n" \
-               + "When providing an output directory, uses the current session counter as the filename.\n" \
+               + "When providing an output directory, either uses the current session counter as the filename or, " \
+               + "if present, the 'id' value from the meta-data.\n" \
                + "When providing an output file, all incoming content will be concatenated in this one file. " \
                + "Compression is not available in this case due to the streaming context."
 
@@ -175,6 +177,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         """
         super().initialize()
         self._first_item = True
+        self._fname_format = "%0" + str(self.num_digits) + "d.txt"
         if os.path.exists(self.target) and os.path.isdir(self.target):
             self._concatenate = False
         else:
@@ -196,7 +199,13 @@ class TxtPretrainWriter(StreamPretrainWriter):
                 fp.write(data.content)
                 fp.write("\n")
         else:
-            fname_format = "%0" + str(self.num_digits) + "d.txt"
-            output = generate_output(fname_format % self.session.count, self.target, ".txt", self.session.options.compression)
+            if (data.meta is not None) and ("id" in data.meta):
+                try:
+                    fname = self._fname_format % int(data.meta["id"])
+                except:
+                    fname = str(data.meta["id"]) + ".txt"
+            else:
+                fname = self._fname_format % self.session.count
+            output = generate_output(fname, self.target, ".txt", self.session.options.compression)
             with open(output, "w") as fp:
                 fp.write(data.content)
