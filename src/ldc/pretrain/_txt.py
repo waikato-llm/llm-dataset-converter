@@ -1,8 +1,9 @@
 import argparse
+import os
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN
-from ldc.io import locate_files, open_file, generate_output
+from ldc.io import locate_files, open_file, generate_output, is_compressed
 from ._core import PretrainData, PretrainReader, StreamPretrainWriter
 
 
@@ -121,6 +122,8 @@ class TxtPretrainWriter(StreamPretrainWriter):
         self.num_digits = num_digits
         self._output = None
         self._writer = None
+        self._concatenate = False
+        self._first_item = True
 
     def name(self) -> str:
         """
@@ -138,7 +141,9 @@ class TxtPretrainWriter(StreamPretrainWriter):
         :return: the description
         :rtype: str
         """
-        return "Writes pretrain data to plain text files. Uses the current session counter for the filename."
+        return "Writes pretrain data to plain text files.\n" \
+               + "When providing an output directory, uses the current session counter as the filename.\n" \
+               + "When providing an output file, all incoming content will be concatenated in this one file."
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -148,7 +153,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path to the directory to write to", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path to the directory or file to write to", required=True)
         parser.add_argument("-d", "--num_digits", metavar="NUM", type=int, default=6, help="The number of digits to use for the filenames", required=False)
         return parser
 
@@ -163,6 +168,19 @@ class TxtPretrainWriter(StreamPretrainWriter):
         self.target = ns.output
         self.num_digits = ns.num_digits
 
+    def initialize(self):
+        """
+        Initializes the processing, e.g., for opening files or databases.
+        """
+        super().initialize()
+        self._first_item = True
+        if os.path.exists(self.target) and os.path.isdir(self.target):
+            self._concatenate = False
+        else:
+            self._concatenate = True
+            if is_compressed(self.target):
+                raise Exception("Cannot use compression when concatenating due to streaming!")
+
     def write_stream(self, data: PretrainData):
         """
         Saves the data one by one.
@@ -170,7 +188,14 @@ class TxtPretrainWriter(StreamPretrainWriter):
         :param data: the data to write
         :type data: PretrainData
         """
-        fname_format = "%0" + str(self.num_digits) + "d.txt"
-        output = generate_output(fname_format % self.session.count, self.target, ".txt", self.session.options.compression)
-        with open(output, "w") as fp:
-            fp.write(data.content)
+        if self._concatenate:
+            mode = "w" if self._first_item else "a"
+            self._first_item = False
+            with open(self.target, mode) as fp:
+                fp.write(data.content)
+                fp.write("\n")
+        else:
+            fname_format = "%0" + str(self.num_digits) + "d.txt"
+            output = generate_output(fname_format % self.session.count, self.target, ".txt", self.session.options.compression)
+            with open(output, "w") as fp:
+                fp.write(data.content)
