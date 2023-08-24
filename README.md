@@ -31,7 +31,9 @@ The following dataset formats are supported:
 | pretrain | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pretrain](plugins/from-jsonlines-pretrain.md) | [to-jsonlines-pretrain](plugins/to-jsonlines-pretrain.md) | Y |
 | pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pretrain](plugins/from-parquet-pretrain.md) | [to-parquet-pretrain](plugins/to-parquet-pretrain.md) | N |    
 | pretrain | TSV | [from-tsv-pretrain](plugins/from-tsv-pretrain.md) | [to-tsv-pretrain](plugins/to-tsv-pretrain.md) | Y |
-| pretrain | TXT | [from-txt-pretrain](plugins/from-txt-pretrain.md) | [to-txt-pretrain](plugins/to-txt-pretrain.md) | Y (not when concatenating) |
+| pretrain | TXT | [from-txt-pretrain](plugins/from-txt-pretrain.md) | [to-txt-pretrain](plugins/to-txt-pretrain.md) | Y<sup>1</sup> |
+
+<sup>1</sup> Not available when concatenating content in single file.
 
 
 ## Compression formats
