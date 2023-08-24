@@ -101,6 +101,7 @@ class PairsToPretrain(Filter):
         """
         Initializes the processing, e.g., for opening files or databases.
         """
+        super().initialize()
         if (self.data_fields is None) or (len(self.data_fields) == 0):
             raise Exception("No data fields provided!")
 
