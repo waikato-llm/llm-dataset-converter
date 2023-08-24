@@ -63,6 +63,7 @@ setup(
         "ldc.filters": [
             "keyword=ldc.filter:Keyword",
             "pairs-to-pretrain=ldc.filter:PairsToPretrain",
+            "skip-duplicate-ids=ldc.filter:SkipDuplicateIDs",
         ],
         "ldc.writers": [
             # pairs

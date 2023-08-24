@@ -136,6 +136,7 @@ optional arguments:
 
 Filters:  
 * [keyword](plugins/keyword.md)
+* [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 
 
