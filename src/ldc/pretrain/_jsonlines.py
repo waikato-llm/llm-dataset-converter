@@ -145,7 +145,7 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
     Writer for the JsonLines JSON format.
     """
 
-    def __init__(self, target: str = None, att_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, att_content: str = None, att_id: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -153,12 +153,15 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
         :type target: str
         :param att_content: the attribute with the content
         :type att_content: str
+        :param att_id: the (optional) attribute with the ID
+        :type att_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.target = target
         self.att_content = att_content
+        self.att_id = att_id
         self._output = None
         self._writer = None
 
@@ -190,6 +193,7 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help="Path of the JsonLines file to write (directory when processing multiple files)", required=True)
         parser.add_argument("--att_content", metavar="ATT", type=str, default=None, help="The attribute for the text content", required=False)
+        parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The name of the attribute for the row IDs (uses 'id' from meta-data)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -202,6 +206,7 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
         super()._apply_args(ns)
         self.target = ns.output
         self.att_content = ns.att_content
+        self.att_id = ns.att_id
 
     def initialize(self):
         """
@@ -226,9 +231,11 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
 
         self._writer = jsonlines.Writer(self._output)
         for item in data:
-            self._writer.write({
-                self.att_content: item.content
-            })
+            d = {self.att_content: item.content}
+            if self.att_id is not None:
+                if (item.meta is not None) and ("id" in item.meta):
+                    d[self.att_id] = item.meta["id"]
+            self._writer.write(d)
 
     def finalize(self):
         """

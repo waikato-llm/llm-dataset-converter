@@ -165,7 +165,7 @@ class JsonLinesPairWriter(BatchPairWriter):
     """
 
     def __init__(self, target: str = None,
-                 att_instruction: str = None, att_input: str = None, att_output: str = None,
+                 att_instruction: str = None, att_input: str = None, att_output: str = None, att_id: str = None,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
@@ -178,6 +178,8 @@ class JsonLinesPairWriter(BatchPairWriter):
         :type att_input: str
         :param att_output: the attribute with the output data
         :type att_output: str
+        :param att_id: the (optional) attribute with the ID
+        :type att_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -186,6 +188,7 @@ class JsonLinesPairWriter(BatchPairWriter):
         self.att_instruction = att_instruction
         self.att_input = att_input
         self.att_output = att_output
+        self.att_id = att_id
         self._output = None
         self._writer = None
 
@@ -219,6 +222,7 @@ class JsonLinesPairWriter(BatchPairWriter):
         parser.add_argument("--att_instruction", metavar="ATT", type=str, default=None, help="The attribute for the instructions", required=False)
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute for the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute for the outputs", required=False)
+        parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The name of the attribute for the row IDs (uses 'id' from meta-data)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -233,6 +237,7 @@ class JsonLinesPairWriter(BatchPairWriter):
         self.att_instruction = ns.att_instruction
         self.att_input = ns.att_input
         self.att_output = ns.att_output
+        self.add_id = ns.att_id
 
     def initialize(self):
         """
@@ -264,6 +269,9 @@ class JsonLinesPairWriter(BatchPairWriter):
                 d[self.att_input] = item.input
             if self.att_output is not None:
                 d[self.att_output] = item.output
+            if self.att_id is not None:
+                if (item.meta is not None) and ("id" in item.meta):
+                    d[self.att_id] = item.meta["id"]
             self._writer.write(d)
 
     def finalize(self):

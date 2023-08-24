@@ -144,7 +144,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
     Writer for Parquet database files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, col_id: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -152,12 +152,15 @@ class ParquetPretrainWriter(BatchPretrainWriter):
         :type target: str
         :param col_content: the column with the content
         :type col_content: str
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.target = target
         self.col_content = col_content
+        self.col_id = col_id
         self._output = None
         self._output_writer = None
 
@@ -189,6 +192,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help="Path of the CSV file to write (directory when processing multiple files)", required=True)
         parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column for the text content", required=False)
+        parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column for the row IDs (uses 'id' from meta-data)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -201,6 +205,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
         super()._apply_args(ns)
         self.target = ns.output
         self.col_content = ns.col_content
+        self.col_id = ns.col_id
 
     def initialize(self):
         """
@@ -223,11 +228,19 @@ class ParquetPretrainWriter(BatchPretrainWriter):
             self.logger().info("Writing to: " + output)
             # create dictionary
             d_content = []
+            d_ids = []
             for row in data:
                 d_content.append(row.content)
+                if self.col_id is not None:
+                    if (row.meta is not None) and ("id" in row.meta):
+                        d_ids.append(row.meta["id"])
+                    else:
+                        d_ids.append(None)
             d = dict()
             if self.col_content is not None:
                 d[self.col_content] = d_content
+            if self.col_id is not None:
+                d[self.col_id] = d_ids
             # create pandas dataframe
             df = pd.DataFrame.from_dict(d)
             table = pa.Table.from_pandas(df)

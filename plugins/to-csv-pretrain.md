@@ -7,7 +7,7 @@ Writes pretrain data in CSV format.
 
 ```
 usage: to-csv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                       [-c COL] [-n]
+                       [-c COL] [--col_id COL] [-n]
 
 Writes pretrain data in CSV format.
 
@@ -21,5 +21,7 @@ optional arguments:
   -c COL, --col_content COL
                         The name of the column for the content when outputting
                         a header row (default: None)
+  --col_id COL          The name of the column for the row IDs (uses 'id' from
+                        meta-data) (default: None)
   -n, --no_header       For suppressing the header row (default: False)
 ```

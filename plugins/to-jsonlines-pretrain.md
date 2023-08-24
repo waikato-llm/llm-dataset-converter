@@ -7,7 +7,7 @@ Writes pretrain data in JsonLines-like JSON format.
 
 ```
 usage: to-jsonlines-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o
-                             OUTPUT [--att_content ATT]
+                             OUTPUT [--att_content ATT] [--att_id ATT]
 
 Writes pretrain data in JsonLines-like JSON format.
 
@@ -19,4 +19,6 @@ optional arguments:
                         Path of the JsonLines file to write (directory when
                         processing multiple files) (default: None)
   --att_content ATT     The attribute for the text content (default: None)
+  --att_id ATT          The name of the attribute for the row IDs (uses 'id'
+                        from meta-data) (default: None)
 ```

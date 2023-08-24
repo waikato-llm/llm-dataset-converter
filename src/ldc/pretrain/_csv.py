@@ -170,7 +170,8 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
     Ancestor for writers of CSV-like files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -180,6 +181,8 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         :type col_content: str
         :param no_header: whether to suppress the header row
         :type no_header: bool
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -187,6 +190,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         self.target = target
         self.col_content = col_content
         self.no_header = no_header
+        self.col_id = col_id
         self._output = None
         self._output_writer = None
 
@@ -209,6 +213,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help=self._get_output_description(), required=True)
         parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name of the column for the content when outputting a header row", required=False)
+        parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column for the row IDs (uses 'id' from meta-data)", required=False)
         parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
         return parser
 
@@ -223,6 +228,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         self.target = ns.output
         self.col_content = ns.col_content
         self.no_header = ns.no_header
+        self.col_id = ns.col_id
 
     def initialize(self):
         """
@@ -265,10 +271,20 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
             self._output = open_file(output, mode="wt")
             self._output_writer = self._init_writer(self._output)
             if not self.no_header:
-                self._output_writer.writerow([self.col_content])
+                row = []
+                if self.col_id is not None:
+                    row.append(self.col_id)
+                row.append(self.col_content)
+                self._output_writer.writerow(row)
 
         for item in data:
-            row = [item.content]
+            row = []
+            if self.col_id is not None:
+                if (item.meta is not None) and ("id" in item.meta):
+                    row.append(item.meta["id"])
+                else:
+                    row.append(None)
+            row.append(item.content)
             self._output_writer.writerow(row)
 
     def finalize(self):
@@ -349,7 +365,8 @@ class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
     Writer for CSV files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -359,10 +376,13 @@ class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :type col_content: str
         :param no_header: whether to suppress the header row
         :type no_header: bool
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, col_content=col_content, no_header=no_header, logging_level=logging_level)
+        super().__init__(target=target, col_content=col_content, no_header=no_header, col_id=col_id,
+                         logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -478,7 +498,8 @@ class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
     Writer for TSV files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -488,10 +509,13 @@ class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :type col_content: str
         :param no_header: whether to suppress the header row
         :type no_header: bool
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, col_content=col_content, no_header=no_header, logging_level=logging_level)
+        super().__init__(target=target, col_content=col_content, no_header=no_header, col_id=col_id,
+                         logging_level=logging_level)
 
     def name(self) -> str:
         """

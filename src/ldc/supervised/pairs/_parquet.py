@@ -164,7 +164,7 @@ class ParquetPairsWriter(BatchPairWriter):
     """
 
     def __init__(self, target: str = None,
-                 col_instruction: str = None, col_input: str = None, col_output: str = None,
+                 col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
@@ -177,6 +177,8 @@ class ParquetPairsWriter(BatchPairWriter):
         :type col_input: str
         :param col_output: the column with the output data
         :type col_output: str
+        :param col_id: the (optional) column containing row IDs
+        :type col_id: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -185,6 +187,7 @@ class ParquetPairsWriter(BatchPairWriter):
         self.col_instruction = col_instruction
         self.col_input = col_input
         self.col_output = col_output
+        self.col_id = col_id
         self._output = None
         self._output_writer = None
 
@@ -218,6 +221,7 @@ class ParquetPairsWriter(BatchPairWriter):
         parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column for the instructions", required=False)
         parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column for the inputs", required=False)
         parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column for the outputs", required=False)
+        parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column for the row IDs (uses 'id' from meta-data)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -232,6 +236,7 @@ class ParquetPairsWriter(BatchPairWriter):
         self.col_instruction = ns.col_instruction
         self.col_input = ns.col_input
         self.col_output = ns.col_output
+        self.col_id = ns.col_id
 
     def initialize(self):
         """
@@ -256,10 +261,16 @@ class ParquetPairsWriter(BatchPairWriter):
             d_instruction = []
             d_input = []
             d_output = []
+            d_ids = []
             for row in data:
                 d_instruction.append(row.instruction)
                 d_input.append(row.input)
                 d_output.append(row.output)
+                if self.col_id is not None:
+                    if (row.meta is not None) and ("id" in row.meta):
+                        d_ids.append(row.meta["id"])
+                    else:
+                        d_ids.append(None)
             d = dict()
             if self.col_instruction is not None:
                 d[self.col_instruction] = d_instruction
@@ -267,6 +278,8 @@ class ParquetPairsWriter(BatchPairWriter):
                 d[self.col_input] = d_input
             if self.col_output is not None:
                 d[self.col_output] = d_output
+            if self.col_id is not None:
+                d[self.col_id] = d_ids
             # create pandas dataframe
             df = pd.DataFrame.from_dict(d)
             table = pa.Table.from_pandas(df)

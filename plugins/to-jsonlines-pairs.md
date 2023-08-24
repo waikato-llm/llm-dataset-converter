@@ -8,7 +8,7 @@ Writes prompt/output pairs in JsonLines-like JSON format.
 ```
 usage: to-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
                           [--att_instruction ATT] [--att_input ATT]
-                          [--att_output ATT]
+                          [--att_output ATT] [--att_id ATT]
 
 Writes prompt/output pairs in JsonLines-like JSON format.
 
@@ -23,4 +23,6 @@ optional arguments:
                         The attribute for the instructions (default: None)
   --att_input ATT       The attribute for the inputs (default: None)
   --att_output ATT      The attribute for the outputs (default: None)
+  --att_id ATT          The name of the attribute for the row IDs (uses 'id'
+                        from meta-data) (default: None)
 ```

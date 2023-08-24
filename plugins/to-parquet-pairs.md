@@ -8,7 +8,7 @@ Writes prompt/output pairs in Parquet database format.
 ```
 usage: to-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
                         [--col_instruction COL] [--col_input COL]
-                        [--col_output COL]
+                        [--col_output COL] [--col_id COL]
 
 Writes prompt/output pairs in Parquet database format.
 
@@ -24,4 +24,6 @@ optional arguments:
                         None)
   --col_input COL       The name of the column for the inputs (default: None)
   --col_output COL      The name of the column for the outputs (default: None)
+  --col_id COL          The name of the column for the row IDs (uses 'id' from
+                        meta-data) (default: None)
 ```
