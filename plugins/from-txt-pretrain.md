@@ -4,13 +4,15 @@
 * generates: PretrainData
 
 Reads pretrain data from plain text files, with each file representing a data record.
+Text files can be split into lines and forwarded as separate records as well.
 
 ```
 usage: from-txt-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                         [INPUT ...]
+                         [INPUT ...] [-s]
 
 Reads pretrain data from plain text files, with each file representing a data
-record.
+record. Text files can be split into lines and forwarded as separate records
+as well.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -19,4 +21,7 @@ optional arguments:
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the text file(s) to read; glob syntax is
                         supported (default: None)
+  -s, --split_lines     Splits the text file on new lines and forwards them as
+                        separate records; the index of the line gets stored in
+                        the meta-data under 'line'. (default: False)
 ```
