@@ -92,7 +92,7 @@ class TxtPretrainReader(PretrainReader):
         for input_file in self._inputs:
             self.session.current_input = input_file
             self.logger().info("Reading from: " + str(input_file))
-            with open_file(self._current_input, mode="rt") as fp:
+            with open_file(self.session.current_input, mode="rt") as fp:
                 lines = fp.readlines()
             self.session.input_changed = True
             if self.split_lines:
@@ -105,6 +105,7 @@ class TxtPretrainReader(PretrainReader):
                 yield PretrainData(
                     content="".join(lines)
                 )
+        self._inputs = []
 
     def has_finished(self) -> bool:
         """
