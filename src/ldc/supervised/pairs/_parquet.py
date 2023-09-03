@@ -5,7 +5,7 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
