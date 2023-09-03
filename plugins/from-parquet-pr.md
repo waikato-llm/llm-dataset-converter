@@ -1,4 +1,4 @@
-# from-parquet-pairs
+# from-parquet-pr
 
 * domain(s): pairs
 * generates: PairData
@@ -6,9 +6,9 @@
 Reads prompt/output pairs from Parquet database files.
 
 ```
-usage: from-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                          [INPUT ...] [--col_instruction COL]
-                          [--col_input COL] [--col_output COL] [--col_id COL]
+usage: from-parquet-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                       [INPUT ...] [--col_instruction COL] [--col_input COL]
+                       [--col_output COL] [--col_id COL]
 
 Reads prompt/output pairs from Parquet database files.
 

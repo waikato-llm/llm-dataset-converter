@@ -1,23 +1,23 @@
-# from-csv-pairs
+# from-tsv-pr
 
 * domain(s): pairs
 * generates: PairData
 
-Reads prompt/output pairs in CSV format.
+Reads prompt/output pairs in TSV format.
 
 ```
-usage: from-csv-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                      [INPUT ...] [--col_instruction COL] [--col_input COL]
-                      [--col_output COL] [--col_id COL] [-n]
+usage: from-tsv-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                   [INPUT ...] [--col_instruction COL] [--col_input COL]
+                   [--col_output COL] [--col_id COL] [-n]
 
-Reads prompt/output pairs in CSV format.
+Reads prompt/output pairs in TSV format.
 
 optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the CSV file(s) to read; glob syntax is
+                        Path to the TSV file(s) to read; glob syntax is
                         supported (default: None)
   --col_instruction COL
                         The name of the column (or 1-based index if no header

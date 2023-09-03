@@ -1,4 +1,4 @@
-# from-tsv-pretrain
+# from-tsv-pt
 
 * domain(s): pretrain
 * generates: PretrainData
@@ -6,8 +6,8 @@
 Reads pretrain data in TSV format.
 
 ```
-usage: from-tsv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                         [INPUT ...] [-c COL] [--col_id COL] [-n]
+usage: from-tsv-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                   [INPUT ...] [-c COL] [--col_id COL] [-n]
 
 Reads pretrain data in TSV format.
 

@@ -1,4 +1,4 @@
-# to-jsonlines-pairs
+# to-jsonlines-pr
 
 * domain(s): pairs
 * accepts: PairData
@@ -6,9 +6,9 @@
 Writes prompt/output pairs in JsonLines-like JSON format.
 
 ```
-usage: to-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                          [--att_instruction ATT] [--att_input ATT]
-                          [--att_output ATT] [--att_id ATT]
+usage: to-jsonlines-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
+                       [--att_instruction ATT] [--att_input ATT]
+                       [--att_output ATT] [--att_id ATT]
 
 Writes prompt/output pairs in JsonLines-like JSON format.
 

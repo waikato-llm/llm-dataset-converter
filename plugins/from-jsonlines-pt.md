@@ -1,4 +1,4 @@
-# from-jsonlines-pretrain
+# from-jsonlines-pt
 
 * domain(s): pretrain
 * generates: PretrainData
@@ -6,9 +6,8 @@
 Reads pretrain data in JsonLines-like JSON format.
 
 ```
-usage: from-jsonlines-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
-                               INPUT [INPUT ...] [--att_content ATT]
-                               [--att_id ATT]
+usage: from-jsonlines-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                         [INPUT ...] [--att_content ATT] [--att_id ATT]
 
 Reads pretrain data in JsonLines-like JSON format.
 

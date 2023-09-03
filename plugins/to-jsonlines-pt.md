@@ -1,4 +1,4 @@
-# to-jsonlines-pretrain
+# to-jsonlines-pt
 
 * domain(s): pretrain
 * accepts: PretrainData
@@ -6,8 +6,8 @@
 Writes pretrain data in JsonLines-like JSON format.
 
 ```
-usage: to-jsonlines-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o
-                             OUTPUT [--att_content ATT] [--att_id ATT]
+usage: to-jsonlines-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
+                       [--att_content ATT] [--att_id ATT]
 
 Writes pretrain data in JsonLines-like JSON format.
 

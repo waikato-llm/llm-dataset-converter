@@ -1,4 +1,4 @@
-# to-parquet-pairs
+# to-parquet-pr
 
 * domain(s): pairs
 * accepts: PairData
@@ -6,9 +6,9 @@
 Writes prompt/output pairs in Parquet database format.
 
 ```
-usage: to-parquet-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                        [--col_instruction COL] [--col_input COL]
-                        [--col_output COL] [--col_id COL]
+usage: to-parquet-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
+                     [--col_instruction COL] [--col_input COL]
+                     [--col_output COL] [--col_id COL]
 
 Writes prompt/output pairs in Parquet database format.
 

@@ -1,4 +1,4 @@
-# to-txt-pretrain
+# to-txt-pt
 
 * domain(s): pretrain
 * accepts: PretrainData
@@ -8,8 +8,7 @@ When providing an output directory, either uses the current session counter as t
 When providing an output file, all incoming content will be concatenated in this one file. Compression is not available in this case due to the streaming context.
 
 ```
-usage: to-txt-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT
-                       [-d NUM]
+usage: to-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT [-d NUM]
 
 Writes pretrain data to plain text files. When providing an output directory,
 either uses the current session counter as the filename or, if present, the

@@ -1,4 +1,4 @@
-# from-txt-pretrain
+# from-txt-pt
 
 * domain(s): pretrain
 * generates: PretrainData
@@ -7,8 +7,8 @@ Reads pretrain data from plain text files, with each file representing a data re
 Text files can be split into lines and forwarded as separate records as well.
 
 ```
-usage: from-txt-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                         [INPUT ...] [-s]
+usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                   [INPUT ...] [-s]
 
 Reads pretrain data from plain text files, with each file representing a data
 record. Text files can be split into lines and forwarded as separate records

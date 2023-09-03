@@ -1,4 +1,4 @@
-# from-parquet-pretrain
+# from-parquet-pt
 
 * domain(s): pretrain
 * generates: PretrainData
@@ -6,9 +6,8 @@
 Reads text from Parquet database files to use for pretraining.
 
 ```
-usage: from-parquet-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
-                             INPUT [INPUT ...] [--col_content COL]
-                             [--col_id COL]
+usage: from-parquet-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                       [INPUT ...] [--col_content COL] [--col_id COL]
 
 Reads text from Parquet database files to use for pretraining.
 

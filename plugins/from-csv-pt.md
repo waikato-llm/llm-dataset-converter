@@ -1,4 +1,4 @@
-# from-csv-pretrain
+# from-csv-pt
 
 * domain(s): pretrain
 * generates: PretrainData
@@ -6,8 +6,8 @@
 Reads pretrain data in CSV format.
 
 ```
-usage: from-csv-pretrain [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                         [INPUT ...] [-c COL] [--col_id COL] [-n]
+usage: from-csv-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                   [INPUT ...] [-c COL] [--col_id COL] [-n]
 
 Reads pretrain data in CSV format.
 

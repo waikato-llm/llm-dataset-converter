@@ -7,10 +7,12 @@ from typing import List, Union
 DOMAIN_ANY = "any"
 DOMAIN_PAIRS = "pairs"
 DOMAIN_PRETRAIN = "pretrain"
+DOMAIN_TRANSLATION = "translation"
 
 DOMAIN_SUFFIX_LOOKUP = {
-    DOMAIN_PAIRS: "pairs",
-    DOMAIN_PRETRAIN: "pretrain"
+    DOMAIN_PAIRS: "pr",
+    DOMAIN_PRETRAIN: "pt",
+    DOMAIN_TRANSLATION: "t9n",
 }
 
 CONVERT = "llm-convert"

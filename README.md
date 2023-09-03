@@ -23,15 +23,15 @@ The following dataset formats are supported:
 | Domain   | Format | Read  | Write | Compression |
 | :---     | :---   | :---  | :---  | :---:       |
 | pairs    | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md) | [to-alpaca](plugins/to-alpaca.md) | Y |    
-| pairs    | CSV | [from-csv-pairs](plugins/from-csv-pairs.md) | [to-csv-pairs](plugins/to-csv-pairs.md) | Y |
-| pairs    | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pairs](plugins/from-jsonlines-pairs.md) | [to-jsonlines-pairs](plugins/to-jsonlines-pairs.md) | Y |
-| pairs    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pairs](plugins/from-parquet-pairs.md) | [to-parquet-pairs](plugins/to-parquet-pairs.md) | N |    
-| pairs    | TSV | [from-tsv-pairs](plugins/from-tsv-pairs.md) | [to-tsv-pairs](plugins/to-tsv-pairs.md) | Y |
-| pretrain | CSV | [from-csv-pretrain](plugins/from-csv-pretrain.md) | [to-csv-pretrain](plugins/to-csv-pretrain.md) | Y |
-| pretrain | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pretrain](plugins/from-jsonlines-pretrain.md) | [to-jsonlines-pretrain](plugins/to-jsonlines-pretrain.md) | Y |
-| pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pretrain](plugins/from-parquet-pretrain.md) | [to-parquet-pretrain](plugins/to-parquet-pretrain.md) | N |    
-| pretrain | TSV | [from-tsv-pretrain](plugins/from-tsv-pretrain.md) | [to-tsv-pretrain](plugins/to-tsv-pretrain.md) | Y |
-| pretrain | TXT | [from-txt-pretrain](plugins/from-txt-pretrain.md) | [to-txt-pretrain](plugins/to-txt-pretrain.md) | Y<sup>1</sup> |
+| pairs    | CSV | [from-csv-pr](plugins/from-csv-pr.md) | [to-csv-pr](plugins/to-csv-pr.md) | Y |
+| pairs    | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pr](plugins/from-jsonlines-pr.md) | [to-jsonlines-pr](plugins/to-jsonlines-pr.md) | Y |
+| pairs    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pr](plugins/from-parquet-pr.md) | [to-parquet-pr](plugins/to-parquet-pr.md) | N |    
+| pairs    | TSV | [from-tsv-pr](plugins/from-tsv-pr.md) | [to-tsv-pr](plugins/to-tsv-pr.md) | Y |
+| pretrain | CSV | [from-csv-pt](plugins/from-csv-pt.md) | [to-csv-pt](plugins/to-csv-pt.md) | Y |
+| pretrain | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pt](plugins/from-jsonlines-pt.md) | [to-jsonlines-pt](plugins/to-jsonlines-pt.md) | Y |
+| pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pt](plugins/from-parquet-pt.md) | [to-parquet-pt](plugins/to-parquet-pt.md) | N |    
+| pretrain | TSV | [from-tsv-pt](plugins/from-tsv-pt.md) | [to-tsv-pt](plugins/to-tsv-pt.md) | Y |
+| pretrain | TXT | [from-txt-pt](plugins/from-txt-pt.md) | [to-txt-pt](plugins/to-txt-pt.md) | Y<sup>1</sup> |
 
 <sup>1</sup> Not available when concatenating content in single file.
 
@@ -62,13 +62,13 @@ usage: llm-convert [-h|--help|--help-all|-help-plugin NAME]
 Tool for converting between large language model (LLM) dataset formats.
 
 readers:
-   from-alpaca, from-csv-pairs, from-csv-pretrain, from-jsonlines-pairs, 
-   from-jsonlines-pretrain, from-parquet-pairs, from-parquet-pretrain
+   from-alpaca, from-csv-pr, from-csv-pt, from-jsonlines-pr, 
+   from-jsonlines-pt, from-parquet-pr, from-parquet-pt
 filters:
-   keyword-pairs, pairs-to-pretrain
+   keyword-pr, pairs-to-pt
 writers:
-   to-alpaca, to-csv-pairs, to-csv-pretrain, to-jsonlines-pairs, 
-   to-jsonlines-pretrain, to-parquet-pairs, to-parquet-pretrain
+   to-alpaca, to-csv-pr, to-csv-pt, to-jsonlines-pr, 
+   to-jsonlines-pt, to-parquet-pr, to-parquet-pt
 
 optional arguments:
   -h, --help            show basic help message and exit
@@ -144,7 +144,7 @@ optional arguments:
 Filters:  
 * [keyword](plugins/keyword.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
-* [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
+* [pairs-to-pt](plugins/pairs-to-pt.md)
 
 
 ## Command-line examples
@@ -158,7 +158,7 @@ dataset for the following examples.
 llm-convert \
   from-alpaca \
     --input ./alpaca_data_cleaned.json \
-  to-csv-pairs \
+  to-csv-pr \
     --output alpaca_data_cleaned.csv
 ```
 
@@ -171,7 +171,7 @@ llm-convert \
   from-alpaca \
     --input ./alpaca_data_cleaned.json \
     -l INFO \
-  to-csv-pairs \
+  to-csv-pr \
     --output alpaca_data_cleaned.csv
     -l INFO
 ```
@@ -187,7 +187,7 @@ The following uses Gzip to compress the CSV file:
 llm-convert \
   from-alpaca \
     --input ./alpaca_data_cleaned.json \
-  to-csv-pairs \
+  to-csv-pr \
     --output alpaca_data_cleaned.csv.gz
 ```
 
@@ -223,7 +223,7 @@ llm-convert \
   from-alpaca \
     -l INFO \
     --input alpaca_data_cleaned.json \
-  keyword-pairs \
+  keyword \
     -l INFO \
     --keyword function \
     --location any \

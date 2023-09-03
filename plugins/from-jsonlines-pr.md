@@ -1,4 +1,4 @@
-# from-jsonlines-pairs
+# from-jsonlines-pr
 
 * domain(s): pairs
 * generates: PairData
@@ -6,10 +6,9 @@
 Reads prompt/output pairs in JsonLines-like JSON format.
 
 ```
-usage: from-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
-                            INPUT [INPUT ...] [--att_instruction ATT]
-                            [--att_input ATT] [--att_output ATT]
-                            [--att_id ATT]
+usage: from-jsonlines-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
+                         [INPUT ...] [--att_instruction ATT] [--att_input ATT]
+                         [--att_output ATT] [--att_id ATT]
 
 Reads prompt/output pairs in JsonLines-like JSON format.
 
