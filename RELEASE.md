@@ -3,6 +3,7 @@ PyPi
 
 Preparation:
 
+* update all help files (`llm-help -f markdown -o plugins -l INFO`) and commit changes
 * increment version in `setup.py`
 * add new changelog section in `CHANGES.rst`
 * align `DESCRIPTION.rst` with `README.md`  
