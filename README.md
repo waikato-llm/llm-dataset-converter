@@ -115,22 +115,27 @@ optional arguments:
 Tool for generating help screens for plugins:
 
 ```
-usage: llm-help [-h] -p NAME [-f FORMAT] [-l INT] [-o FILE]
+usage: llm-help [-h] [-p NAME] [-f FORMAT] [-L INT] [-o PATH]
+                [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool for outputting help for plugins in various formats.
 
 optional arguments:
   -h, --help            show this help message and exit
   -p NAME, --plugin_name NAME
-                        The name of the plugin to generate the help for
-                        (default: None)
+                        The name of the plugin to generate the help for,
+                        generates it for all if not specified (default: None)
   -f FORMAT, --help_format FORMAT
                         The output format to generate (default: text)
-  -l INT, --heading_level INT
+  -L INT, --heading_level INT
                         The level to use for the heading (default: 1)
-  -o FILE, --output FILE
-                        The file to store the help in, outputs it to stdout if
-                        not supplied (default: None)
+  -o PATH, --output PATH
+                        The directory or file to store the help in; outputs it
+                        to stdout if not supplied; if pointing to a directory,
+                        automatically generates file name from plugin name and
+                        help format (default: None)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
 ```
 
 

@@ -1,33 +1,29 @@
-# from-tsv-pairs
+# from-jsonlines-pairs
 
 * domain(s): pairs
 * generates: PairData
 
-Reads prompt/output pairs in TSV format.
+Reads prompt/output pairs in JsonLines-like JSON format.
 
 ```
-usage: from-tsv-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                      [INPUT ...] [--col_instruction COL] [--col_input COL]
-                      [--col_output COL] [--col_id COL] [-n]
+usage: from-jsonlines-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i
+                            INPUT [INPUT ...] [--att_instruction ATT]
+                            [--att_input ATT] [--att_output ATT]
+                            [--att_id ATT]
 
-Reads prompt/output pairs in TSV format.
+Reads prompt/output pairs in JsonLines-like JSON format.
 
 optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
-                        Path to the TSV file(s) to read; glob syntax is
+                        Path to the JsonLines file(s) to read; glob syntax is
                         supported (default: None)
-  --col_instruction COL
-                        The name of the column (or 1-based index if no header
-                        row) with the instructions (default: None)
-  --col_input COL       The name of the column (or 1-based index if no header
-                        row) with the inputs (default: None)
-  --col_output COL      The name of the column (or 1-based index if no header
-                        row) with the outputs (default: None)
-  --col_id COL          The name (or 1-based index if no header row) of the
-                        column with the row IDs (gets stored under 'id' in
+  --att_instruction ATT
+                        The attribute with the instructions (default: None)
+  --att_input ATT       The attribute with the inputs (default: None)
+  --att_output ATT      The attribute with the outputs (default: None)
+  --att_id ATT          The attribute the record ID (gets stored under 'id' in
                         meta-data) (default: None)
-  -n, --no_header       For files with no header row (default: False)
 ```

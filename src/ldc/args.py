@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 from typing import List, Dict, Tuple, Iterable
 
@@ -106,7 +107,7 @@ def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72
 
 
 def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1,
-                          output_file: str = None):
+                          output_path: str = None):
     """
     Generates the usage help screen for the specified plugin.
 
@@ -116,8 +117,8 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
     :type help_format: str
     :param heading_level: the level to use for the heading (markdown)
     :type heading_level: int
-    :param output_file: the file to store the generated help in, uses stdout if None
-    :type output_file: str
+    :param output_path: the directory (automatically generates output name from plugin name and output format) or file to store the generated help in, uses stdout if None
+    :type output_path: str
     """
     if help_format not in HELP_FORMATS:
         raise Exception("Unhandled help format: %s" % help_format)
@@ -126,6 +127,7 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
 
     result = ""
     if help_format == HELP_FORMAT_TEXT:
+        suffix = ".txt"
         result += "\n" + plugin_name + "\n" + "=" * len(plugin_name) + "\n"
         result += "domain(s): " + ", ".join(plugin.domains()) + "\n"
         if isinstance(plugin, InputConsumer):
@@ -135,6 +137,7 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
         result += "\n"
         result += plugin.format_help() + "\n"
     elif help_format == HELP_FORMAT_MARKDOWN:
+        suffix = ".md"
         result += "#"*heading_level + " " + plugin_name + "\n"
         result += "\n"
         result += "* domain(s): " + ", ".join(plugin.domains()) + "\n"
@@ -151,9 +154,13 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
     else:
         raise Exception("Unhandled help format: %s" % help_format)
 
-    if output_file is None:
+    if output_path is None:
         print(result)
     else:
+        if os.path.isdir(output_path):
+            output_file = os.path.join(output_path, plugin.name() + suffix)
+        else:
+            output_file = output_path
         with open(output_file, "w") as fp:
             fp.write(result)
 
