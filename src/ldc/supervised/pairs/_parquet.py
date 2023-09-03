@@ -50,7 +50,7 @@ class ParquetPairsReader(PairReader):
         :return: the name
         :rtype: str
         """
-        return "from-parquet-pairs"
+        return "from-parquet-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -198,7 +198,7 @@ class ParquetPairsWriter(BatchPairWriter):
         :return: the name
         :rtype: str
         """
-        return "to-parquet-pairs"
+        return "to-parquet-" + domain_suffix(self)
 
     def description(self) -> str:
         """

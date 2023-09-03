@@ -1,7 +1,7 @@
 import argparse
 from typing import List
 
-from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, domain_suffix
 from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
@@ -38,7 +38,7 @@ class PairsToPretrain(Filter):
         :return: the name
         :rtype: str
         """
-        return "pairs-to-pretrain"
+        return "pairs-to-" + domain_suffix(self)
 
     def description(self) -> str:
         """

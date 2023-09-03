@@ -2,7 +2,7 @@ import argparse
 import os
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output, is_compressed
 from ._core import PretrainData, PretrainReader, StreamPretrainWriter
 
@@ -38,7 +38,7 @@ class TxtPretrainReader(PretrainReader):
         :return: the name
         :rtype: str
         """
-        return "from-txt-pretrain"
+        return "from-txt-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -149,7 +149,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         :return: the name
         :rtype: str
         """
-        return "to-txt-pretrain"
+        return "to-txt-" + domain_suffix(self)
 
     def description(self) -> str:
         """

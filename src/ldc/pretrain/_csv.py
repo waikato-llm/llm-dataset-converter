@@ -2,7 +2,7 @@ import argparse
 import csv
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
 
@@ -326,7 +326,7 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
         :return: the name
         :rtype: str
         """
-        return "from-csv-pretrain"
+        return "from-csv-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -391,7 +391,7 @@ class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :return: the name
         :rtype: str
         """
-        return "to-csv-pretrain"
+        return "to-csv-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -459,7 +459,7 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
         :return: the name
         :rtype: str
         """
-        return "from-tsv-pretrain"
+        return "from-tsv-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -524,7 +524,7 @@ class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :return: the name
         :rtype: str
         """
-        return "to-tsv-pretrain"
+        return "to-tsv-" + domain_suffix(self)
 
     def description(self) -> str:
         """

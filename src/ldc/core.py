@@ -2,11 +2,16 @@ import argparse
 import logging
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, Union
 
 DOMAIN_ANY = "any"
 DOMAIN_PAIRS = "pairs"
 DOMAIN_PRETRAIN = "pretrain"
+
+DOMAIN_SUFFIX_LOOKUP = {
+    DOMAIN_PAIRS: "pairs",
+    DOMAIN_PRETRAIN: "pretrain"
+}
 
 CONVERT = "llm-convert"
 HUGGINGFACE_DOWNLOAD = "llm-hf-download"
@@ -353,3 +358,31 @@ def check_compatibility(handlers: List[CommandlineHandler]):
             raise Exception(
                 "Output(s) of " + handler1.name() + " not compatible with input(s) of " + handler2.name() + ": "
                 + classes_to_str(classes1) + " != " + classes_to_str(classes2))
+
+
+def domain_suffix(o: Union[str, CommandlineHandler]) -> str:
+    """
+    Returns the suffix for the domain. See DOMAIN_SUFFIX_LOOKUP.
+    Returns the domain if no lookup defined.
+
+    :param o: commandhandler or domain to lookup the suffix for
+    :return: the suffix
+    :rtype: str
+    """
+    if isinstance(o, CommandlineHandler):
+        domain = o.domains()
+        if len(domain) == 0:
+            raise Exception("Require one domain to determine suffix (%s)!" % str(type(o)))
+        elif len(domain) > 1:
+            raise Exception("Cannot determine domain suffix for multiple domains (%s)!" % str(type(o)))
+        else:
+            domain = domain[0]
+    elif isinstance(o, str):
+        domain = o
+    else:
+        raise Exception("Unsupported class to determine domain for: %s" % str(type(o)))
+
+    if domain in DOMAIN_SUFFIX_LOOKUP:
+        return DOMAIN_SUFFIX_LOOKUP[domain]
+    else:
+        return domain

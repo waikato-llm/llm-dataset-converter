@@ -5,7 +5,7 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
 
@@ -43,7 +43,7 @@ class ParquetPretrainReader(PretrainReader):
         :return: the name
         :rtype: str
         """
-        return "from-parquet-pretrain"
+        return "from-parquet-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -171,7 +171,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
         :return: the name
         :rtype: str
         """
-        return "to-parquet-pretrain"
+        return "to-parquet-" + domain_suffix(self)
 
     def description(self) -> str:
         """

@@ -2,7 +2,7 @@ import argparse
 import csv
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
@@ -394,7 +394,7 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
         :return: the name
         :rtype: str
         """
-        return "from-csv-pairs"
+        return "from-csv-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -464,7 +464,7 @@ class CsvPairsWriter(AbstractCsvLikePairsWriter):
         :return: the name
         :rtype: str
         """
-        return "to-csv-pairs"
+        return "to-csv-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -542,7 +542,7 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
         :return: the name
         :rtype: str
         """
-        return "from-tsv-pairs"
+        return "from-tsv-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -612,7 +612,7 @@ class TsvPairsWriter(AbstractCsvLikePairsWriter):
         :return: the name
         :rtype: str
         """
-        return "to-tsv-pairs"
+        return "to-tsv-" + domain_suffix(self)
 
     def description(self) -> str:
         """

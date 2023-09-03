@@ -2,7 +2,7 @@ import argparse
 import jsonlines
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
 
@@ -40,7 +40,7 @@ class JsonLinesPretrainReader(PretrainReader):
         :return: the name
         :rtype: str
         """
-        return "from-jsonlines-pretrain"
+        return "from-jsonlines-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -172,7 +172,7 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
         :return: the name
         :rtype: str
         """
-        return "to-jsonlines-pretrain"
+        return "to-jsonlines-" + domain_suffix(self)
 
     def description(self) -> str:
         """

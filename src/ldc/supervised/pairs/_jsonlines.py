@@ -2,7 +2,7 @@ import argparse
 import jsonlines
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
@@ -47,7 +47,7 @@ class JsonLinesPairReader(PairReader):
         :return: the name
         :rtype: str
         """
-        return "from-jsonlines-pairs"
+        return "from-jsonlines-" + domain_suffix(self)
 
     def description(self) -> str:
         """
@@ -199,7 +199,7 @@ class JsonLinesPairWriter(BatchPairWriter):
         :return: the name
         :rtype: str
         """
-        return "to-jsonlines-pairs"
+        return "to-jsonlines-" + domain_suffix(self)
 
     def description(self) -> str:
         """
