@@ -1,10 +1,11 @@
+import abc
 from typing import List
 
 from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, Session, DOMAIN_ANY
 from ldc.core import LOGGING_WARN
 
 
-class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler):
+class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, abc.ABC):
     """
     Base class for filters.
     """
@@ -46,7 +47,7 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler):
         :param data: the record to process
         :return: the potentially updated record or None if to drop
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class MultiFilter(Filter):
@@ -54,7 +55,7 @@ class MultiFilter(Filter):
     Combines multiple filters.
     """
 
-    def __init__(self, filters: List[Filter], logging_level: str = LOGGING_WARN):
+    def __init__(self, filters: List[Filter] = None, logging_level: str = LOGGING_WARN):
         """
         Initialize with the specified filters.
 
@@ -64,7 +65,7 @@ class MultiFilter(Filter):
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
-        self.filters = filters[:]
+        self.filters = None if (filters is None) else filters[:]
 
     def name(self) -> str:
         """
@@ -100,7 +101,7 @@ class MultiFilter(Filter):
         :return: the list of classes
         :rtype: list
         """
-        if len(self.filters) > 0:
+        if (self.filters is not None) and (len(self.filters) > 0):
             return self.filters[0].accepts()
         else:
             return list()
@@ -112,7 +113,7 @@ class MultiFilter(Filter):
         :return: the list of classes
         :rtype: list
         """
-        if len(self.filters) > 0:
+        if (self.filters is not None) and (len(self.filters) > 0):
             return self.filters[-1].generates()
         else:
             return list()

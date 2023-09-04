@@ -20,18 +20,19 @@ https://github.com/Zjh-819/LLMDataHub
 
 The following dataset formats are supported:
 
-| Domain   | Format | Read  | Write | Compression |
-| :---     | :---   | :---  | :---  | :---:       |
-| pairs    | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md) | [to-alpaca](plugins/to-alpaca.md) | Y |    
-| pairs    | CSV | [from-csv-pr](plugins/from-csv-pr.md) | [to-csv-pr](plugins/to-csv-pr.md) | Y |
-| pairs    | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pr](plugins/from-jsonlines-pr.md) | [to-jsonlines-pr](plugins/to-jsonlines-pr.md) | Y |
-| pairs    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pr](plugins/from-parquet-pr.md) | [to-parquet-pr](plugins/to-parquet-pr.md) | N |    
-| pairs    | TSV | [from-tsv-pr](plugins/from-tsv-pr.md) | [to-tsv-pr](plugins/to-tsv-pr.md) | Y |
-| pretrain | CSV | [from-csv-pt](plugins/from-csv-pt.md) | [to-csv-pt](plugins/to-csv-pt.md) | Y |
-| pretrain | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pt](plugins/from-jsonlines-pt.md) | [to-jsonlines-pt](plugins/to-jsonlines-pt.md) | Y |
-| pretrain | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pt](plugins/from-parquet-pt.md) | [to-parquet-pt](plugins/to-parquet-pt.md) | N |    
-| pretrain | TSV | [from-tsv-pt](plugins/from-tsv-pt.md) | [to-tsv-pt](plugins/to-tsv-pt.md) | Y |
-| pretrain | TXT | [from-txt-pt](plugins/from-txt-pt.md) | [to-txt-pt](plugins/to-txt-pt.md) | Y<sup>1</sup> |
+| Domain      | Format | Read  | Write | Compression |
+| :---        | :---   | :---  | :---  | :---:       |
+| pairs       | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md) | [to-alpaca](plugins/to-alpaca.md) | Y |    
+| pairs       | CSV | [from-csv-pr](plugins/from-csv-pr.md) | [to-csv-pr](plugins/to-csv-pr.md) | Y |
+| pairs       | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pr](plugins/from-jsonlines-pr.md) | [to-jsonlines-pr](plugins/to-jsonlines-pr.md) | Y |
+| pairs       | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pr](plugins/from-parquet-pr.md) | [to-parquet-pr](plugins/to-parquet-pr.md) | N |    
+| pairs       | TSV | [from-tsv-pr](plugins/from-tsv-pr.md) | [to-tsv-pr](plugins/to-tsv-pr.md) | Y |
+| pretrain    | CSV | [from-csv-pt](plugins/from-csv-pt.md) | [to-csv-pt](plugins/to-csv-pt.md) | Y |
+| pretrain    | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pt](plugins/from-jsonlines-pt.md) | [to-jsonlines-pt](plugins/to-jsonlines-pt.md) | Y |
+| pretrain    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pt](plugins/from-parquet-pt.md) | [to-parquet-pt](plugins/to-parquet-pt.md) | N |    
+| pretrain    | TSV | [from-tsv-pt](plugins/from-tsv-pt.md) | [to-tsv-pt](plugins/to-tsv-pt.md) | Y |
+| pretrain    | TXT | [from-txt-pt](plugins/from-txt-pt.md) | [to-txt-pt](plugins/to-txt-pt.md) | Y<sup>1</sup> |
+| translation | TXT | [from-txt-t9n](plugins/from-txt-t9n.md) | [to-txt-t9n](plugins/to-txt-t9n.md) | Y<sup>1</sup> |
 
 <sup>1</sup> Not available when concatenating content in single file.
 
@@ -142,9 +143,11 @@ optional arguments:
 ## Other plugins
 
 Filters:  
+* [multi-filter](plugins/multi-filter.md)
 * [keyword](plugins/keyword.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
-* [pairs-to-pt](plugins/pairs-to-pt.md)
+* [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
+* [translation-to-pretrain](plugins/translation-to-pretrain.md)
 
 
 ## Command-line examples

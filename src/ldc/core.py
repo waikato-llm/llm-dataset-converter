@@ -136,7 +136,7 @@ class SessionHandler(object):
         :return: the session object
         :rtype: Session
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @session.setter
     def session(self, s: Session):
@@ -146,7 +146,7 @@ class SessionHandler(object):
         :param s: the session object
         :type s: Session
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class CommandlineHandler(object):
@@ -171,7 +171,7 @@ class CommandlineHandler(object):
         :return: the name
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def description(self) -> str:
         """
@@ -180,7 +180,7 @@ class CommandlineHandler(object):
         :return: the description
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def domains(self) -> List[str]:
         """
@@ -189,7 +189,7 @@ class CommandlineHandler(object):
         :return: the domains
         :rtype: list
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def logger(self) -> logging.Logger:
         """
@@ -279,7 +279,7 @@ class OutputProducer(object):
         :return: the list of classes
         :rtype: list
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class InputConsumer(object):
@@ -294,7 +294,7 @@ class InputConsumer(object):
         :return: the list of classes
         :rtype: list
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 def classes_to_str(classes: List):

@@ -1,3 +1,4 @@
+import abc
 import argparse
 import csv
 from typing import Iterable, List, Union
@@ -7,7 +8,7 @@ from ldc.io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
 
-class AbstractCsvLikePairsReader(PairReader):
+class AbstractCsvLikePairsReader(PairReader, abc.ABC):
     """
     Ancestor for readers of CSV-like files.
     """
@@ -54,7 +55,7 @@ class AbstractCsvLikePairsReader(PairReader):
         :return: the description
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -124,7 +125,7 @@ class AbstractCsvLikePairsReader(PairReader):
         :return: the reader to use
         :rtype: csv.reader or csv.DictReader
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def read(self) -> Iterable[PairData]:
         """
@@ -199,7 +200,7 @@ class AbstractCsvLikePairsReader(PairReader):
             self._current_input = None
 
 
-class AbstractCsvLikePairsWriter(BatchPairWriter):
+class AbstractCsvLikePairsWriter(BatchPairWriter, abc.ABC):
     """
     Ancestor for writers of CSV-like files.
     """
@@ -242,7 +243,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
         :return: the description
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -291,7 +292,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
         :return: the reader
         :rtype: csv.writer
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _get_extension(self) -> str:
         """
@@ -300,7 +301,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter):
         :return: the extension to use (incl dot)
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def write_batch(self, data: Iterable[PairData]):
         """

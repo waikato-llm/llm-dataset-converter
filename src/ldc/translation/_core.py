@@ -1,31 +1,32 @@
+import abc
 from dataclasses import dataclass
 from typing import Iterable, List
 
-from ldc.core import DOMAIN_PRETRAIN
+from ldc.core import DOMAIN_TRANSLATION
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
 
 @dataclass
-class PretrainData:
+class TranslationData:
     """
     Container for pretrain data.
     """
-    content: str
+    translations: dict  # lookup: language -> text
     meta: dict = None
 
     @classmethod
-    def parse(cls, d: dict) -> 'PretrainData':
+    def parse(cls, d: dict) -> 'TranslationData':
         """
-        Obtains the data from the provided dictionary and creates a PretrainData instance.
+        Obtains the data from the provided dictionary and creates a TranslationData instance.
 
         :param d: the dictionary to get the data from
         :type d: dict
         :return: the generated instance
-        :rtype: PretrainData
+        :rtype: TranslationData
         """
-        return PretrainData(
-            content=d.get("content", None),
+        return TranslationData(
+            translations=d.get("translations", None),
         )
 
     def to_dict(self) -> dict:
@@ -36,11 +37,11 @@ class PretrainData:
         :rtype: dict
         """
         return {
-            "content": self.content,
+            "translations": self.translations,
         }
     
 
-class PretrainReader(Reader):
+class TranslationReader(Reader, abc.ABC):
     """
     Reader for pretrain data.
     """
@@ -51,7 +52,7 @@ class PretrainReader(Reader):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PRETRAIN]
+        return [DOMAIN_TRANSLATION]
 
     def generates(self) -> List:
         """
@@ -60,9 +61,9 @@ class PretrainReader(Reader):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [TranslationData]
 
-    def read(self) -> Iterable[PretrainData]:
+    def read(self) -> Iterable[TranslationData]:
         """
         Loads the data and returns the items one by one.
 
@@ -72,7 +73,7 @@ class PretrainReader(Reader):
         raise NotImplementedError()
 
 
-class PretrainWriter(Writer):
+class TranslationWriter(Writer, abc.ABC):
     """
     Writer for pretrain data.
     """
@@ -84,7 +85,7 @@ class PretrainWriter(Writer):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PRETRAIN]
+        return [DOMAIN_TRANSLATION]
 
     def accepts(self) -> List:
         """
@@ -93,40 +94,40 @@ class PretrainWriter(Writer):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [TranslationData]
 
 
-class StreamPretrainWriter(PretrainWriter, StreamWriter):
+class StreamTranslationWriter(TranslationWriter, StreamWriter, abc.ABC):
     """
     Stream writer for pretrain data.
     """
 
-    def write_stream(self, data: PretrainData):
+    def write_stream(self, data: TranslationData):
         """
         Saves the data one by one.
 
         :param data: the data to write
-        :type data: PretrainData
+        :type data: TranslationData
         """
         raise NotImplementedError()
 
 
-class BatchPretrainWriter(PretrainWriter, BatchWriter):
+class BatchTranslationWriter(TranslationWriter, BatchWriter, abc.ABC):
     """
     Batch writer for pretrain data.
     """
 
-    def write_batch(self, data: Iterable[PretrainData]):
+    def write_batch(self, data: Iterable[TranslationData]):
         """
         Saves the data in one go.
 
-        :param data: the data to write as list of PretrainData
+        :param data: the data to write as list of TranslationData
         :type data: list
         """
         raise NotImplementedError()
 
 
-class PretrainFilter(Filter):
+class TranslationFilter(Filter, abc.ABC):
     """
     Filter for pretrain data.
     """
@@ -138,7 +139,7 @@ class PretrainFilter(Filter):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PRETRAIN]
+        return [DOMAIN_TRANSLATION]
 
     def accepts(self) -> List:
         """
@@ -147,7 +148,7 @@ class PretrainFilter(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [TranslationData]
 
     def generates(self) -> List:
         """
@@ -156,5 +157,5 @@ class PretrainFilter(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [TranslationData]
 

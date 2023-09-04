@@ -1,35 +1,29 @@
 import argparse
 from typing import List
 
-from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, domain_suffix
+from ldc.core import DOMAIN_TRANSLATION, DOMAIN_PRETRAIN
 from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
-from ldc.supervised.pairs import PairData, PAIRDATA_FIELDS, PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT
+from ldc.translation import TranslationData
 
 
-class PairsToPretrain(Filter):
+class TranslationToPretrain(Filter):
     """
-    Converts records of prompt/output pairs to pretrain ones.
+    Converts records of translation records to pretrain ones.
     """
 
-    def __init__(self, data_fields: List[str] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, lang: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
-        :param data_fields: the list of data fields to turn into pretrain content
-        :type data_fields: list
+        :param lang: the ID of the language to turn into pretrain records
+        :type lang: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
-
-        if data_fields is not None:
-            for data_field in data_fields:
-                if data_field not in PAIRDATA_FIELDS:
-                    raise Exception("Invalid data field: %s" % data_field)
-
-        self.data_fields = data_fields
+        self.lang = lang
 
     def name(self) -> str:
         """
@@ -38,7 +32,7 @@ class PairsToPretrain(Filter):
         :return: the name
         :rtype: str
         """
-        return "pairs-to-pretrain"
+        return "translation-to-pretrain"
 
     def description(self) -> str:
         """
@@ -47,7 +41,7 @@ class PairsToPretrain(Filter):
         :return: the description
         :rtype: str
         """
-        return "Converts records of prompt/output pairs to pretrain ones."
+        return "Converts records of translation data to pretrain ones, extracting a specific language."
 
     def domains(self) -> List[str]:
         """
@@ -56,7 +50,7 @@ class PairsToPretrain(Filter):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN]
+        return [DOMAIN_TRANSLATION, DOMAIN_PRETRAIN]
 
     def accepts(self) -> List:
         """
@@ -65,7 +59,7 @@ class PairsToPretrain(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData]
+        return [TranslationData]
 
     def generates(self) -> List:
         """
@@ -84,7 +78,7 @@ class PairsToPretrain(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-f", "--data_fields", choices=PAIRDATA_FIELDS, default=None, help="The data fields to use for the pretrain content", nargs="+")
+        parser.add_argument("--lang", type=str, default=None, help="The ID of the language to convert")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -95,17 +89,17 @@ class PairsToPretrain(Filter):
         :type ns: argparse.Namespace
         """
         super()._apply_args(ns)
-        self.data_fields = ns.data_fields[:]
+        self.lang = ns.lang
 
     def initialize(self):
         """
         Initializes the processing, e.g., for opening files or databases.
         """
         super().initialize()
-        if (self.data_fields is None) or (len(self.data_fields) == 0):
-            raise Exception("No data fields provided!")
+        if self.lang is None:
+            raise Exception("No language ID specified!")
 
-    def process(self, data: PairData):
+    def process(self, data: TranslationData):
         """
         Processes the data record.
 
@@ -113,15 +107,7 @@ class PairsToPretrain(Filter):
         :type data: PairData
         :return: the potentially updated record or None if to drop
         """
-        content = []
-        for data_field in self.data_fields:
-            if data_field == PAIRDATA_INSTRUCTION:
-                content.append(data.instruction)
-            elif data_field == PAIRDATA_INPUT:
-                content.append(data.input)
-            elif data_field == PAIRDATA_OUTPUT:
-                content.append(data.output)
-            else:
-                raise Exception("Unhandled data field: %s" % data_field)
-
-        return PretrainData(content=" ".join(content))
+        if self.lang in data.translations:
+            return PretrainData(data.translations[self.lang])
+        else:
+            return None

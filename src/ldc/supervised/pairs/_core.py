@@ -1,3 +1,4 @@
+import abc
 from dataclasses import dataclass
 from typing import Iterable, List
 
@@ -53,7 +54,7 @@ class PairData:
         return result
 
 
-class PairReader(Reader):
+class PairReader(Reader, abc.ABC):
     """
     Reader for pair data.
     """
@@ -82,10 +83,10 @@ class PairReader(Reader):
         :return: the data
         :rtype: Iterable
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
-class PairWriter(Writer):
+class PairWriter(Writer, abc.ABC):
     """
     Writer for pair data.
     """
@@ -109,7 +110,7 @@ class PairWriter(Writer):
         return [PairData]
 
 
-class StreamPairWriter(PairWriter, StreamWriter):
+class StreamPairWriter(PairWriter, StreamWriter, abc.ABC):
     """
     Stream writer for pair data.
     """
@@ -121,10 +122,10 @@ class StreamPairWriter(PairWriter, StreamWriter):
         :param data: the data to write
         :type data: PairData
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
-class BatchPairWriter(PairWriter, BatchWriter):
+class BatchPairWriter(PairWriter, BatchWriter, abc.ABC):
     """
     Batch writer for pair data.
     """
@@ -136,10 +137,10 @@ class BatchPairWriter(PairWriter, BatchWriter):
         :param data: the data to write as list of PairData
         :type data: list
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
-class PairFilter(Filter):
+class PairFilter(Filter, abc.ABC):
     """
     Filter for pair data.
     """

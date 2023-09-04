@@ -1,3 +1,4 @@
+import abc
 import argparse
 import csv
 from typing import Iterable, List, Union
@@ -7,7 +8,7 @@ from ldc.io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
 
 
-class AbstractCsvLikePretrainReader(PretrainReader):
+class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
     """
     Ancestor for readers of CSV-like files.
     """
@@ -45,7 +46,7 @@ class AbstractCsvLikePretrainReader(PretrainReader):
         :return: the description
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -104,7 +105,7 @@ class AbstractCsvLikePretrainReader(PretrainReader):
         :return: the reader to use
         :rtype: csv.reader or csv.DictReader
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def read(self) -> Iterable[PretrainData]:
         """
@@ -165,7 +166,7 @@ class AbstractCsvLikePretrainReader(PretrainReader):
             self._current_input = None
 
 
-class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
+class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
     """
     Ancestor for writers of CSV-like files.
     """
@@ -201,7 +202,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         :return: the description
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -246,7 +247,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         :return: the reader
         :rtype: csv.writer
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _get_extension(self) -> str:
         """
@@ -255,7 +256,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter):
         :return: the extension to use (incl dot)
         :rtype: str
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def write_batch(self, data: Iterable[PretrainData]):
         """
