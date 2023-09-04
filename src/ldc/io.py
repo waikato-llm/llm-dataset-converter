@@ -32,6 +32,7 @@ ENCODING_MAX_CHECK_LENGTH = 1024*1024
 def locate_files(inputs: Union[str, List[str]], fail_if_empty: bool = False) -> List[str]:
     """
     Locates all the files from the specified inputs, which may contain globs.
+    glob results get sorted to ensure the same file order each time.
 
     :param inputs: the input path(s) with optional globs
     :type inputs: list
@@ -49,7 +50,7 @@ def locate_files(inputs: Union[str, List[str]], fail_if_empty: bool = False) -> 
 
     result = []
     for inp in inputs:
-        result.extend(glob.glob(inp))
+        result.extend(sorted(glob.glob(inp)))
 
     if fail_if_empty and (len(result) == 0):
         raise Exception("Failed to locate any files using: %s" % str(inputs))
