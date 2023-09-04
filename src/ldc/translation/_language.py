@@ -63,7 +63,7 @@ class Language(TranslationFilter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-L", "--language", type=str, help="The languages to look for", required=True, nargs="+")
+        parser.add_argument("--language", type=str, help="The languages to look for", required=True, nargs="+")
         parser.add_argument("-a", "--action", choices=KEYWORD_ACTIONS, default=KEYWORD_ACTION_KEEP, help="How to react when a language is encountered")
         return parser
 
