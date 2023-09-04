@@ -158,4 +158,3 @@ class TranslationFilter(Filter, abc.ABC):
         :rtype: list
         """
         return [TranslationData]
-

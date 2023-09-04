@@ -1,3 +1,4 @@
+import abc
 from dataclasses import dataclass
 from typing import Iterable, List
 
@@ -40,7 +41,7 @@ class PretrainData:
         }
     
 
-class PretrainReader(Reader):
+class PretrainReader(Reader, abc.ABC):
     """
     Reader for pretrain data.
     """
@@ -72,7 +73,7 @@ class PretrainReader(Reader):
         raise NotImplementedError()
 
 
-class PretrainWriter(Writer):
+class PretrainWriter(Writer, abc.ABC):
     """
     Writer for pretrain data.
     """
@@ -96,7 +97,7 @@ class PretrainWriter(Writer):
         return [PretrainData]
 
 
-class StreamPretrainWriter(PretrainWriter, StreamWriter):
+class StreamPretrainWriter(PretrainWriter, StreamWriter, abc.ABC):
     """
     Stream writer for pretrain data.
     """
@@ -111,7 +112,7 @@ class StreamPretrainWriter(PretrainWriter, StreamWriter):
         raise NotImplementedError()
 
 
-class BatchPretrainWriter(PretrainWriter, BatchWriter):
+class BatchPretrainWriter(PretrainWriter, BatchWriter, abc.ABC):
     """
     Batch writer for pretrain data.
     """
@@ -126,7 +127,7 @@ class BatchPretrainWriter(PretrainWriter, BatchWriter):
         raise NotImplementedError()
 
 
-class PretrainFilter(Filter):
+class PretrainFilter(Filter, abc.ABC):
     """
     Filter for pretrain data.
     """
@@ -157,4 +158,3 @@ class PretrainFilter(Filter):
         :rtype: list
         """
         return [PretrainData]
-
