@@ -1,4 +1,6 @@
+import abc
 import bz2
+import chardet
 import glob
 import gzip
 import lzma
@@ -49,6 +51,19 @@ def locate_files(inputs: Union[str, List[str]], fail_if_empty: bool = False) -> 
         raise Exception("Failed to locate any files using: %s" % str(inputs))
 
     return result
+
+
+def determine_encoding(path: str) -> str:
+    """
+    Determines the file encoding of the text file.
+
+    :param path: the file to determine the encoding for
+    :type path: str
+    :return: the encoding
+    :rtype: str
+    """
+    raw = open(path, "rb").read(32)
+    return chardet.detect(raw)['encoding']
 
 
 def is_compressed(path: str):
@@ -116,7 +131,9 @@ def open_file(path: str, mode: str = None, encoding: str = None, compression: st
         if compression is not None:
             raise Exception("Unhandled compression: %s" % compression)
         else:
-            return open(path, mode)
+            if encoding is None:
+                encoding = determine_encoding(path)
+            return open(path, mode=mode, encoding=encoding)
 
 
 def generate_output(input_path: str, output_path: str, ext: str, compression: str) -> str:
@@ -150,7 +167,7 @@ def generate_output(input_path: str, output_path: str, ext: str, compression: st
         return output_path
 
 
-class Reader(CommandlineHandler, OutputProducer, SessionHandler):
+class Reader(CommandlineHandler, OutputProducer, SessionHandler, abc.ABC):
     """
     Ancestor of classes that read data.
     """
@@ -192,7 +209,7 @@ class Reader(CommandlineHandler, OutputProducer, SessionHandler):
         :return: the data
         :rtype: Iterable
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def has_finished(self) -> bool:
         """
@@ -201,10 +218,10 @@ class Reader(CommandlineHandler, OutputProducer, SessionHandler):
         :return: True if finished
         :rtype: bool
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
-class Writer(CommandlineHandler, InputConsumer, SessionHandler):
+class Writer(CommandlineHandler, InputConsumer, SessionHandler, abc.ABC):
     """
     Ancestor of classes that write data.
     """
@@ -251,7 +268,7 @@ class StreamWriter(Writer):
 
         :param data: the data to write
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class BatchWriter(Writer):
@@ -266,4 +283,4 @@ class BatchWriter(Writer):
         :param data: the data to write
         :type data: Iterable
         """
-        raise NotImplemented()
+        raise NotImplementedError()
