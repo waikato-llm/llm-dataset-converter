@@ -19,6 +19,7 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, 
         """
         super().__init__(logging_level=logging_level)
         self._session = None
+        self._last_input = None
 
     @property
     def session(self) -> Session:
@@ -39,6 +40,33 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, 
         :type s: Session
         """
         self._session = s
+
+    def _has_input_changed(self, current_input: str = None, update: bool = False) -> bool:
+        """
+        Checks whether the current input is different from the last one we processed.
+
+        :param current_input: the current input, uses the current_input from the session if None
+        :type current_input: str
+        :param update: whether to update the last input immediately
+        :type update: bool
+        :return: True if input has changed
+        :rtype: bool
+        """
+        if current_input is None:
+            current_input = self.session.current_input
+        result = self._last_input != current_input
+        if update:
+            self._update_last_input(current_input)
+        return result
+
+    def _update_last_input(self, current_input: str):
+        """
+        Updates the last input that was processed.
+
+        :param current_input: the "new" last input
+        :type current_input: str
+        """
+        self._last_input = current_input
 
     def process(self, data):
         """

@@ -141,7 +141,6 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_input = open_file(self._current_input, mode="rt")
         self._current_reader = self._init_reader(self._current_input)
-        self.session.input_changed = True
 
         for row in self._current_reader:
             val_instruction = None
@@ -310,7 +309,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter, abc.ABC):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
-        if self.session.input_changed:
+        if self._has_input_changed(update=True):
             self.finalize()
             output = generate_output(self.session.current_input, self.target, self._get_extension(), self.session.options.compression)
             self.logger().info("Writing to: " + output)

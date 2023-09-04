@@ -129,6 +129,13 @@ class Split(Filter):
         self._counter = 0
         self._stats = dict()
 
+    def _output_stats(self):
+        """
+        Outputs the statistics.
+        """
+        for split in self._stats:
+            self.logger().info("%s: %d" % (split, self._stats[split]))
+
     def process(self, data):
         """
         Processes the data record.
@@ -136,6 +143,12 @@ class Split(Filter):
         :param data: the record to process
         :return: the potentially updated record or None if to drop
         """
+        if self._has_input_changed(update=True):
+            if self._counter > 0:
+                self.logger().info("Input changed, resetting counter.")
+                self._output_stats()
+                self._counter = 0
+
         # get meta data
         if isinstance(data, PairData):
             meta = data.meta
@@ -172,5 +185,4 @@ class Split(Filter):
         Finishes the processing, e.g., for closing files or databases.
         """
         super().finalize()
-        for split in self._stats:
-            self.logger().info("%s: %d" % (split, self._stats[split]))
+        self._output_stats()

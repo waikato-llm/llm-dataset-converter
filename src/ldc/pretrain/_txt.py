@@ -105,7 +105,6 @@ class TxtPretrainReader(PretrainReader):
                     if len(line.strip()) > 0:
                         lines_new.append(line)
                 lines = lines_new
-            self.session.input_changed = True
             if self.split_lines:
                 for index, line in enumerate(lines):
                     yield PretrainData(

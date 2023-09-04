@@ -82,9 +82,6 @@ class Session:
     current_input = None
     """ the current input etc. """
 
-    input_changed: bool = False
-    """ whether the input has changed. """
-
     def _add_option(self, name: str, value):
         """
         Adds the key/value to the global options.

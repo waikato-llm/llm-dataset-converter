@@ -25,6 +25,10 @@ COMPRESSION_FORMATS = [
 ]
 
 
+ENCODING_MAX_CHECK_LENGTH = 1024*1024
+""" the maximum number of bytes to read for determining the encoding. """
+
+
 def locate_files(inputs: Union[str, List[str]], fail_if_empty: bool = False) -> List[str]:
     """
     Locates all the files from the specified inputs, which may contain globs.
@@ -62,7 +66,7 @@ def determine_encoding(path: str) -> str:
     :return: the encoding
     :rtype: str
     """
-    raw = open(path, "rb").read(32)
+    raw = open(path, "rb").read(ENCODING_MAX_CHECK_LENGTH)
     return chardet.detect(raw)['encoding']
 
 
@@ -235,6 +239,7 @@ class Writer(CommandlineHandler, InputConsumer, SessionHandler, abc.ABC):
         """
         super().__init__(logging_level=logging_level)
         self._session = None
+        self._last_input = None
 
     @property
     def session(self) -> Session:
@@ -255,6 +260,33 @@ class Writer(CommandlineHandler, InputConsumer, SessionHandler, abc.ABC):
         :type s: Session
         """
         self._session = s
+
+    def _has_input_changed(self, current_input: str = None, update: bool = False) -> bool:
+        """
+        Checks whether the current input is different from the last one we processed.
+
+        :param current_input: the current input, uses the current_input from the session if None
+        :type current_input: str
+        :param update: whether to update the last input immediately
+        :type update: bool
+        :return: True if input has changed
+        :rtype: bool
+        """
+        if current_input is None:
+            current_input = self.session.current_input
+        result = self._last_input != current_input
+        if update:
+            self._update_last_input(current_input)
+        return result
+
+    def _update_last_input(self, current_input: str):
+        """
+        Updates the last input that was processed.
+
+        :param current_input: the "new" last input
+        :type current_input: str
+        """
+        self._last_input = current_input
 
 
 class StreamWriter(Writer, abc.ABC):

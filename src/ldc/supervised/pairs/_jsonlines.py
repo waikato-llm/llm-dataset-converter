@@ -109,8 +109,7 @@ class JsonLinesPairReader(PairReader):
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_input = open_file(self._current_input, mode="rt")
-        self.session.input_changed = True
-        
+
         self._reader = jsonlines.Reader(self._current_input)
         for item in self._reader:
             val_instruction = None
@@ -254,7 +253,7 @@ class JsonLinesPairWriter(BatchPairWriter):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
-        if self.session.input_changed:
+        if self._has_input_changed(update=True):
             self.finalize()
             output = generate_output(self.session.current_input, self.target, ".json", self.session.options.compression)
             self.logger().info("Writing to: " + output)

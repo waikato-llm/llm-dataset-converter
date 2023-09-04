@@ -112,7 +112,6 @@ class ParquetPairsReader(PairReader):
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_table = pq.read_table(self._current_input).to_pandas()
-        self.session.input_changed = True
         if (self.col_instruction is not None) and (self.col_instruction not in self._current_table.columns):
             raise Exception("Failed to locate instruction column: %s" % self.col_instruction)
         if (self.col_input is not None) and (self.col_input not in self._current_table.columns):
@@ -253,7 +252,7 @@ class ParquetPairsWriter(BatchPairWriter):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
-        if self.session.input_changed:
+        if self._has_input_changed(update=True):
             self.finalize()
             output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
             self.logger().info("Writing to: " + output)

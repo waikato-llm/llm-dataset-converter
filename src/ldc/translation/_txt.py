@@ -176,7 +176,6 @@ class TxtTranslationReader(TranslationReader):
 
             with open_file(self.session.current_input, mode="r") as fp:
                 lines = fp.readlines()
-            self.session.input_changed = True
             for line in lines:
                 old_id = curr_id
                 cells = line.strip().split(sep)

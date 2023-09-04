@@ -101,7 +101,6 @@ class ParquetPretrainReader(PretrainReader):
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
         self._current_table = pq.read_table(self._current_input).to_pandas()
-        self.session.input_changed = True
         if (self.col_content is not None) and (self.col_content not in self._current_table.columns):
             raise Exception("Failed to locate content column: %s" % self.col_content)
 
@@ -222,7 +221,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
         :param data: the data to write as iterable of PretrainData
         :type data: Iterable
         """
-        if self.session.input_changed:
+        if self._has_input_changed(update=True):
             self.finalize()
             output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
             self.logger().info("Writing to: " + output)
