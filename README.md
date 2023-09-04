@@ -145,6 +145,7 @@ optional arguments:
 Filters:  
 * [multi-filter](plugins/multi-filter.md)
 * [keyword](plugins/keyword.md)
+* [language](plugins/language.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [translation-to-pretrain](plugins/translation-to-pretrain.md)
