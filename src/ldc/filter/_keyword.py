@@ -112,7 +112,7 @@ class Keyword(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for", required=True, nargs="+")
         parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
-        parser.add_argument("--language", type=str, help="The languages to inspect; inspects all if not specified", required=True, nargs="+")
+        parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=True, nargs="+")
         parser.add_argument("-a", "--action", choices=KEYWORD_ACTIONS, default=KEYWORD_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
