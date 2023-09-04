@@ -7,7 +7,7 @@ import lzma
 import os
 import pyzstd
 
-from typing import Union, Iterable, List
+from typing import Union, Iterable, List, Optional
 
 from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, Session, SessionHandler
 from ldc.core import LOGGING_WARN
@@ -57,17 +57,20 @@ def locate_files(inputs: Union[str, List[str]], fail_if_empty: bool = False) -> 
     return result
 
 
-def determine_encoding(path: str) -> str:
+def determine_encoding(path: str) -> Optional[str]:
     """
     Determines the file encoding of the text file.
 
     :param path: the file to determine the encoding for
     :type path: str
-    :return: the encoding
+    :return: the encoding, None if file does not exist
     :rtype: str
     """
-    raw = open(path, "rb").read(ENCODING_MAX_CHECK_LENGTH)
-    return chardet.detect(raw)['encoding']
+    if os.path.exists(path):
+        raw = open(path, "rb").read(ENCODING_MAX_CHECK_LENGTH)
+        return chardet.detect(raw)['encoding']
+    else:
+        return None
 
 
 def is_compressed(path: str):
