@@ -29,7 +29,6 @@ class TxtPretrainReader(PretrainReader):
         self.split_lines = split_lines
         self._inputs = None
         self._current_input = None
-        self._reader = None
 
     def name(self) -> str:
         """
