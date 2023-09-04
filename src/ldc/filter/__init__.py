@@ -5,4 +5,5 @@ from ._keyword import LOCATIONS, LOCATIONS_PRETRAIN, LOCATIONS_PAIRS
 from ._keyword import LOCATION_ANY, LOCATION_CONTENT, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT
 from ._pairs_to_pretrain import PairsToPretrain
 from ._skip_duplicate_ids import SkipDuplicateIDs
+from ._split import Split
 from ._translation_to_pretrain import TranslationToPretrain

@@ -147,6 +147,7 @@ Filters:
 * [keyword](plugins/keyword.md)
 * [language](plugins/language.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
+* [split](plugins/split.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [translation-to-pretrain](plugins/translation-to-pretrain.md)
 
