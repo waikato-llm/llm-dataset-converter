@@ -1,6 +1,8 @@
 import importlib
 import inspect
 import os
+import sys
+import traceback
 from typing import Dict, Iterator
 
 from pkg_resources import working_set, EntryPoint
@@ -31,6 +33,7 @@ DEFAULT_LDC_MODULES = ",".join([
     "ldc.supervised.context",
     "ldc.supervised.dialog",
     "ldc.supervised.pairs",
+    "ldc.translation",
 ])
 
 
@@ -96,8 +99,11 @@ def _register_from_modules(cls):
                 try:
                     o = c()
                     _register_plugin(result, o)
-                except:
+                except NotImplementedError:
                     pass
+                except:
+                    print("Problem encountered instantiating: " + m + "." + att, file=sys.stderr)
+                    traceback.print_exc()
 
     return result
 
