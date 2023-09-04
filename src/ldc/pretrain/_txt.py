@@ -14,19 +14,23 @@ class TxtPretrainReader(PretrainReader):
     Reader for plain text files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, split_lines: bool = False, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, split_lines: bool = False, skip_empty: bool = False,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
         :param split_lines: whether to split the lines of the text into separate records
         :type split_lines: bool
+        :param skip_empty: skips empty lines
+        :type skip_empty: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
         self.source = source
         self.split_lines = split_lines
+        self.skip_empty = skip_empty
         self._inputs = None
         self._current_input = None
 
@@ -59,6 +63,7 @@ class TxtPretrainReader(PretrainReader):
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text file on new lines and forwards them as separate records; the index of the line gets stored in the meta-data under '" + METADATA_LINE + "'.")
+        parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -71,6 +76,7 @@ class TxtPretrainReader(PretrainReader):
         super()._apply_args(ns)
         self.source = ns.input
         self.split_lines = ns.split_lines
+        self.skip_empty = ns.skip_empty
 
     def initialize(self):
         """
@@ -93,6 +99,12 @@ class TxtPretrainReader(PretrainReader):
             self.logger().info("Reading from: " + str(input_file))
             with open_file(self.session.current_input, mode="rt") as fp:
                 lines = fp.readlines()
+            if self.skip_empty:
+                lines_new = []
+                for line in lines:
+                    if len(line.strip()) > 0:
+                        lines_new.append(line)
+                lines = lines_new
             self.session.input_changed = True
             if self.split_lines:
                 for index, line in enumerate(lines):
