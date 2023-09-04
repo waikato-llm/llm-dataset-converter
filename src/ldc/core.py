@@ -16,7 +16,6 @@ DOMAIN_SUFFIX_LOOKUP = {
 }
 
 CONVERT = "llm-convert"
-HUGGINGFACE_DOWNLOAD = "llm-hf-download"
 
 
 LOGGING_DEBUG = "DEBUG"

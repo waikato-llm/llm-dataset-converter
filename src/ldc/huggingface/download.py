@@ -4,11 +4,12 @@ import traceback
 
 from typing import Union, List
 
-from ldc.core import HUGGINGFACE_DOWNLOAD, init_logging
+from ldc.core import init_logging
 from ldc.core import LOGGING_LEVELS, LOGGING_INFO, set_logging_level
 from huggingface_hub import hf_hub_download, snapshot_download
 from huggingface_hub.constants import REPO_TYPES
 
+HUGGINGFACE_DOWNLOAD = "llm-hf-download"
 
 _logger = logging.getLogger(HUGGINGFACE_DOWNLOAD)
 
