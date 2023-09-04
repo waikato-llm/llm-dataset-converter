@@ -1,10 +1,11 @@
 import argparse
 from typing import List, Set
 
-from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN
+from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
+from ldc.translation import TranslationData
 
 KEYWORD_ACTION_KEEP = "keep"
 KEYWORD_ACTION_DISCARD = "discard"
@@ -18,6 +19,7 @@ LOCATION_CONTENT = "content"
 LOCATIONS = [LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT]
 LOCATIONS_PAIRS = [LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT]
 LOCATIONS_PRETRAIN = [LOCATION_ANY, LOCATION_CONTENT]
+LOCATIONS_TRANSLATION = [LOCATION_ANY, LOCATION_CONTENT]
 
 
 class Keyword(Filter):
@@ -26,7 +28,7 @@ class Keyword(Filter):
     """
 
     def __init__(self, keywords: List[str] = None, action: str = KEYWORD_ACTION_KEEP,
-                 location: str = LOCATION_ANY, logging_level: str = LOGGING_WARN):
+                 location: str = LOCATION_ANY, languages: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -36,6 +38,8 @@ class Keyword(Filter):
         :type action: str
         :param location: in which part of the data to look for the keywords
         :type location: str
+        :param languages: the languages to restrict the keywords to, None to check all
+        :type languages: list
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -49,6 +53,7 @@ class Keyword(Filter):
         self.keywords = keywords
         self.action = action
         self.location = location
+        self.languages = languages
         self.kept = 0
         self.discarded = 0
 
@@ -77,7 +82,7 @@ class Keyword(Filter):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN]
+        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION]
 
     def accepts(self) -> List:
         """
@@ -86,7 +91,7 @@ class Keyword(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData]
+        return [PairData, PretrainData, TranslationData]
 
     def generates(self) -> List:
         """
@@ -95,7 +100,7 @@ class Keyword(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData]
+        return [PairData, PretrainData, TranslationData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -106,7 +111,8 @@ class Keyword(Filter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for", required=True, nargs="+")
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN))
+        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
+        parser.add_argument("--language", type=str, help="The languages to inspect; inspects all if not specified", required=True, nargs="+")
         parser.add_argument("-a", "--action", choices=KEYWORD_ACTIONS, default=KEYWORD_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
@@ -121,6 +127,7 @@ class Keyword(Filter):
         self.keywords = ns.keyword[:]
         self.action = ns.action
         self.location = ns.location
+        self.languages = ns.language
 
     def initialize(self):
         """
@@ -130,6 +137,8 @@ class Keyword(Filter):
         if (self.keywords is None) or (len(self.keywords) == 0):
             raise Exception("No keywords provided!")
         self.keywords = [x.lower() for x in self.keywords]
+        if self.languages is not None:
+            self.languages = [x.lower() for x in self.languages]
         self.kept = 0
         self.discarded = 0
 
@@ -152,6 +161,14 @@ class Keyword(Filter):
         elif isinstance(data, PretrainData):
             if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
                 words.update(data.content.lower().split())
+        elif isinstance(data, TranslationData):
+            if self.languages is None:
+                for k in data.translations:
+                    words.update(data.translations[k].lower().split())
+            else:
+                for lang in self.languages:
+                    if lang in data.translations:
+                        words.update(data.translations[lang].lower().split())
         else:
             raise Exception("Unhandled data type: %s" % str(type(data)))
 
