@@ -257,7 +257,7 @@ class Writer(CommandlineHandler, InputConsumer, SessionHandler, abc.ABC):
         self._session = s
 
 
-class StreamWriter(Writer):
+class StreamWriter(Writer, abc.ABC):
     """
     Ancestor for classes that write data one record at a time.
     """
@@ -271,7 +271,7 @@ class StreamWriter(Writer):
         raise NotImplementedError()
 
 
-class BatchWriter(Writer):
+class BatchWriter(Writer, abc.ABC):
     """
     Ancestor of classes that write data all at once.
     """
