@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import sys
 import traceback
 
 from ldc.args import HELP_FORMATS, HELP_FORMAT_TEXT, generate_plugin_usage, available_plugins
@@ -71,7 +72,8 @@ def sys_main() -> int:
         main()
         return 0
     except Exception:
-        print(traceback.format_exc())
+        traceback.print_exc()
+        print("Arguments: %s" % str(sys.argv[1:]), file=sys.stderr)
         return 1
 
 

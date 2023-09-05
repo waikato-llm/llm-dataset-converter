@@ -14,10 +14,12 @@ def main(args=None):
     :type args: list
     """
     init_logging()
+    _args = sys.argv[1:] if (args is None) else args
     try:
-        reader, filter_, writer, session = parse_args(sys.argv[1:] if (args is None) else args)
+        reader, filter_, writer, session = parse_args(_args)
     except Exception as e:
-        print(e)
+        print(e, file=sys.stderr)
+        print("Arguments: %s" % str(_args), file=sys.stderr)
         print_usage()
         sys.exit(1)
 
@@ -35,7 +37,7 @@ def sys_main() -> int:
         main()
         return 0
     except Exception:
-        print(traceback.format_exc())
+        traceback.print_exc()
         return 1
 
 

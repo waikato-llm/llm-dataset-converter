@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 import traceback
 
 from typing import Union, List
@@ -88,7 +89,8 @@ def sys_main() -> int:
         main()
         return 0
     except Exception:
-        print(traceback.format_exc())
+        traceback.print_exc()
+        print("Arguments: %s" % str(sys.argv[1:]), file=sys.stderr)
         return 1
 
 
