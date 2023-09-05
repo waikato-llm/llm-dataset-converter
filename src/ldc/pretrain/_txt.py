@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
@@ -15,7 +16,7 @@ class TxtPretrainReader(PretrainReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, split_lines: bool = False, skip_empty: bool = False,
-                 logging_level: str = LOGGING_WARN):
+                 expr_remove: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -24,6 +25,8 @@ class TxtPretrainReader(PretrainReader):
         :type split_lines: bool
         :param skip_empty: skips empty lines
         :type skip_empty: bool
+        :param expr_remove: the list of regexp for removing sub-strings from the text
+        :type expr_remove: list
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -31,6 +34,7 @@ class TxtPretrainReader(PretrainReader):
         self.source = source
         self.split_lines = split_lines
         self.skip_empty = skip_empty
+        self.expr_remove = expr_remove
         self._inputs = None
         self._current_input = None
 
@@ -64,6 +68,7 @@ class TxtPretrainReader(PretrainReader):
         parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text file on new lines and forwards them as separate records; the index of the line gets stored in the meta-data under '" + METADATA_LINE + "'.")
         parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
+        parser.add_argument("-r", "--expr_remove", type=str, default=None, help="Regular expressions for removing sub-strings from the text.", nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -77,6 +82,7 @@ class TxtPretrainReader(PretrainReader):
         self.source = ns.input
         self.split_lines = ns.split_lines
         self.skip_empty = ns.skip_empty
+        self.expr_remove = ns.expr_remove
 
     def initialize(self):
         """
@@ -99,6 +105,12 @@ class TxtPretrainReader(PretrainReader):
             self.logger().info("Reading from: " + str(input_file))
             with open_file(self.session.current_input, mode="rt") as fp:
                 lines = fp.readlines()
+            # remove patterns?
+            if self.expr_remove is not None:
+                for i in range(len(lines)):
+                    for expr in self.expr_remove:
+                        lines[i] = re.sub(expr, "", lines[i])
+            # skip empty?
             if self.skip_empty:
                 lines_new = []
                 for line in lines:
