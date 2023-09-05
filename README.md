@@ -149,6 +149,7 @@ Filters:
 * [multi-filter](plugins/multi-filter.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
+* [skip-duplicate-text](plugins/skip-duplicate-text.md)
 * [split](plugins/split.md)
 * [text-length](plugins/text-length.md)
 * [translation-to-pretrain](plugins/translation-to-pretrain.md)
