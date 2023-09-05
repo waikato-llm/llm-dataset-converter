@@ -141,30 +141,30 @@ class TextLength(Filter):
         :return: the compiled list of lengths
         :rtype: list
         """
-        words = list()
+        lengths = list()
 
         if isinstance(data, PairData):
             if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
-                words.append(len(data.instruction))
+                lengths.append(len(data.instruction))
             if self.location in [LOCATION_INPUT, LOCATION_ANY]:
-                words.append(len(data.input))
+                lengths.append(len(data.input))
             if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
-                words.append(len(data.output))
+                lengths.append(len(data.output))
         elif isinstance(data, PretrainData):
             if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
-                words.append(len(data.content))
+                lengths.append(len(data.content))
         elif isinstance(data, TranslationData):
             if self.languages is None:
                 for k in data.translations:
-                    words.append(len(data.translations[k]))
+                    lengths.append(len(data.translations[k]))
             else:
                 for lang in self.languages:
                     if lang in data.translations:
-                        words.append(len(data.translations[lang]))
+                        lengths.append(len(data.translations[lang]))
         else:
             raise Exception("Unhandled data type: %s" % str(type(data)))
 
-        return words
+        return lengths
 
     def process(self, data):
         """
