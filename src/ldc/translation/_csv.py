@@ -8,7 +8,7 @@ from ldc.io import locate_files, open_file, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
 
 
-class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
+class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
     """
     Ancestor for readers of CSV-like files.
     """
@@ -169,7 +169,7 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
             self._current_input = None
 
 
-class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
+class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC):
     """
     Ancestor for writers of CSV-like files.
     """
@@ -306,7 +306,7 @@ class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
             self._output = None
 
 
-class CsvTranslationsReader(AbstractCsvLikeTranslationsReader):
+class CsvTranslationReader(AbstractCsvLikeTranslationReader):
     """
     Reader for CSV files.
     """
@@ -372,7 +372,7 @@ class CsvTranslationsReader(AbstractCsvLikeTranslationsReader):
         return reader
 
 
-class CsvTranslationsWriter(AbstractCsvLikeTranslationsWriter):
+class CsvTranslationWriter(AbstractCsvLikeTranslationWriter):
     """
     Writer for CSV files.
     """
@@ -440,7 +440,7 @@ class CsvTranslationsWriter(AbstractCsvLikeTranslationsWriter):
         return ".csv"
 
 
-class TsvTranslationsReader(AbstractCsvLikeTranslationsReader):
+class TsvTranslationReader(AbstractCsvLikeTranslationReader):
     """
     Reader for TSV files.
     """
@@ -506,7 +506,7 @@ class TsvTranslationsReader(AbstractCsvLikeTranslationsReader):
         return reader
 
 
-class TsvTranslationsWriter(AbstractCsvLikeTranslationsWriter):
+class TsvTranslationWriter(AbstractCsvLikeTranslationWriter):
     """
     Writer for TSV files.
     """
