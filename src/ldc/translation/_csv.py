@@ -13,7 +13,7 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
     Ancestor for readers of CSV-like files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
                  columns: List[str] = None, languages: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
@@ -21,6 +21,8 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
         :param source: the filename(s)
         :param no_header: whether the data files have no header
         :type no_header: bool
+        :param col_id: the (optional) 1-based column containing the row ID
+        :type col_id: str
         :param columns: the columns with the language data (1-based indices)
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
@@ -31,6 +33,8 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
         super().__init__(logging_level=logging_level)
         self.source = source
         self.no_header = no_header
+        self.col_id = col_id
+        self.idx_id = -1
         self.columns = columns
         self.languages = languages
         self.indices = None
@@ -59,6 +63,7 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
         parser.add_argument("-c", "--columns", metavar="COL", type=str, default=None, help="The 1-based column indices with the language data", required=True, nargs="+")
         parser.add_argument("-g", "--languages", metavar="LANG", type=str, default=None, help="The language IDs (ISO 639-1) corresponding to the columns", required=True, nargs="+")
         parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
+        parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The 1-based column containing the row ID", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -73,6 +78,7 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
         self.columns = ns.columns[:]
         self.languages = ns.languages[:]
         self.no_header = ns.no_header
+        self.col_id = ns.col_id
 
     def initialize(self):
         """
@@ -87,6 +93,12 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
                 raise Exception("Failed to parse column: %s" % col)
         if len(self.columns) != len(self.languages):
             raise Exception("Number of columns and languages differ: %d != %d" % (len(self.columns), len(self.languages)))
+
+        if (self.col_id is not None) and (len(self.col_id) > 0):
+            try:
+                self.idx_id = int(self.col_id) - 1
+            except:
+                raise Exception("Failed to parse ID column as integer: %s" % self.col_id)
 
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
@@ -126,9 +138,11 @@ class AbstractCsvLikeTranslationsReader(TranslationReader, abc.ABC):
                     if len(cell) > 0:
                         translations[self.languages[index]] = cell
 
-            # TODO column with ID?
             meta = dict()
-            meta["id"] = str(count)
+            if self.idx_id > -1:
+                meta["id"] = row[self.idx_id]
+            else:
+                meta["id"] = str(count)
 
             yield TranslationData(
                 translations=translations,
@@ -160,7 +174,7 @@ class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
     Ancestor for writers of CSV-like files.
     """
 
-    def __init__(self, target: str = None, no_header: bool = False,
+    def __init__(self, target: str = None, no_header: bool = False, no_col_id: bool = False,
                  languages: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
@@ -169,6 +183,8 @@ class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
         :type target: str
         :param no_header: whether to suppress the header row
         :type no_header: bool
+        :param no_col_id: whether to suppress the column with the row ID
+        :type no_col_id: bool
         :param languages: the list of languages to output
         :type languages: list
         :param logging_level: the logging level to use
@@ -178,6 +194,7 @@ class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
         self.target = target
         self.languages = languages
         self.no_header = no_header
+        self.no_col_id = no_col_id
         self._output = None
         self._output_writer = None
 
@@ -201,6 +218,7 @@ class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
         parser.add_argument("-o", "--output", type=str, help=self._get_output_description(), required=True)
         parser.add_argument("-g", "--languages", metavar="LANG", type=str, default=None, help="The language IDs (ISO 639-1) to output in separate columns", required=True, nargs="+")
         parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
+        parser.add_argument("--no_col_id", action="store_true", help="For suppressing the column with the row IDs", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -214,6 +232,7 @@ class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
         self.target = ns.output
         self.languages = ns.languages
         self.no_header = ns.no_header
+        self.no_col_id = ns.no_col_id
 
     def initialize(self):
         """
@@ -255,13 +274,20 @@ class AbstractCsvLikeTranslationsWriter(BatchTranslationWriter, abc.ABC):
             self.logger().info("Writing to: " + output)
             self._output = open_file(output, mode="wt")
             self._output_writer = self._init_writer(self._output)
-            # TODO output id?
             if not self.no_header:
-                self._output_writer.writerow(self.languages)
+                row = []
+                if not self.no_col_id:
+                    row.append("ID")
+                row.extend(self.languages[:])
+                self._output_writer.writerow(row)
 
         for item in data:
             row = []
-            # TODO output id?
+            if not self.no_col_id:
+                if (item.meta is not None) and ("id" in item.meta):
+                    row.append(item.meta["id"])
+                else:
+                    row.append(None)
             for lang in self.languages:
                 if lang in item.translations:
                     row.append(item.translations[lang])
@@ -285,15 +311,16 @@ class CsvTranslationsReader(AbstractCsvLikeTranslationsReader):
     Reader for CSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
-                 columns: List[str] = None, languages: List[str] = None,
-                 logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
+                 columns: List[str] = None, languages: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
         :param no_header: whether the data files have no header
         :type no_header: bool
+        :param col_id: the (optional) 1-based column containing the row ID
+        :type col_id: str
         :param columns: the columns with the language data (1-based indices)
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
@@ -302,7 +329,7 @@ class CsvTranslationsReader(AbstractCsvLikeTranslationsReader):
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, columns=columns, languages=languages,
-                         logging_level=logging_level)
+                         col_id=col_id, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -418,9 +445,8 @@ class TsvTranslationsReader(AbstractCsvLikeTranslationsReader):
     Reader for TSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
-                 columns: List[str] = None, languages: List[str] = None,
-                 logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
+                 columns: List[str] = None, languages: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -429,13 +455,15 @@ class TsvTranslationsReader(AbstractCsvLikeTranslationsReader):
         :type no_header: bool
         :param columns: the columns with the language data (1-based indices)
         :type columns: list
+        :param col_id: the (optional) 1-based column containing the row ID
+        :type col_id: str
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, columns=columns, languages=languages,
-                         logging_level=logging_level)
+                         col_id=col_id, logging_level=logging_level)
 
     def name(self) -> str:
         """

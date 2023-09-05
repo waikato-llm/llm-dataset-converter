@@ -7,7 +7,7 @@ Writes translation data in TSV format.
 
 ```
 usage: to-tsv-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT -g LANG
-                  [LANG ...] [-n]
+                  [LANG ...] [-n] [--no_col_id]
 
 Writes translation data in TSV format.
 
@@ -22,4 +22,6 @@ optional arguments:
                         The language IDs (ISO 639-1) to output in separate
                         columns (default: None)
   -n, --no_header       For suppressing the header row (default: False)
+  --no_col_id           For suppressing the column with the row IDs (default:
+                        False)
 ```

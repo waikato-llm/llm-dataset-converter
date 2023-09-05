@@ -8,6 +8,7 @@ Reads translation data in CSV format.
 ```
 usage: from-csv-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
                     [INPUT ...] -c COL [COL ...] -g LANG [LANG ...] [-n]
+                    [--col_id COL]
 
 Reads translation data in CSV format.
 
@@ -25,4 +26,6 @@ optional arguments:
                         The language IDs (ISO 639-1) corresponding to the
                         columns (default: None)
   -n, --no_header       For files with no header row (default: False)
+  --col_id COL          The 1-based column containing the row ID (default:
+                        None)
 ```
