@@ -69,7 +69,10 @@ def determine_encoding(path: str) -> Optional[str]:
     """
     if os.path.exists(path):
         raw = open(path, "rb").read(ENCODING_MAX_CHECK_LENGTH)
-        return chardet.detect(raw)['encoding']
+        result = chardet.detect(raw)['encoding']
+        if result == "ascii":
+            result = "utf-8"
+        return result
     else:
         return None
 
