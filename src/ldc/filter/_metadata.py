@@ -61,7 +61,7 @@ class MetaData(Filter):
         :rtype: str
         """
         return "Keeps or discards data records based on meta-data comparisons. " \
-               + "Performs the following comparison: FILTER_VALUE COMPARISON VALUE. " \
+               + "Performs the following comparison: METADATA_VALUE COMPARISON VALUE. " \
                + "Records that do not have the required field get discarded automatically."
 
     def domains(self) -> List[str]:
