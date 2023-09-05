@@ -1,45 +1,43 @@
 import argparse
-from typing import List, Set
+from typing import List
 
 from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
     LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
-from ._core import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
+from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
 
 
-class Keyword(Filter):
+class TextLength(Filter):
     """
     Keeps or discards data records based on keyword(s).
     """
 
-    def __init__(self, keywords: List[str] = None, action: str = FILTER_ACTION_KEEP,
+    def __init__(self, min_length: int = None, max_length: int = None,
                  location: str = LOCATION_ANY, languages: List[str] = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
-        :param keywords: the list of keywords to look for (lower case)
-        :type keywords: list
-        :param action: the action to perform
-        :type action: str
+        :param min_length: the minimum text length, ignored if None
+        :type min_length: int
+        :param max_length: the maximum text length, ignored if None
+        :type max_length: int
         :param location: in which part of the data to look for the keywords
         :type location: str
-        :param languages: the languages to restrict the keywords to, None to check all
+        :param languages: the languages to restrict the check to, None to check all
         :type languages: list
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logging_level=logging_level)
 
-        if action not in FILTER_ACTIONS:
-            raise Exception("Invalid action: %s" % action)
         if location not in LOCATIONS:
             raise Exception("Invalid location: %s" % location)
 
-        self.keywords = keywords
-        self.action = action
+        self.min_length = min_length
+        self.max_length = max_length
         self.location = location
         self.languages = languages
         self.kept = 0
@@ -52,7 +50,7 @@ class Keyword(Filter):
         :return: the name
         :rtype: str
         """
-        return "keyword"
+        return "text-length"
 
     def description(self) -> str:
         """
@@ -61,7 +59,7 @@ class Keyword(Filter):
         :return: the description
         :rtype: str
         """
-        return "Keeps or discards data records based on keyword(s)."
+        return "Keeps or discards data records based on text length constraints."
 
     def domains(self) -> List[str]:
         """
@@ -98,12 +96,10 @@ class Keyword(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for", required=True, nargs="+")
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
-            LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
-            LOCATIONS_PRETRAIN))
+        parser.add_argument("-m", "--min_length", type=int, help="The minimum text length, ignored if <0", default=-1, required=False)
+        parser.add_argument("-M", "--max_length", type=int, help="The maximum text length, ignored if <0", default=-1, required=False)
+        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
-        parser.add_argument("-a", "--action", choices=FILTER_ACTIONS, default=FILTER_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -114,8 +110,8 @@ class Keyword(Filter):
         :type ns: argparse.Namespace
         """
         super()._apply_args(ns)
-        self.keywords = ns.keyword[:]
-        self.action = ns.action
+        self.min_length = ns.min_length
+        self.max_length = ns.max_length
         self.location = ns.location
         self.languages = ns.language
 
@@ -124,41 +120,47 @@ class Keyword(Filter):
         Initializes the processing, e.g., for opening files or databases.
         """
         super().initialize()
-        if (self.keywords is None) or (len(self.keywords) == 0):
-            raise Exception("No keywords provided!")
-        self.keywords = [x.lower() for x in self.keywords]
+
+        if (self.min_length is None) or (self.min_length < 0):
+            self.min_length = -1
+        if (self.max_length is None) or (self.max_length < 0):
+            self.max_length = -1
+        if (self.min_length > 0) and (self.max_length > 0) and (self.min_length > self.max_length):
+            raise Exception("Minimum length can be at most the maximum length: min=%d, max=%d" % (self.min_length, self.max_length))
+
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
+
         self.kept = 0
         self.discarded = 0
 
-    def _to_words(self, data) -> Set[str]:
+    def _get_lengths(self, data) -> List[int]:
         """
-        Turns the record into words.
+        Turns the record into list of lengths.
 
-        :return: the compiled set of words (lower case)
-        :rtype: set
+        :return: the compiled list of lengths
+        :rtype: list
         """
-        words = set()
+        words = list()
 
         if isinstance(data, PairData):
             if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
-                words.update(data.instruction.lower().split())
+                words.append(len(data.instruction))
             if self.location in [LOCATION_INPUT, LOCATION_ANY]:
-                words.update(data.input.lower().split())
+                words.append(len(data.input))
             if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
-                words.update(data.output.lower().split())
+                words.append(len(data.output))
         elif isinstance(data, PretrainData):
             if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
-                words.update(data.content.lower().split())
+                words.append(len(data.content))
         elif isinstance(data, TranslationData):
             if self.languages is None:
                 for k in data.translations:
-                    words.update(data.translations[k].lower().split())
+                    words.append(len(data.translations[k]))
             else:
                 for lang in self.languages:
                     if lang in data.translations:
-                        words.update(data.translations[lang].lower().split())
+                        words.append(len(data.translations[lang]))
         else:
             raise Exception("Unhandled data type: %s" % str(type(data)))
 
@@ -173,32 +175,28 @@ class Keyword(Filter):
         """
         result = data
 
-        # prepare lookup
-        words = self._to_words(data)
+        # get lengths
+        lengths = self._get_lengths(data)
 
-        # check for keywords
-        found = False
-        for keyword in self.keywords:
-            if keyword in words:
-                found = True
+        keep = True
+        for length in lengths:
+            if self.min_length > -1:
+                if length < self.min_length:
+                    keep = False
+            if self.max_length > -1:
+                if length > self.max_length:
+                    keep = False
+            if not keep:
                 break
 
-        if self.action == FILTER_ACTION_KEEP:
-            if not found:
-                result = None
-        elif self.action == FILTER_ACTION_DISCARD:
-            if found:
-                result = None
-        else:
-            raise Exception("Unhandled action: %s" % self.action)
+        if not keep:
+            result = None
+            self.logger().debug("Text length violated constraints (min=%d, max=%d): %s" % (self.min_length, self.max_length, str(data)))
 
         if result is None:
             self.discarded += 1
         else:
             self.kept += 1
-
-        info = "keeping" if (result is not None) else "discarding"
-        self.logger().debug("Keyword found, %s: %s" % (info, str(data)))
 
         return result
 

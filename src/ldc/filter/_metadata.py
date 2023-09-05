@@ -2,35 +2,12 @@ import argparse
 from typing import List, Tuple
 
 from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
-from ldc.filter import Filter
+from ldc.core import COMPARISONS, COMPARISON_LESSTHAN, COMPARISON_LESSOREQUAL, COMPARISON_EQUAL, COMPARISON_NOTEQUAL, \
+    COMPARISON_GREATEROREQUAL, COMPARISON_GREATERTHAN, COMPARISON_HELP
+from ldc.filter import Filter, FILTER_ACTIONS, FILTER_ACTION_KEEP, FILTER_ACTION_DISCARD
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
-
-METADATA_ACTION_KEEP = "keep"
-METADATA_ACTION_DISCARD = "discard"
-METADATA_ACTIONS = [METADATA_ACTION_KEEP, METADATA_ACTION_DISCARD]
-
-COMPARISON_LESSTHAN = "lt"
-COMPARISON_LESSOREQUAL = "le"
-COMPARISON_EQUAL = "eq"
-COMPARISON_NOTEQUAL = "ne"
-COMPARISON_GREATEROREQUAL = "ge"
-COMPARISON_GREATERTHAN = "gt"
-COMPARISONS = [
-    COMPARISON_LESSTHAN,
-    COMPARISON_LESSOREQUAL,
-    COMPARISON_EQUAL,
-    COMPARISON_NOTEQUAL,
-    COMPARISON_GREATEROREQUAL,
-    COMPARISON_GREATERTHAN,
-]
-COMPARISON_HELP = COMPARISON_LESSTHAN + ": less than, " \
-    + COMPARISON_LESSOREQUAL + ": less or equal, " \
-    + COMPARISON_EQUAL + ": equal, " \
-    + COMPARISON_NOTEQUAL + ": not equal, " \
-    + COMPARISON_GREATERTHAN + ": greater than, " \
-    + COMPARISON_GREATEROREQUAL + ": greater of equal"
 
 
 class MetaData(Filter):
@@ -38,7 +15,7 @@ class MetaData(Filter):
     Keeps or discards data records based on meta-data values.
     """
 
-    def __init__(self, field: str = None, action: str = METADATA_ACTION_KEEP,
+    def __init__(self, field: str = None, action: str = FILTER_ACTION_KEEP,
                  comparison: str = COMPARISON_EQUAL, value=None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
@@ -55,7 +32,7 @@ class MetaData(Filter):
         """
         super().__init__(logging_level=logging_level)
 
-        if action not in METADATA_ACTIONS:
+        if action not in FILTER_ACTIONS:
             raise Exception("Invalid action: %s" % action)
         if comparison not in COMPARISONS:
             raise Exception("Invalid comparison: %s" % comparison)
@@ -84,7 +61,7 @@ class MetaData(Filter):
         :rtype: str
         """
         return "Keeps or discards data records based on meta-data comparisons. " \
-               + "Performs the following comparison: METADATA_VALUE COMPARISON VALUE. " \
+               + "Performs the following comparison: FILTER_VALUE COMPARISON VALUE. " \
                + "Records that do not have the required field get discarded automatically."
 
     def domains(self) -> List[str]:
@@ -125,7 +102,7 @@ class MetaData(Filter):
         parser.add_argument("-f", "--field", type=str, help="The meta-data field to use in the comparison", required=True)
         parser.add_argument("-v", "--value", type=str, help="The value to use in the comparison", required=True)
         parser.add_argument("-c", "--comparison", choices=COMPARISONS, default=COMPARISON_EQUAL, help="How to compare the value with the meta-data value; " + COMPARISON_HELP)
-        parser.add_argument("-a", "--action", choices=METADATA_ACTIONS, default=METADATA_ACTION_KEEP, help="How to react when a keyword is encountered")
+        parser.add_argument("-a", "--action", choices=FILTER_ACTIONS, default=FILTER_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -218,10 +195,10 @@ class MetaData(Filter):
         else:
             raise Exception("Unhandled comparison: %s" % self.comparison)
 
-        if self.action == METADATA_ACTION_KEEP:
+        if self.action == FILTER_ACTION_KEEP:
             if not comp_result:
                 result = None
-        elif self.action == METADATA_ACTION_DISCARD:
+        elif self.action == FILTER_ACTION_DISCARD:
             if comp_result:
                 result = None
         else:

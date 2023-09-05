@@ -1,7 +1,7 @@
 import argparse
-from typing import List, Set
+from typing import List
 
-from ldc.core import LOGGING_WARN, DOMAIN_TRANSLATION
+from ldc.core import LOGGING_WARN
 from ._core import TranslationFilter
 from ldc.translation import TranslationData
 
@@ -106,10 +106,7 @@ class Language(TranslationFilter):
                 elif self.action == KEYWORD_ACTION_DISCARD:
                     self.discarded += 1
             else:
-                if self.action == KEYWORD_ACTION_DISCARD:
-                    translations[lang] = data.translations[lang]
-                else:
-                    self.discarded += 1
+                self.discarded += 1
 
         if len(translations) == 0:
             return None

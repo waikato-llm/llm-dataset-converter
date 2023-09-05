@@ -1,11 +1,7 @@
-from ._core import Filter, MultiFilter
+from ._core import Filter, MultiFilter, FILTER_ACTIONS, FILTER_ACTION_KEEP, FILTER_ACTION_DISCARD
 from ._keyword import Keyword
-from ._keyword import KEYWORD_ACTIONS, KEYWORD_ACTION_KEEP, KEYWORD_ACTION_DISCARD
-from ._keyword import LOCATIONS, LOCATIONS_PRETRAIN, LOCATIONS_PAIRS
-from ._keyword import LOCATION_ANY, LOCATION_CONTENT, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT
-from ._metadata import MetaData, METADATA_ACTIONS, METADATA_ACTION_KEEP, METADATA_ACTION_DISCARD
-from ._metadata import COMPARISONS, COMPARISON_EQUAL, COMPARISON_NOTEQUAL, COMPARISON_GREATERTHAN, COMPARISON_GREATEROREQUAL, COMPARISON_LESSTHAN, COMPARISON_LESSOREQUAL
 from ._pairs_to_pretrain import PairsToPretrain
 from ._skip_duplicate_ids import SkipDuplicateIDs
 from ._split import Split
+from ._text_length import TextLength
 from ._translation_to_pretrain import TranslationToPretrain
