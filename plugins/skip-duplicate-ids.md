@@ -1,8 +1,8 @@
 # skip-duplicate-ids
 
-* domain(s): pairs, pretrain
-* accepts: PairData, PretrainData
-* generates: PairData, PretrainData
+* domain(s): pairs, pretrain, translation
+* accepts: PairData, PretrainData, TranslationData
+* generates: PairData, PretrainData, TranslationData
 
 Suppresses records with IDs that have already passed through. Uses the 'id' value from the meta-data.
 
