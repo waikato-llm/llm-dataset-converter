@@ -67,8 +67,8 @@ class TxtPretrainReader(PretrainReader):
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text file on new lines and forwards them as separate records; the index of the line gets stored in the meta-data under '" + METADATA_LINE + "'.")
+        parser.add_argument("-r", "--expr_remove", type=str, default=None, help="Regular expressions for removing sub-strings from the text (gets applied before skipping empty lines).", nargs="*")
         parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
-        parser.add_argument("-r", "--expr_remove", type=str, default=None, help="Regular expressions for removing sub-strings from the text.", nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
