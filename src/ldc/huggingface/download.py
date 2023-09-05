@@ -90,7 +90,7 @@ def sys_main() -> int:
         return 0
     except Exception:
         traceback.print_exc()
-        print("Arguments: %s" % str(sys.argv[1:]), file=sys.stderr)
+        print("options: %s" % str(sys.argv[1:]), file=sys.stderr)
         return 1
 
 

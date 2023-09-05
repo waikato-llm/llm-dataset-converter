@@ -19,9 +19,11 @@ def main(args=None):
         reader, filter_, writer, session = parse_args(_args)
     except Exception as e:
         print(e, file=sys.stderr)
-        print("Arguments: %s" % str(_args), file=sys.stderr)
+        print("options: %s" % str(_args), file=sys.stderr)
         print_usage()
         sys.exit(1)
+
+    session.logger.info("options: %s" % str(_args))
 
     execute(reader, filter_, writer, session)
 
