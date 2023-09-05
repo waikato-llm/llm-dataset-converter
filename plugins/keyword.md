@@ -8,8 +8,8 @@ Keeps or discards data records based on keyword(s).
 
 ```
 usage: keyword [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -k KEYWORD
-               [KEYWORD ...] [-L {any,instruction,input,output,content}] -g
-               LANGUAGE [LANGUAGE ...] [-a {keep,discard}]
+               [KEYWORD ...] [-L {any,instruction,input,output,content}]
+               [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
 Keeps or discards data records based on keyword(s).
 
@@ -23,7 +23,7 @@ optional arguments:
                         Where to look for the keywords; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)
-  -g LANGUAGE [LANGUAGE ...], --language LANGUAGE [LANGUAGE ...]
+  -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
                         The languages to inspect; inspects all if not
                         specified (default: None)
   -a {keep,discard}, --action {keep,discard}
