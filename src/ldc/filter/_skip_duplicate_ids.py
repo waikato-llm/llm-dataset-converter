@@ -1,10 +1,11 @@
 from typing import List
 
-from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
+from ldc.translation import TranslationData
 
 
 class SkipDuplicateIDs(Filter):
@@ -48,7 +49,7 @@ class SkipDuplicateIDs(Filter):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN]
+        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION]
 
     def accepts(self) -> List:
         """
@@ -57,7 +58,7 @@ class SkipDuplicateIDs(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData]
+        return [PairData, PretrainData, TranslationData]
 
     def generates(self) -> List:
         """
@@ -66,7 +67,7 @@ class SkipDuplicateIDs(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData]
+        return [PairData, PretrainData, TranslationData]
 
     def initialize(self):
         """
@@ -88,6 +89,8 @@ class SkipDuplicateIDs(Filter):
         if isinstance(data, PairData):
             meta = data.meta
         elif isinstance(data, PretrainData):
+            meta = data.meta
+        elif isinstance(data, TranslationData):
             meta = data.meta
         else:
             if hasattr(data, "meta"):
