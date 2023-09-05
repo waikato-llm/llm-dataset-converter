@@ -30,8 +30,6 @@ ENV_LDC_MODULES = "LDC_MODULES"
 DEFAULT_LDC_MODULES = ",".join([
     "ldc.filter",
     "ldc.pretrain",
-    "ldc.supervised.context",
-    "ldc.supervised.dialog",
     "ldc.supervised.pairs",
     "ldc.translation",
 ])
