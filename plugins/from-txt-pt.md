@@ -9,6 +9,7 @@ Text files can be split into lines and forwarded as separate records as well.
 ```
 usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
                    [INPUT ...] [-s] [-r [EXPR_REMOVE [EXPR_REMOVE ...]]] [-e]
+                   [--sentences] [-c END_CHARS]
 
 Reads pretrain data from plain text files, with each file representing a data
 record. Text files can be split into lines and forwarded as separate records
@@ -29,4 +30,9 @@ optional arguments:
                         text (gets applied before skipping empty lines).
                         (default: None)
   -e, --skip_empty      Removes empty lines from the data. (default: False)
+  --sentences           For keeping sentences together, e.g., when reading
+                        preformatted text. (default: False)
+  -c END_CHARS, --end_chars END_CHARS
+                        The characters signifying the end of a sentence.
+                        (default: .!?;:))
 ```

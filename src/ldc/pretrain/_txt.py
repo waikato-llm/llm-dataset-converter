@@ -9,6 +9,8 @@ from ._core import PretrainData, PretrainReader, StreamPretrainWriter
 
 METADATA_LINE = "line"
 
+DEFAULT_END_CHARS = ".!?;:)"
+
 
 class TxtPretrainReader(PretrainReader):
     """
@@ -16,7 +18,8 @@ class TxtPretrainReader(PretrainReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, split_lines: bool = False, skip_empty: bool = False,
-                 expr_remove: List[str] = None, logging_level: str = LOGGING_WARN):
+                 expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
+                 logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -27,6 +30,10 @@ class TxtPretrainReader(PretrainReader):
         :type skip_empty: bool
         :param expr_remove: the list of regexp for removing sub-strings from the text
         :type expr_remove: list
+        :param sentences: whether to assemble lines into sentences (eg when reading preformatted text)
+        :type sentences: bool
+        :param end_chars: the characters that signify the ending of a sentence
+        :type end_chars: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -35,6 +42,8 @@ class TxtPretrainReader(PretrainReader):
         self.split_lines = split_lines
         self.skip_empty = skip_empty
         self.expr_remove = expr_remove
+        self.sentences = sentences
+        self.end_chars = end_chars
         self._inputs = None
         self._current_input = None
 
@@ -69,6 +78,8 @@ class TxtPretrainReader(PretrainReader):
         parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text file on new lines and forwards them as separate records; the index of the line gets stored in the meta-data under '" + METADATA_LINE + "'.")
         parser.add_argument("-r", "--expr_remove", type=str, default=None, help="Regular expressions for removing sub-strings from the text (gets applied before skipping empty lines).", nargs="*")
         parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
+        parser.add_argument("--sentences", action="store_true", help="For keeping sentences together, e.g., when reading preformatted text.")
+        parser.add_argument("-c", "--end_chars", type=str, help="The characters signifying the end of a sentence.", default=DEFAULT_END_CHARS, required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -83,6 +94,8 @@ class TxtPretrainReader(PretrainReader):
         self.split_lines = ns.split_lines
         self.skip_empty = ns.skip_empty
         self.expr_remove = ns.expr_remove
+        self.sentences = ns.sentences
+        self.end_chars = ns.end_chars
 
     def initialize(self):
         """
@@ -90,6 +103,137 @@ class TxtPretrainReader(PretrainReader):
         """
         super().initialize()
         self._inputs = locate_files(self.source, fail_if_empty=True)
+
+    def _assemble_preformatted(self, lines: List[str]) -> List[str]:
+        """
+        Assembles preformatted lines into full sentences.
+
+        :param lines: the lines to process
+        :type lines: list
+        :return: the updated lines
+        :rtype: list
+        """
+        result = []
+        new_sentence = False
+        buffer = None
+
+        for line in lines:
+            line = line.strip()
+            curr = line
+
+            # remove quotes at end
+            if curr.endswith('"') or curr.endswith("'"):
+                curr = curr[:len(curr) - 1]
+
+            # new sentence?
+            if len(curr) == 0:
+                new_sentence = True
+            else:
+                for chr in self.end_chars:
+                    if curr.endswith(chr):
+                        new_sentence = True
+                        break
+
+            if new_sentence:
+                new_sentence = False
+                if len(line) > 0:
+                    if buffer is None:
+                        buffer = line
+                    else:
+                        buffer += " " + line
+                if buffer is not None:
+                    result.append(buffer)
+                    buffer = None
+            else:
+                if buffer is None:
+                    buffer = line
+                else:
+                    buffer += " " + line
+
+        if buffer is not None:
+            result.append(buffer)
+
+        return result
+
+    def _split_into_sentences(self, lines: List[str]) -> List[str]:
+        """
+        Splits text into separate sentences.
+
+        :param lines: the lines to process
+        :type lines: list
+        :return: the updated lines
+        :rtype: list
+        """
+        result = []
+
+        for line in lines:
+            while len(line) > 0:
+                pos = len(line)
+                for chr in self.end_chars:
+                    if chr in line:
+                        pos = min(pos, line.index(chr))
+                if pos < len(line):
+                    result.append(line[0:pos + 1].strip())
+                    line = line[pos + 1:].strip()
+                    # dangling end char?
+                    if len(line) == 1:
+                        result[-1] += line
+                        line = ""
+                else:
+                    result.append(line.strip())
+                    line = ""
+
+        return result
+
+    def _assemble_sentences(self, lines: List[str]) -> List[str]:
+        """
+        Assembles lines into sentences, e.g., when processing preformatted text.
+
+        :param lines: the lines to process
+        :type lines: list
+        :return: the updated lines
+        :rtype: list
+        """
+        pre = len(lines)
+        result = self._assemble_preformatted(lines)
+        result = self._split_into_sentences(result)
+        post = len(result)
+        self.logger().info("assembling sentences, #lines: %d -> %d" % (pre, post))
+        return result
+
+    def _remove_patterns(self, lines: List[str]):
+        """
+        Removes all lines that match the patterns (inline).
+
+        :param lines: the lines to process
+        :type lines: list
+        """
+        affected = 0
+        for i in range(len(lines)):
+            for expr in self.expr_remove:
+                new_line = re.sub(expr, "", lines[i])
+                if len(lines[i]) != len(new_line):
+                    lines[i] = new_line
+                    affected += 1
+        self.logger().info("remove patterns, affected #lines: %d" % affected)
+
+    def _remove_empty(self, lines: List[str]) -> List[str]:
+        """
+        Removes empty lines from the list and returns an updated list.
+
+        :param lines: the lines to process
+        :type lines: list
+        :return: the updated list
+        :rtype: list
+        """
+        pre = len(lines)
+        result = []
+        for line in lines:
+            if len(line.strip()) > 0:
+                result.append(line)
+        post = len(lines)
+        self.logger().info("removing empty, #lines: %d -> %d" % (pre, post))
+        return result
 
     def read(self) -> Iterable[PretrainData]:
         """
@@ -105,18 +249,17 @@ class TxtPretrainReader(PretrainReader):
             self.logger().info("Reading from: " + str(input_file))
             with open_file(self.session.current_input, mode="rt") as fp:
                 lines = fp.readlines()
+
+            # assemble sentences?
+            if self.sentences:
+                lines = self._assemble_sentences(lines)
             # remove patterns?
             if self.expr_remove is not None:
-                for i in range(len(lines)):
-                    for expr in self.expr_remove:
-                        lines[i] = re.sub(expr, "", lines[i])
+                self._remove_patterns(lines)
             # skip empty?
             if self.skip_empty:
-                lines_new = []
-                for line in lines:
-                    if len(line.strip()) > 0:
-                        lines_new.append(line)
-                lines = lines_new
+                lines = self._remove_empty(lines)
+
             if self.split_lines:
                 for index, line in enumerate(lines):
                     yield PretrainData(
