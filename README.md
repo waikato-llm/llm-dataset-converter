@@ -54,7 +54,7 @@ are automatically supported for loading/saving files:
 
 ## Tools
 
-Dataset conversion:
+### Dataset conversion
 
 ```
 usage: llm-convert [-h|--help|--help-all|-help-plugin NAME]
@@ -86,7 +86,7 @@ optional arguments:
                         directory to the writer (default: None)
 ```
 
-Download tool for [Hugging Face](https://huggingface.co/) datasets/files:
+### [Hugging Face](https://huggingface.co/) datasets/files download
 
 ```
 usage: llm-hf-download [-h] -i REPO_ID [-t {None,model,dataset,space}]
@@ -117,16 +117,19 @@ optional arguments:
                         The logging level to use (default: INFO)
 ```
 
-Tool for generating help screens for plugins:
+### Generating help screens for plugins
 
 ```
-usage: llm-help [-h] [-p NAME] [-f FORMAT] [-L INT] [-o PATH]
-                [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: llm-help [-h] [-m [PACKAGE [PACKAGE ...]]] [-p NAME] [-f FORMAT]
+                [-L INT] [-o PATH] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool for outputting help for plugins in various formats.
 
 optional arguments:
   -h, --help            show this help message and exit
+  -m [PACKAGE [PACKAGE ...]], --modules [PACKAGE [PACKAGE ...]]
+                        The names of the module packages, uses the default
+                        ones if not provided. (default: None)
   -p NAME, --plugin_name NAME
                         The name of the plugin to generate the help for,
                         generates it for all if not specified (default: None)
@@ -143,7 +146,7 @@ optional arguments:
                         The logging level to use (default: WARN)
 ```
 
-Tool for generating the `entry_points` section for readers, filters and writers:
+### Generating `entry_points` section for readers, filters and writers
 
 ```
 usage: llm-entry-points [-h] [-m [PACKAGE [PACKAGE ...]]]

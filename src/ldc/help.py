@@ -4,7 +4,10 @@ import os
 import sys
 import traceback
 
-from ldc.args import HELP_FORMATS, HELP_FORMAT_TEXT, generate_plugin_usage, available_plugins
+from typing import List
+
+from ldc.registry import register_plugins, available_plugins
+from ldc.args import HELP_FORMATS, HELP_FORMAT_TEXT, generate_plugin_usage
 from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
 
 HELP = "llm-help"
@@ -12,10 +15,12 @@ HELP = "llm-help"
 _logger = logging.getLogger(HELP)
 
 
-def output_help(plugin_name: str, help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1, output: str = None):
+def output_help(modules: List[str] = None, plugin_name: str = None, help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1, output: str = None):
     """
     Generates and outputs the help screen for the plugin.
 
+    :param modules: the modules to generate the entry points for
+    :type modules: list
     :param plugin_name: the plugin to generate the help for, None if for all
     :type plugin_name: str
     :param help_format: the format to output
@@ -25,6 +30,7 @@ def output_help(plugin_name: str, help_format: str = HELP_FORMAT_TEXT, heading_l
     :param output: the dir/file to save the output to, uses stdout if None
     :type output: str
     """
+    register_plugins(modules)
     if help_format not in HELP_FORMATS:
         raise Exception("Unknown help format: %s" % help_format)
     if (plugin_name is None) and not os.path.isdir(output):
@@ -50,6 +56,7 @@ def main(args=None):
         description="Tool for outputting help for plugins in various formats.",
         prog=HELP,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-m", "--modules", metavar="PACKAGE", help="The names of the module packages, uses the default ones if not provided.", default=None, type=str, required=False, nargs="*")
     parser.add_argument("-p", "--plugin_name", metavar="NAME", help="The name of the plugin to generate the help for, generates it for all if not specified", default=None, type=str, required=False)
     parser.add_argument("-f", "--help_format", metavar="FORMAT", help="The output format to generate", choices=HELP_FORMATS, default=HELP_FORMAT_TEXT, required=False)
     parser.add_argument("-L", "--heading_level", metavar="INT", help="The level to use for the heading", default=1, type=int, required=False)
@@ -57,8 +64,8 @@ def main(args=None):
     parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
     parsed = parser.parse_args(args=args)
     set_logging_level(_logger, parsed.logging_level)
-    output_help(parsed.plugin_name, help_format=parsed.help_format, heading_level=parsed.heading_level,
-                output=parsed.output)
+    output_help(modules=parsed.modules, plugin_name=parsed.plugin_name, help_format=parsed.help_format,
+                heading_level=parsed.heading_level, output=parsed.output)
 
 
 def sys_main() -> int:
