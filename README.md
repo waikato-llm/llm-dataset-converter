@@ -41,6 +41,7 @@ The following dataset formats are supported:
 | pretrain    | TXT | [from-txt-pt](plugins/from-txt-pt.md) | [to-txt-pt](plugins/to-txt-pt.md) | Y <sup>1</sup> |
 | translation | CSV | [from-csv-t9n](plugins/from-csv-t9n.md) | [to-csv-t9n](plugins/to-csv-t9n.md) | Y |
 | translation | [Jsonlines](https://jsonlines.org/) <sup>2</sup> | [from-jsonlines-t9n](plugins/from-jsonlines-t9n.md) | [to-jsonlines-t9n](plugins/to-jsonlines-t9n.md) | Y |
+| translation | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-t9n](plugins/from-parquet-t9n.md) | [to-parquet-t9n](plugins/to-parquet-t9n.md) | N |    
 | translation | TSV | [from-tsv-t9n](plugins/from-tsv-t9n.md) | [to-tsv-t9n](plugins/to-tsv-t9n.md) | Y |
 | translation | TXT | [from-txt-t9n](plugins/from-txt-t9n.md) | [to-txt-t9n](plugins/to-txt-t9n.md) | Y <sup>1</sup> |
 
