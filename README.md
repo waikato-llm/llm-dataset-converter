@@ -37,8 +37,9 @@ The following dataset formats are supported:
 | translation | TSV | [from-tsv-t9n](plugins/from-tsv-t9n.md) | [to-tsv-t9n](plugins/to-tsv-t9n.md) | Y |
 | translation | TXT | [from-txt-t9n](plugins/from-txt-t9n.md) | [to-txt-t9n](plugins/to-txt-t9n.md) | Y <sup>1</sup> |
 
-<sup>1</sup> Not available when concatenating content in single file.
-<sup>2</sup> Format defined here: https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md
+Notes:
+* <sup>1</sup> Not available when concatenating content in single file.
+* <sup>2</sup> Format defined here: https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md
 
 ## Compression formats
 
