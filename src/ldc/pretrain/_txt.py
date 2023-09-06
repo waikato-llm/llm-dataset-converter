@@ -11,6 +11,8 @@ METADATA_LINE = "line"
 
 DEFAULT_END_CHARS = ".!?;:)"
 
+DEFAULT_QUOTES = "\"'”’"
+
 
 class TxtPretrainReader(PretrainReader):
     """
@@ -19,6 +21,7 @@ class TxtPretrainReader(PretrainReader):
 
     def __init__(self, source: Union[str, List[str]] = None, split_lines: bool = False, skip_empty: bool = False,
                  expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
+                 block_removal_start: List[str] = None, block_removal_end: List[str] = None,
                  logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
@@ -34,6 +37,10 @@ class TxtPretrainReader(PretrainReader):
         :type sentences: bool
         :param end_chars: the characters that signify the ending of a sentence
         :type end_chars: str
+        :param block_removal_start: the start of blocks to remove
+        :type block_removal_start: list
+        :param block_removal_end: the end of blocks to remove
+        :type block_removal_end: list
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -44,6 +51,8 @@ class TxtPretrainReader(PretrainReader):
         self.expr_remove = expr_remove
         self.sentences = sentences
         self.end_chars = end_chars
+        self.block_removal_start = block_removal_start
+        self.block_removal_end = block_removal_end
         self._inputs = None
         self._current_input = None
 
@@ -80,6 +89,8 @@ class TxtPretrainReader(PretrainReader):
         parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
         parser.add_argument("--sentences", action="store_true", help="For keeping sentences together, e.g., when reading preformatted text.")
         parser.add_argument("-c", "--end_chars", type=str, help="The characters signifying the end of a sentence.", default=DEFAULT_END_CHARS, required=False)
+        parser.add_argument("--block_removal_start", type=str, help="The starting strings for blocks to remove", required=False, nargs="*")
+        parser.add_argument("--block_removal_end", type=str, help="The ending strings for blocks to remove", required=False, nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -96,6 +107,8 @@ class TxtPretrainReader(PretrainReader):
         self.expr_remove = ns.expr_remove
         self.sentences = ns.sentences
         self.end_chars = ns.end_chars
+        self.block_removal_start = ns.block_removal_start
+        self.block_removal_end = ns.block_removal_end
 
     def initialize(self):
         """
@@ -103,6 +116,44 @@ class TxtPretrainReader(PretrainReader):
         """
         super().initialize()
         self._inputs = locate_files(self.source, fail_if_empty=True)
+        if (self.block_removal_start is not None) and (self.block_removal_end is None):
+            raise Exception("Block removal starts defined but no ends!")
+        if (self.block_removal_start is None) and (self.block_removal_end is not None):
+            raise Exception("Block removal ends defined but no starts!")
+        if (self.block_removal_start is not None) and (self.block_removal_end is not None):
+            if len(self.block_removal_start) != len(self.block_removal_end):
+                raise Exception("Differing number of block removal starts and ends: %d != %d" % (len(self.block_removal_start), len(self.block_removal_end)))
+
+    def _remove_blocks(self, lines: List[str]) -> List[str]:
+        """
+        Removes blocks of text between the defined start/end strings (incl these strings).
+
+        :param lines: the lines to process
+        :type lines: list
+        :return: the updated lines
+        :rtype: list
+        """
+        pre = len(lines)
+        result = []
+        in_block = False
+
+        for line in lines:
+            if in_block:
+                for end in self.block_removal_end:
+                    if end in line:
+                        in_block = False
+                        continue
+            else:
+                for start in self.block_removal_start:
+                    if start in line:
+                        in_block = True
+                        break
+                if not in_block:
+                    result.append(line)
+
+        post = len(result)
+        self.logger().info("block removal, #lines: %d -> %d" % (pre, post))
+        return result
 
     def _assemble_preformatted(self, lines: List[str]) -> List[str]:
         """
@@ -122,6 +173,7 @@ class TxtPretrainReader(PretrainReader):
             curr = line
 
             # remove quotes at end
+            # TODO quotes
             if curr.endswith('"') or curr.endswith("'"):
                 curr = curr[:len(curr) - 1]
 
@@ -250,6 +302,9 @@ class TxtPretrainReader(PretrainReader):
             with open_file(self.session.current_input, mode="rt") as fp:
                 lines = fp.readlines()
 
+            # remove blocks?
+            if self.block_removal_start is not None:
+                lines = self._remove_blocks(lines)
             # assemble sentences?
             if self.sentences:
                 lines = self._assemble_sentences(lines)
