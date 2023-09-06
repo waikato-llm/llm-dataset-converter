@@ -77,13 +77,19 @@ usage: llm-convert [-h|--help|--help-all|-help-plugin NAME]
 Tool for converting between large language model (LLM) dataset formats.
 
 readers:
-   from-alpaca, from-csv-pr, from-csv-pt, from-jsonlines-pr, 
-   from-jsonlines-pt, from-parquet-pr, from-parquet-pt
+   from-alpaca, from-csv-pr, from-csv-pt, from-csv-t9n, 
+   from-jsonlines-pr, from-jsonlines-pt, from-jsonlines-t9n, 
+   from-parquet-pr, from-parquet-pt, from-parquet-t9n, from-tsv-pr, 
+   from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n
 filters:
-   keyword-pr, pairs-to-pt
+   keyword, language, metadata, multi-filter, pairs-to-pretrain, 
+   skip-duplicate-ids, skip-duplicate-text, split, text-length, 
+   translation-to-pretrain
 writers:
-   to-alpaca, to-csv-pr, to-csv-pt, to-jsonlines-pr, 
-   to-jsonlines-pt, to-parquet-pr, to-parquet-pt
+   to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
+   to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
+   to-parquet-t9n, to-tsv-pr, to-tsv-pt, to-tsv-t9n, to-txt-pt, 
+   to-txt-t9n
 
 optional arguments:
   -h, --help            show basic help message and exit
