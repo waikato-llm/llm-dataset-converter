@@ -1,8 +1,12 @@
 import argparse
 import logging
+import os
 
 from dataclasses import dataclass
 from typing import List, Union
+
+ENV_LLM_LOGLEVEL = "LLM_LOGLEVEL"
+""" environment variable for the global default logging level. """
 
 DOMAIN_ANY = "any"
 DOMAIN_PAIRS = "pairs"
@@ -64,11 +68,39 @@ LOCATIONS_PRETRAIN = [LOCATION_ANY, LOCATION_CONTENT]
 LOCATIONS_TRANSLATION = [LOCATION_ANY, LOCATION_CONTENT]
 
 
+def str_to_logging_level(level: str) -> int:
+    """
+    Turns a logging level string into the corresponding integer constant.
+
+    :param level: the level to convert
+    :type level: str
+    :return: the int level
+    :rtype: int
+    """
+    if level not in LOGGING_LEVELS:
+        raise Exception("Invalid logging level (%s): %s" % ("|".join(LOGGING_LEVELS), level))
+    if level == LOGGING_CRITICAL:
+        return logging.CRITICAL
+    elif level == LOGGING_ERROR:
+        return logging.ERROR
+    elif level == LOGGING_WARN:
+        return logging.WARN
+    elif level == LOGGING_INFO:
+        return logging.INFO
+    elif level == LOGGING_DEBUG:
+        return logging.DEBUG
+    else:
+        raise Exception("Unhandled logging level: %s" % level)
+
+
 def init_logging():
     """
     Initializes the logging.
     """
-    logging.basicConfig(level=logging.WARNING)
+    level = logging.WARNING
+    if os.getenv(ENV_LLM_LOGLEVEL) is not None:
+        level = str_to_logging_level(os.getenv(ENV_LLM_LOGLEVEL))
+    logging.basicConfig(level=level)
 
 
 def set_logging_level(logger: logging.Logger, level: str):
@@ -80,20 +112,7 @@ def set_logging_level(logger: logging.Logger, level: str):
     :param level: the level string, see LOGGING_LEVELS
     :type level: str
     """
-    if level not in LOGGING_LEVELS:
-        raise Exception("Invalid logging level (%s): %s" % ("|".join(LOGGING_LEVELS), level))
-    if level == LOGGING_CRITICAL:
-        logger.setLevel(logging.CRITICAL)
-    elif level == LOGGING_ERROR:
-        logger.setLevel(logging.ERROR)
-    elif level == LOGGING_WARN:
-        logger.setLevel(logging.WARN)
-    elif level == LOGGING_INFO:
-        logger.setLevel(logging.INFO)
-    elif level == LOGGING_DEBUG:
-        logger.setLevel(logging.DEBUG)
-    else:
-        raise Exception("Unhandled logging level: %s" % level)
+    logger.setLevel(str_to_logging_level(level))
 
 
 @dataclass

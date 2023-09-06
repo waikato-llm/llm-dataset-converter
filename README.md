@@ -150,7 +150,6 @@ optional arguments:
 
 ```
 usage: llm-entry-points [-h] [-m [PACKAGE [PACKAGE ...]]]
-                        [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool generating data for the 'entry_points' section in setup.py, populating it
 with the readers, filters and writers.
@@ -160,8 +159,6 @@ optional arguments:
   -m [PACKAGE [PACKAGE ...]], --modules [PACKAGE [PACKAGE ...]]
                         The names of the module packages, uses the default
                         ones if not provided. (default: None)
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
 ```
 
 

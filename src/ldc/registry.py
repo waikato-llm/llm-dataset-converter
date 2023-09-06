@@ -1,5 +1,6 @@
 import importlib
 import inspect
+import logging
 import os
 import sys
 import traceback
@@ -33,6 +34,23 @@ DEFAULT_LDC_MODULES = ",".join([
     "ldc.supervised.pairs",
     "ldc.translation",
 ])
+
+LLM_REGISTRY = "llm-registry"
+
+_logger = None
+
+
+def logger() -> logging.Logger:
+    """
+    Returns the logger instance to use, initializes it if necessary.
+
+    :return: the logger instance
+    :rtype: logging.Logger
+    """
+    global _logger
+    if _logger is None:
+        _logger = logging.getLogger(LLM_REGISTRY)
+    return _logger
 
 
 def _plugin_entry_points(group: str) -> Iterator[EntryPoint]:
@@ -89,6 +107,7 @@ def _register_from_modules(cls, modules: List[str] = None):
     result = dict()
     if modules is None:
         modules = os.getenv(ENV_LDC_MODULES, default=DEFAULT_LDC_MODULES).split(",")
+    logger().info("%s using modules: %s" % (cls.__name__, str(modules)))
 
     for m in modules:
         module = importlib.import_module(m)

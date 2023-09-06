@@ -1,18 +1,16 @@
 import argparse
 import importlib
 import json
-import logging
 import sys
 import traceback
 
 from typing import List
 
-from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS, CommandlineHandler
-from ldc.registry import DEFAULT_LDC_MODULES, register_plugins, available_readers, available_filters, available_writers
+from ldc.core import init_logging, CommandlineHandler
+from ldc.registry import register_plugins, available_readers, available_filters, available_writers
+from ldc.registry import ENTRY_POINT_READERS, ENTRY_POINT_FILTERS, ENTRY_POINT_WRITERS
 
 ENTRY_POINTS = "llm-entry-points"
-
-_logger = logging.getLogger(ENTRY_POINTS)
 
 
 def _to_entry_point(plugin: CommandlineHandler) -> str:
@@ -63,21 +61,20 @@ def output_entry_points(modules: List[str] = None):
     :param modules: the modules to generate the entry points for
     :type modules: list
     """
-    if modules is None:
-        modules = DEFAULT_LDC_MODULES.split(",")
-    _logger.info("using modules: %s" % str(modules))
-
-    # register using our modules
     register_plugins(modules)
 
     # generate entry points
     entry_points = dict()
-    entry_points["ldc.readers"] = _to_entry_points(list(available_readers().values()))
-    entry_points["ldc.filters"] = _to_entry_points(list(available_filters().values()))
-    entry_points["ldc.writers"] = _to_entry_points(list(available_writers().values()))
+    entry_points[ENTRY_POINT_READERS] = _to_entry_points(list(available_readers().values()))
+    entry_points[ENTRY_POINT_FILTERS] = _to_entry_points(list(available_filters().values()))
+    entry_points[ENTRY_POINT_WRITERS] = _to_entry_points(list(available_writers().values()))
+    keys = list(entry_points.keys())
+    for k in keys:
+        if len(entry_points[k]) == 0:
+            entry_points.pop(k)
 
     # output
-    print(json.dumps(entry_points, indent=4))
+    print("entry_points=" + json.dumps(entry_points, indent=4))
 
 
 def main(args=None):
@@ -93,9 +90,7 @@ def main(args=None):
         prog=ENTRY_POINTS,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-m", "--modules", metavar="PACKAGE", help="The names of the module packages, uses the default ones if not provided.", default=None, type=str, required=False, nargs="*")
-    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
     parsed = parser.parse_args(args=args)
-    set_logging_level(_logger, parsed.logging_level)
     output_entry_points(parsed.modules)
 
 
