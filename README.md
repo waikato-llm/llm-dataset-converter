@@ -12,7 +12,7 @@ pip install git+https://github.com/waikato-datamining/llm-dataset-converter.git
 
 [Docker](docker) images are available from:
 
-* Docker hub: `waikatodatamining/llm-dataset-converter`
+* Docker hub: [waikatodatamining/llm-dataset-converter](https://hub.docker.com/r/waikatodatamining/llm-dataset-converter)
 * In-house registry: `public.aml-repo.cms.waikato.ac.nz:443/tools/llm-dataset-converter`
 
 
