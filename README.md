@@ -8,6 +8,13 @@ For converting large language model (LLM) datasets from one format into another.
 pip install git+https://github.com/waikato-datamining/llm-dataset-converter.git
 ```
 
+## Docker
+
+[Docker](docker) images are available from:
+
+* Docker hub: `waikatodatamining/llm-dataset-converter`
+* In-house registry: `public.aml-repo.cms.waikato.ac.nz:443/tools/llm-dataset-converter`
+
 
 ## Datasets
 
