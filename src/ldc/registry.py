@@ -3,7 +3,7 @@ import inspect
 import os
 import sys
 import traceback
-from typing import Dict, Iterator
+from typing import Dict, Iterator, List
 
 from pkg_resources import working_set, EntryPoint
 
@@ -78,14 +78,17 @@ def _register_from_entry_point(group: str) -> Dict[str, CommandlineHandler]:
     return result
 
 
-def _register_from_modules(cls):
+def _register_from_modules(cls, modules: List[str] = None):
     """
     Locates all the classes implementing the specified class and adds them to the dictionary.
 
     :param cls: the type to look for, eg Reader
+    :param modules: the list of modules to use instead of env variable or default modules
+    :type modules: list
     """
     result = dict()
-    modules = os.getenv(ENV_LDC_MODULES, default=DEFAULT_LDC_MODULES).split(",")
+    if modules is None:
+        modules = os.getenv(ENV_LDC_MODULES, default=DEFAULT_LDC_MODULES).split(",")
 
     for m in modules:
         module = importlib.import_module(m)
@@ -116,10 +119,12 @@ def _register_from_env() -> bool:
     return os.getenv(ENV_LDC_MODULES) is not None
 
 
-def available_readers() -> Dict[str, CommandlineHandler]:
+def available_readers(modules: List[str] = None) -> Dict[str, CommandlineHandler]:
     """
     Returns all available readers.
 
+    :param modules: the list of modules to use instead of env variable or default modules
+    :type modules: list
     :return: the dict of reader objects
     :rtype: dict
     """
@@ -127,15 +132,17 @@ def available_readers() -> Dict[str, CommandlineHandler]:
     if AVAILABLE_READERS is None:
         AVAILABLE_READERS = _register_from_entry_point(ENTRY_POINT_READERS)
         # fallback for development
-        if (len(AVAILABLE_READERS) == 0) or _register_from_env():
-            AVAILABLE_READERS = _register_from_modules(Reader)
+        if (len(AVAILABLE_READERS) == 0) or _register_from_env() or (modules is not None):
+            AVAILABLE_READERS = _register_from_modules(Reader, modules)
     return AVAILABLE_READERS
 
 
-def available_writers() -> Dict[str, CommandlineHandler]:
+def available_writers(modules: List[str] = None) -> Dict[str, CommandlineHandler]:
     """
     Returns all available writers.
 
+    :param modules: the list of modules to use instead of env variable or default modules
+    :type modules: list
     :return: the dict of writer objects
     :rtype: dict
     """
@@ -143,15 +150,17 @@ def available_writers() -> Dict[str, CommandlineHandler]:
     if AVAILABLE_WRITERS is None:
         AVAILABLE_WRITERS = _register_from_entry_point(ENTRY_POINT_WRITERS)
         # fallback for development
-        if (len(AVAILABLE_WRITERS) == 0) or _register_from_env():
-            AVAILABLE_WRITERS = _register_from_modules(Writer)
+        if (len(AVAILABLE_WRITERS) == 0) or _register_from_env() or (modules is not None):
+            AVAILABLE_WRITERS = _register_from_modules(Writer, modules)
     return AVAILABLE_WRITERS
 
 
-def available_filters() -> Dict[str, CommandlineHandler]:
+def available_filters(modules: List[str] = None) -> Dict[str, CommandlineHandler]:
     """
     Returns all available filters.
 
+    :param modules: the list of modules to use instead of env variable or default modules
+    :type modules: list
     :return: the dict of filter objects
     :rtype: dict
     """
@@ -159,29 +168,34 @@ def available_filters() -> Dict[str, CommandlineHandler]:
     if AVAILABLE_FILTERS is None:
         AVAILABLE_FILTERS = _register_from_entry_point(ENTRY_POINT_FILTERS)
         # fallback for development
-        if (len(AVAILABLE_FILTERS) == 0) or _register_from_env():
-            AVAILABLE_FILTERS = _register_from_modules(Filter)
+        if (len(AVAILABLE_FILTERS) == 0) or _register_from_env() or (modules is not None):
+            AVAILABLE_FILTERS = _register_from_modules(Filter, modules)
     return AVAILABLE_FILTERS
 
 
-def available_plugins() -> Dict[str, CommandlineHandler]:
+def available_plugins(modules: List[str] = None) -> Dict[str, CommandlineHandler]:
     """
     Returns all available plugins.
 
+    :param modules: the list of modules to use instead of env variable or default modules
+    :type modules: list
     :return: the dict of plugin objects
     :rtype: dict
     """
     global AVAILABLE_PLUGINS
     if AVAILABLE_PLUGINS is None:
         AVAILABLE_PLUGINS = dict()
-        AVAILABLE_PLUGINS.update(available_readers())
-        AVAILABLE_PLUGINS.update(available_filters())
-        AVAILABLE_PLUGINS.update(available_writers())
+        AVAILABLE_PLUGINS.update(available_readers(modules))
+        AVAILABLE_PLUGINS.update(available_filters(modules))
+        AVAILABLE_PLUGINS.update(available_writers(modules))
     return AVAILABLE_PLUGINS
 
 
-def register_plugins():
+def register_plugins(modules: List[str] = None):
     """
     Registers all plugins.
+
+    :param modules: the list of modules to use instead of env variable or default modules
+    :type modules: list
     """
-    available_plugins()
+    available_plugins(modules)

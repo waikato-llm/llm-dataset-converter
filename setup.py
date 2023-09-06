@@ -16,8 +16,8 @@ setup(
     name="llm-dataset-converter",
     description="Python3 library for converting between various LLM dataset formats.",
     long_description=(
-        _read('DESCRIPTION.rst') + b'\n' +
-        _read('CHANGES.rst')).decode('utf-8'),
+            _read('DESCRIPTION.rst') + b'\n' +
+            _read('CHANGES.rst')).decode('utf-8'),
     url="https://github.com/waikato-datamining/llm-dataset-converter",
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -44,30 +44,27 @@ setup(
     entry_points={
         "console_scripts": [
             "llm-convert=ldc.convert:sys_main",
+            "llm-entry-points=ldc.entry_points:sys_main",
             "llm-help=ldc.help:sys_main",
             "llm-hf-download=ldc.huggingface.download:sys_main",
         ],
         "ldc.readers": [
-            # pairs
-            "from-alpaca=ldc.supervised.pairs:AlpacaReader",
-            "from-csv-pr=ldc.supervised.pairs:CsvPairsReader",
-            "from-jsonlines-pr=ldc.supervised.pairs:JsonLinesPairReader",
-            "from-parquet-pr=ldc.supervised.pairs:ParquetPairsReader",
-            "from-tsv-pr=ldc.supervised.pairs:TsvPairsReader",
-            # pretrain
             "from-csv-pt=ldc.pretrain:CsvPretrainReader",
             "from-jsonlines-pt=ldc.pretrain:JsonLinesPretrainReader",
             "from-parquet-pt=ldc.pretrain:ParquetPretrainReader",
             "from-tsv-pt=ldc.pretrain:TsvPretrainReader",
             "from-txt-pt=ldc.pretrain:TxtPretrainReader",
-            # translation
+            "from-alpaca=ldc.supervised.pairs:AlpacaReader",
+            "from-csv-pr=ldc.supervised.pairs:CsvPairsReader",
+            "from-jsonlines-pr=ldc.supervised.pairs:JsonLinesPairReader",
+            "from-parquet-pr=ldc.supervised.pairs:ParquetPairsReader",
+            "from-tsv-pr=ldc.supervised.pairs:TsvPairsReader",
             "from-csv-t9n=ldc.translation:CsvTranslationReader",
             "from-tsv-t9n=ldc.translation:TsvTranslationReader",
-            "from-txt-t9n=ldc.translation:TxtTranslationReader",
+            "from-txt-t9n=ldc.translation:TxtTranslationReader"
         ],
         "ldc.filters": [
             "keyword=ldc.filter:Keyword",
-            "language=ldc.translation:Language",
             "metadata=ldc.filter:MetaData",
             "multi-filter=ldc.filter:MultiFilter",
             "pairs-to-pretrain=ldc.filter:PairsToPretrain",
@@ -76,24 +73,22 @@ setup(
             "split=ldc.filter:Split",
             "text-length=ldc.filter:TextLength",
             "translation-to-pretrain=ldc.filter:TranslationToPretrain",
+            "language=ldc.translation:Language"
         ],
         "ldc.writers": [
-            # pairs
-            "to-alpaca=ldc.supervised.pairs:AlpacaWriter",
-            "to-csv-pr=ldc.supervised.pairs:CsvPairsWriter",
-            "to-jsonlines-pr=ldc.supervised.pairs:JsonLinesPairWriter",
-            "to-parquet-pr=ldc.supervised.pairs:ParquetPairsWriter",
-            "to-tsv-pr=ldc.supervised.pairs:TsvPairsWriter",
-            # pretrain
             "to-csv-pt=ldc.pretrain:CsvPretrainWriter",
             "to-jsonlines-pt=ldc.pretrain:JsonLinesPretrainWriter",
             "to-parquet-pt=ldc.pretrain:ParquetPretrainWriter",
             "to-tsv-pt=ldc.pretrain:TsvPretrainWriter",
             "to-txt-pt=ldc.pretrain:TxtPretrainWriter",
-            # translation
+            "to-alpaca=ldc.supervised.pairs:AlpacaWriter",
+            "to-csv-pr=ldc.supervised.pairs:CsvPairsWriter",
+            "to-jsonlines-pr=ldc.supervised.pairs:JsonLinesPairWriter",
+            "to-parquet-pr=ldc.supervised.pairs:ParquetPairsWriter",
+            "to-tsv-pr=ldc.supervised.pairs:TsvPairsWriter",
             "to-csv-t9n=ldc.translation:CsvTranslationWriter",
             "to-tsv-t9n=ldc.translation:TsvTranslationWriter",
-            "to-txt-t9n=ldc.translation:TxtTranslationWriter",
+            "to-txt-t9n=ldc.translation:TxtTranslationWriter"
         ],
     },
 )

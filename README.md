@@ -141,6 +141,24 @@ optional arguments:
                         The logging level to use (default: WARN)
 ```
 
+Tool for generating the `entry_points` section for readers, filters and writers:
+
+```
+usage: llm-entry-points [-h] [-m [PACKAGE [PACKAGE ...]]]
+                        [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+
+Tool generating data for the 'entry_points' section in setup.py, populating it
+with the readers, filters and writers.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m [PACKAGE [PACKAGE ...]], --modules [PACKAGE [PACKAGE ...]]
+                        The names of the module packages, uses the default
+                        ones if not provided. (default: None)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+```
+
 
 ## Other plugins
 
