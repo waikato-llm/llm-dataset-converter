@@ -31,13 +31,14 @@ The following dataset formats are supported:
 | pretrain    | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pt](plugins/from-jsonlines-pt.md) | [to-jsonlines-pt](plugins/to-jsonlines-pt.md) | Y |
 | pretrain    | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-pt](plugins/from-parquet-pt.md) | [to-parquet-pt](plugins/to-parquet-pt.md) | N |    
 | pretrain    | TSV | [from-tsv-pt](plugins/from-tsv-pt.md) | [to-tsv-pt](plugins/to-tsv-pt.md) | Y |
-| pretrain    | TXT | [from-txt-pt](plugins/from-txt-pt.md) | [to-txt-pt](plugins/to-txt-pt.md) | Y<sup>1</sup> |
+| pretrain    | TXT | [from-txt-pt](plugins/from-txt-pt.md) | [to-txt-pt](plugins/to-txt-pt.md) | Y <sup>1</sup> |
 | translation | CSV | [from-csv-t9n](plugins/from-csv-t9n.md) | [to-csv-t9n](plugins/to-csv-t9n.md) | Y |
+| translation | [Jsonlines](https://jsonlines.org/) <sup>2</sup> | [from-jsonlines-t9n](plugins/from-jsonlines-t9n.md) | [to-jsonlines-t9n](plugins/to-jsonlines-t9n.md) | Y |
 | translation | TSV | [from-tsv-t9n](plugins/from-tsv-t9n.md) | [to-tsv-t9n](plugins/to-tsv-t9n.md) | Y |
-| translation | TXT | [from-txt-t9n](plugins/from-txt-t9n.md) | [to-txt-t9n](plugins/to-txt-t9n.md) | Y<sup>1</sup> |
+| translation | TXT | [from-txt-t9n](plugins/from-txt-t9n.md) | [to-txt-t9n](plugins/to-txt-t9n.md) | Y <sup>1</sup> |
 
 <sup>1</sup> Not available when concatenating content in single file.
-
+<sup>2</sup> Format defined here: https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md
 
 ## Compression formats
 

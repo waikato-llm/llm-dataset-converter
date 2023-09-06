@@ -60,6 +60,7 @@ setup(
             "from-parquet-pr=ldc.supervised.pairs:ParquetPairsReader",
             "from-tsv-pr=ldc.supervised.pairs:TsvPairsReader",
             "from-csv-t9n=ldc.translation:CsvTranslationReader",
+            "from-jsonlines-t9n=ldc.translation:JsonLinesTranslationReader",
             "from-tsv-t9n=ldc.translation:TsvTranslationReader",
             "from-txt-t9n=ldc.translation:TxtTranslationReader"
         ],
@@ -87,8 +88,9 @@ setup(
             "to-parquet-pr=ldc.supervised.pairs:ParquetPairsWriter",
             "to-tsv-pr=ldc.supervised.pairs:TsvPairsWriter",
             "to-csv-t9n=ldc.translation:CsvTranslationWriter",
+            "to-jsonlines-t9n=ldc.translation:JsonLinesTranslationWriter",
             "to-tsv-t9n=ldc.translation:TsvTranslationWriter",
             "to-txt-t9n=ldc.translation:TxtTranslationWriter"
-        ],
+        ]
     },
 )
