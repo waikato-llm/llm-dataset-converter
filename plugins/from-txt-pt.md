@@ -8,7 +8,7 @@ Text files can be split into lines and forwarded as separate records as well.
 
 ```
 usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                   [INPUT ...] [-s] [-e] [-r [EXPR_REMOVE [EXPR_REMOVE ...]]]
+                   [INPUT ...] [-s] [-r [EXPR_REMOVE [EXPR_REMOVE ...]]] [-e]
 
 Reads pretrain data from plain text files, with each file representing a data
 record. Text files can be split into lines and forwarded as separate records
@@ -24,8 +24,9 @@ optional arguments:
   -s, --split_lines     Splits the text file on new lines and forwards them as
                         separate records; the index of the line gets stored in
                         the meta-data under 'line'. (default: False)
-  -e, --skip_empty      Removes empty lines from the data. (default: False)
   -r [EXPR_REMOVE [EXPR_REMOVE ...]], --expr_remove [EXPR_REMOVE [EXPR_REMOVE ...]]
                         Regular expressions for removing sub-strings from the
-                        text. (default: None)
+                        text (gets applied before skipping empty lines).
+                        (default: None)
+  -e, --skip_empty      Removes empty lines from the data. (default: False)
 ```
