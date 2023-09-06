@@ -33,7 +33,7 @@ def output_help(modules: List[str] = None, plugin_name: str = None, help_format:
     register_plugins(modules)
     if help_format not in HELP_FORMATS:
         raise Exception("Unknown help format: %s" % help_format)
-    if (plugin_name is None) and not os.path.isdir(output):
+    if (plugin_name is None) and ((output is None) or (not os.path.isdir(output))):
         raise Exception("When generating the help for all plugins, the output must be a directory: %s" % output)
     if plugin_name is None:
         plugin_names = available_plugins().keys()
