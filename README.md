@@ -187,6 +187,7 @@ Filters:
 * [multi-filter](plugins/multi-filter.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [pretrain-sentences](plugins/pretrain-sentences.md)
+* [reset-ids](plugins/reset-ids.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
 * [skip-duplicate-text](plugins/skip-duplicate-text.md)
 * [split](plugins/split.md)

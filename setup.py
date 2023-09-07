@@ -70,6 +70,7 @@ setup(
             "metadata=ldc.filter:MetaData",
             "multi-filter=ldc.filter:MultiFilter",
             "pairs-to-pretrain=ldc.filter:PairsToPretrain",
+            "reset-ids=ldc.filter:ResetIDs",
             "skip-duplicate-ids=ldc.filter:SkipDuplicateIDs",
             "skip-duplicate-text=ldc.filter:SkipDuplicateText",
             "split=ldc.filter:Split",
