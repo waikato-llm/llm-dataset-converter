@@ -3,7 +3,7 @@ import numpy as np
 
 from typing import List
 
-from ldc.core import DOMAIN_ANY, LOGGING_WARN, get_metadata
+from ldc.core import DOMAIN_ANY, LOGGING_WARN, get_metadata, MetaDataHandler
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -151,7 +151,11 @@ class Split(Filter):
         # get meta data
         meta = get_metadata(data)
         if meta is None:
-            raise Exception("No meta-data available for type: %s" % str(type(data)))
+            if not isinstance(data, MetaDataHandler):
+                raise Exception("Cannot access meta-data for type: %s" % str(type(data)))
+            else:
+                meta = dict()
+                data.set_metadata(meta)
 
         # find split according to schedule
         split = None

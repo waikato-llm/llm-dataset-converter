@@ -1,7 +1,7 @@
 import argparse
 from typing import List
 
-from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, get_metadata
+from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, get_metadata, MetaDataHandler
 from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -111,7 +111,11 @@ class ResetIDs(Filter):
         # get metadata
         meta = get_metadata(data)
         if meta is None:
-            raise Exception("No meta-data available for type: %s" % str(type(data)))
+            if not isinstance(data, MetaDataHandler):
+                raise Exception("Cannot access meta-data for type: %s" % str(type(data)))
+            else:
+                meta = dict()
+                data.set_metadata(meta)
 
         # reset ID
         self._counter += 1
