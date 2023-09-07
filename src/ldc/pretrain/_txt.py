@@ -5,7 +5,7 @@ from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.io import locate_files, open_file, generate_output, is_compressed
-from ._core import PretrainData, PretrainReader, StreamPretrainWriter, split_into_sentences
+from ._core import PretrainData, PretrainReader, StreamPretrainWriter, assemble_preformatted, split_into_sentences
 
 METADATA_LINE = "line"
 
@@ -161,58 +161,6 @@ class TxtPretrainReader(PretrainReader):
         self.logger().info("block removal, #lines: %d -> %d" % (pre, post))
         return result
 
-    def _assemble_preformatted(self, lines: List[str]) -> List[str]:
-        """
-        Assembles preformatted lines into full sentences.
-
-        :param lines: the lines to process
-        :type lines: list
-        :return: the updated lines
-        :rtype: list
-        """
-        result = []
-        new_sentence = False
-        buffer = None
-
-        for line in lines:
-            line = line.strip()
-            curr = line
-
-            # remove quotes at end
-            for chr in self.quote_chars:
-                if curr.endswith(chr):
-                    curr = curr[:len(curr) - 1]
-
-            # new sentence?
-            if len(curr) == 0:
-                new_sentence = True
-            else:
-                for chr in self.end_chars:
-                    if curr.endswith(chr):
-                        new_sentence = True
-                        break
-
-            if new_sentence:
-                new_sentence = False
-                if len(line) > 0:
-                    if buffer is None:
-                        buffer = line
-                    else:
-                        buffer += " " + line
-                if buffer is not None:
-                    result.append(buffer)
-                    buffer = None
-            else:
-                if buffer is None:
-                    buffer = line
-                else:
-                    buffer += " " + line
-
-        if buffer is not None:
-            result.append(buffer)
-
-        return result
-
     def _assemble_sentences(self, lines: List[str]) -> List[str]:
         """
         Assembles lines into sentences, e.g., when processing preformatted text.
@@ -223,8 +171,8 @@ class TxtPretrainReader(PretrainReader):
         :rtype: list
         """
         pre = len(lines)
-        result = self._assemble_preformatted(lines)
-        result = split_into_sentences(result, self.end_chars)
+        result = assemble_preformatted(lines, end_chars=self.end_chars, quote_chars=self.quote_chars)
+        result = split_into_sentences(result, end_chars=self.end_chars)
         post = len(result)
         self.logger().info("assembling sentences, #lines: %d -> %d" % (pre, post))
         return result

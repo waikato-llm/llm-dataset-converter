@@ -2,7 +2,7 @@ import abc
 from dataclasses import dataclass
 from typing import Iterable, List
 
-from ldc.core import DOMAIN_PRETRAIN, DEFAULT_END_CHARS
+from ldc.core import DOMAIN_PRETRAIN, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
@@ -158,6 +158,64 @@ class PretrainFilter(Filter, abc.ABC):
         :rtype: list
         """
         return [PretrainData]
+
+
+def assemble_preformatted(lines: List[str], end_chars: str = DEFAULT_END_CHARS,
+                          quote_chars: str = DEFAULT_QUOTE_CHARS) -> List[str]:
+    """
+    Assembles preformatted lines into full sentences.
+
+    :param lines: the lines to process
+    :type lines: list
+    :param end_chars: the characters that end a sentence
+    :type end_chars: str
+    :param quote_chars: the quote characters to use
+    :type quote_chars: str
+    :return: the updated lines
+    :rtype: list
+    """
+    result = []
+    new_sentence = False
+    buffer = None
+
+    for line in lines:
+        line = line.strip()
+        curr = line
+
+        # remove quotes at end
+        for c in quote_chars:
+            if curr.endswith(c):
+                curr = curr[:len(curr) - 1]
+
+        # new sentence?
+        if len(curr) == 0:
+            new_sentence = True
+        else:
+            for c in end_chars:
+                if curr.endswith(c):
+                    new_sentence = True
+                    break
+
+        if new_sentence:
+            new_sentence = False
+            if len(line) > 0:
+                if buffer is None:
+                    buffer = line
+                else:
+                    buffer += " " + line
+            if buffer is not None:
+                result.append(buffer)
+                buffer = None
+        else:
+            if buffer is None:
+                buffer = line
+            else:
+                buffer += " " + line
+
+    if buffer is not None:
+        result.append(buffer)
+
+    return result
 
 
 def split_into_sentences(lines: List[str], end_chars: str = DEFAULT_END_CHARS) -> List[str]:
