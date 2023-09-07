@@ -171,7 +171,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
     """
 
     def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 split_lines: bool = False, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -183,6 +183,8 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         :type no_header: bool
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param split_lines: whether to split the lines of the text into separate records
+        :type split_lines: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -191,6 +193,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         self.col_content = col_content
         self.no_header = no_header
         self.col_id = col_id
+        self.split_lines = split_lines
         self._output = None
         self._output_writer = None
 
@@ -215,6 +218,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name of the column for the content when outputting a header row", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column for the row IDs (uses 'id' from meta-data)", required=False)
         parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
+        parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text content on new lines and stores them as separate records.")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -229,6 +233,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         self.col_content = ns.col_content
         self.no_header = ns.no_header
         self.col_id = ns.col_id
+        self.split_lines = ns.split_lines
 
     def initialize(self):
         """
@@ -278,14 +283,22 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
                 self._output_writer.writerow(row)
 
         for item in data:
-            row = []
-            if self.col_id is not None:
-                if (item.meta is not None) and ("id" in item.meta):
-                    row.append(item.meta["id"])
-                else:
-                    row.append(None)
-            row.append(item.content)
-            self._output_writer.writerow(row)
+            if self.split_lines:
+                lines = item.content.split("\n")
+            else:
+                lines = [item.content]
+            for i, line in enumerate(lines):
+                row = []
+                if self.col_id is not None:
+                    if (item.meta is not None) and ("id" in item.meta):
+                        id_ = item.meta["id"]
+                        if self.split_lines:
+                            id_ += "-" + str(i)
+                        row.append(id_)
+                    else:
+                        row.append(None)
+                row.append(line)
+                self._output_writer.writerow(row)
 
     def finalize(self):
         """

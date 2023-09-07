@@ -7,7 +7,7 @@ Writes pretrain data in CSV format.
 
 ```
 usage: to-csv-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -o OUTPUT [-c COL]
-                 [--col_id COL] [-n]
+                 [--col_id COL] [-n] [-s]
 
 Writes pretrain data in CSV format.
 
@@ -24,4 +24,6 @@ optional arguments:
   --col_id COL          The name of the column for the row IDs (uses 'id' from
                         meta-data) (default: None)
   -n, --no_header       For suppressing the header row (default: False)
+  -s, --split_lines     Splits the text content on new lines and stores them
+                        as separate records. (default: False)
 ```
