@@ -9,7 +9,9 @@ Text files can be split into lines and forwarded as separate records as well.
 ```
 usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
                    [INPUT ...] [-s] [-r [EXPR_REMOVE [EXPR_REMOVE ...]]] [-e]
-                   [--sentences] [-c END_CHARS]
+                   [--sentences] [-c END_CHARS] [-q QUOTE_CHARS]
+                   [--block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]]
+                   [--block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]]
 
 Reads pretrain data from plain text files, with each file representing a data
 record. Text files can be split into lines and forwarded as separate records
@@ -35,4 +37,12 @@ optional arguments:
   -c END_CHARS, --end_chars END_CHARS
                         The characters signifying the end of a sentence.
                         (default: .!?;:))
+  -q QUOTE_CHARS, --quote_chars QUOTE_CHARS
+                        The characters that represent quotes. (default: "'”’)
+  --block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]
+                        The starting strings for blocks to remove (default:
+                        None)
+  --block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]
+                        The ending strings for blocks to remove (default:
+                        None)
 ```

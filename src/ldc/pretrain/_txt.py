@@ -11,7 +11,7 @@ METADATA_LINE = "line"
 
 DEFAULT_END_CHARS = ".!?;:)"
 
-DEFAULT_QUOTES = "\"'”’"
+DEFAULT_QUOTE_CHARS = "\"'”’"
 
 
 class TxtPretrainReader(PretrainReader):
@@ -21,6 +21,7 @@ class TxtPretrainReader(PretrainReader):
 
     def __init__(self, source: Union[str, List[str]] = None, split_lines: bool = False, skip_empty: bool = False,
                  expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
+                 quote_chars: str = DEFAULT_QUOTE_CHARS,
                  block_removal_start: List[str] = None, block_removal_end: List[str] = None,
                  logging_level: str = LOGGING_WARN):
         """
@@ -37,6 +38,8 @@ class TxtPretrainReader(PretrainReader):
         :type sentences: bool
         :param end_chars: the characters that signify the ending of a sentence
         :type end_chars: str
+        :param quote_chars: the characters that represent quotes
+        :type quote_chars: str
         :param block_removal_start: the start of blocks to remove
         :type block_removal_start: list
         :param block_removal_end: the end of blocks to remove
@@ -51,6 +54,7 @@ class TxtPretrainReader(PretrainReader):
         self.expr_remove = expr_remove
         self.sentences = sentences
         self.end_chars = end_chars
+        self.quote_chars = quote_chars
         self.block_removal_start = block_removal_start
         self.block_removal_end = block_removal_end
         self._inputs = None
@@ -89,6 +93,7 @@ class TxtPretrainReader(PretrainReader):
         parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
         parser.add_argument("--sentences", action="store_true", help="For keeping sentences together, e.g., when reading preformatted text.")
         parser.add_argument("-c", "--end_chars", type=str, help="The characters signifying the end of a sentence.", default=DEFAULT_END_CHARS, required=False)
+        parser.add_argument("-q", "--quote_chars", type=str, help="The characters that represent quotes.", default=DEFAULT_QUOTE_CHARS, required=False)
         parser.add_argument("--block_removal_start", type=str, help="The starting strings for blocks to remove", required=False, nargs="*")
         parser.add_argument("--block_removal_end", type=str, help="The ending strings for blocks to remove", required=False, nargs="*")
         return parser
@@ -107,6 +112,7 @@ class TxtPretrainReader(PretrainReader):
         self.expr_remove = ns.expr_remove
         self.sentences = ns.sentences
         self.end_chars = ns.end_chars
+        self.quote_chars = ns.quote_chars
         self.block_removal_start = ns.block_removal_start
         self.block_removal_end = ns.block_removal_end
 
@@ -116,6 +122,10 @@ class TxtPretrainReader(PretrainReader):
         """
         super().initialize()
         self._inputs = locate_files(self.source, fail_if_empty=True)
+        if self.end_chars is None:
+            self.end_chars = ""
+        if self.quote_chars is None:
+            self.quote_chars = ""
         if (self.block_removal_start is not None) and (self.block_removal_end is None):
             raise Exception("Block removal starts defined but no ends!")
         if (self.block_removal_start is None) and (self.block_removal_end is not None):
@@ -173,9 +183,9 @@ class TxtPretrainReader(PretrainReader):
             curr = line
 
             # remove quotes at end
-            # TODO quotes
-            if curr.endswith('"') or curr.endswith("'"):
-                curr = curr[:len(curr) - 1]
+            for chr in self.quote_chars:
+                if curr.endswith(chr):
+                    curr = curr[:len(curr) - 1]
 
             # new sentence?
             if len(curr) == 0:
