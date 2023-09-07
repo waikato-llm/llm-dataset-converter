@@ -1,7 +1,7 @@
 import argparse
 import os
 import sys
-from typing import List, Dict, Tuple, Iterable
+from typing import List, Dict, Tuple, Iterable, Optional
 
 from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str, Session, CONVERT
 from ldc.core import LOGGING_LEVELS, LOGGING_WARN, set_logging_level
@@ -206,12 +206,16 @@ def print_usage(plugin_details: bool = False):
             generate_plugin_usage(k)
 
 
-def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
+def parse_args(args: List[str], require_reader: bool = True, require_writer: bool = True) -> Tuple[Optional[Reader], Optional[Filter], Optional[Writer], Session]:
     """
     Parses the arguments.
 
     :param args: the arguments to parse
     :type args: list
+    :param require_reader: whether a reader is required
+    :type require_reader: bool
+    :param require_writer: whether a writer is required
+    :type require_writer: bool
     :return: tuple of (reader, filter, writer, session), the filter can be None
     :rtype: tuple
     """
@@ -252,13 +256,13 @@ def parse_args(args: List[str]) -> Tuple[Reader, Filter, Writer, Session]:
             filters.append(f)
 
     # checks whether valid pipeline
-    if reader is None:
+    if (reader is None) and require_reader:
         raise Exception("No reader defined!")
-    if writer is None:
+    if (writer is None) and require_writer:
         raise Exception("No writer defined!")
     if len(filters) == 0:
         filter_ = None
-    elif len(filters) == 0:
+    elif len(filters) == 1:
         filter_ = filters[0]
     else:
         filter_ = MultiFilter(filters=filters)
