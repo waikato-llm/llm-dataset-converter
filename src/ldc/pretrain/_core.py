@@ -158,3 +158,36 @@ class PretrainFilter(Filter, abc.ABC):
         :rtype: list
         """
         return [PretrainData]
+
+
+def split_into_sentences(lines: List[str], end_chars: str, ) -> List[str]:
+    """
+    Splits text lines into separate sentences.
+
+    :param lines: the lines to process
+    :type lines: list
+    :param end_chars: the characters that end a sentence
+    :type end_chars: str
+    :return: the updated lines
+    :rtype: list
+    """
+    result = []
+
+    for line in lines:
+        while len(line) > 0:
+            pos = len(line)
+            for c in end_chars:
+                if c in line:
+                    pos = min(pos, line.index(c))
+            if pos < len(line):
+                result.append(line[0:pos + 1].strip())
+                line = line[pos + 1:].strip()
+                # dangling char?
+                if len(line) == 1:
+                    result[-1] += line
+                    line = ""
+            else:
+                result.append(line.strip())
+                line = ""
+
+    return result

@@ -5,7 +5,7 @@ from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.io import locate_files, open_file, generate_output, is_compressed
-from ._core import PretrainData, PretrainReader, StreamPretrainWriter
+from ._core import PretrainData, PretrainReader, StreamPretrainWriter, split_into_sentences
 
 METADATA_LINE = "line"
 
@@ -213,36 +213,6 @@ class TxtPretrainReader(PretrainReader):
 
         return result
 
-    def _split_into_sentences(self, lines: List[str]) -> List[str]:
-        """
-        Splits text into separate sentences.
-
-        :param lines: the lines to process
-        :type lines: list
-        :return: the updated lines
-        :rtype: list
-        """
-        result = []
-
-        for line in lines:
-            while len(line) > 0:
-                pos = len(line)
-                for chr in self.end_chars:
-                    if chr in line:
-                        pos = min(pos, line.index(chr))
-                if pos < len(line):
-                    result.append(line[0:pos + 1].strip())
-                    line = line[pos + 1:].strip()
-                    # dangling end char?
-                    if len(line) == 1:
-                        result[-1] += line
-                        line = ""
-                else:
-                    result.append(line.strip())
-                    line = ""
-
-        return result
-
     def _assemble_sentences(self, lines: List[str]) -> List[str]:
         """
         Assembles lines into sentences, e.g., when processing preformatted text.
@@ -254,7 +224,7 @@ class TxtPretrainReader(PretrainReader):
         """
         pre = len(lines)
         result = self._assemble_preformatted(lines)
-        result = self._split_into_sentences(result)
+        result = split_into_sentences(result, self.end_chars)
         post = len(result)
         self.logger().info("assembling sentences, #lines: %d -> %d" % (pre, post))
         return result
