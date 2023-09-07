@@ -2,7 +2,7 @@ import abc
 from dataclasses import dataclass
 from typing import Iterable, List
 
-from ldc.core import DOMAIN_PRETRAIN
+from ldc.core import DOMAIN_PRETRAIN, DEFAULT_END_CHARS
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
@@ -160,7 +160,7 @@ class PretrainFilter(Filter, abc.ABC):
         return [PretrainData]
 
 
-def split_into_sentences(lines: List[str], end_chars: str, ) -> List[str]:
+def split_into_sentences(lines: List[str], end_chars: str = DEFAULT_END_CHARS) -> List[str]:
     """
     Splits text lines into separate sentences.
 
