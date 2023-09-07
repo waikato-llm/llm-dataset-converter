@@ -61,6 +61,7 @@ setup(
             "from-tsv-pr=ldc.supervised.pairs:TsvPairsReader",
             "from-csv-t9n=ldc.translation:CsvTranslationReader",
             "from-jsonlines-t9n=ldc.translation:JsonLinesTranslationReader",
+            "from-parquet-t9n=ldc.translation:ParquetTranslationReader",
             "from-tsv-t9n=ldc.translation:TsvTranslationReader",
             "from-txt-t9n=ldc.translation:TxtTranslationReader"
         ],
@@ -74,6 +75,7 @@ setup(
             "split=ldc.filter:Split",
             "text-length=ldc.filter:TextLength",
             "translation-to-pretrain=ldc.filter:TranslationToPretrain",
+            "pretrain-sentences=ldc.pretrain:PretrainSentences",
             "language=ldc.translation:Language"
         ],
         "ldc.writers": [
@@ -89,6 +91,7 @@ setup(
             "to-tsv-pr=ldc.supervised.pairs:TsvPairsWriter",
             "to-csv-t9n=ldc.translation:CsvTranslationWriter",
             "to-jsonlines-t9n=ldc.translation:JsonLinesTranslationWriter",
+            "to-parquet-t9n=ldc.translation:ParquetTranslationWriter",
             "to-tsv-t9n=ldc.translation:TsvTranslationWriter",
             "to-txt-t9n=ldc.translation:TxtTranslationWriter"
         ]
