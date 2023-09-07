@@ -68,6 +68,13 @@ LOCATIONS_PRETRAIN = [LOCATION_ANY, LOCATION_CONTENT]
 LOCATIONS_TRANSLATION = [LOCATION_ANY, LOCATION_CONTENT]
 
 
+DEFAULT_END_CHARS = ".!?;:)"
+""" the default end characters for a sentence. """
+
+DEFAULT_QUOTE_CHARS = "\"'”’"
+""" the default quote characters. """
+
+
 def str_to_logging_level(level: str) -> int:
     """
     Turns a logging level string into the corresponding integer constant.

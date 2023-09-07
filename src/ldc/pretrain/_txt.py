@@ -3,15 +3,11 @@ import os
 import re
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from ldc.core import LOGGING_WARN, domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.io import locate_files, open_file, generate_output, is_compressed
 from ._core import PretrainData, PretrainReader, StreamPretrainWriter
 
 METADATA_LINE = "line"
-
-DEFAULT_END_CHARS = ".!?;:)"
-
-DEFAULT_QUOTE_CHARS = "\"'”’"
 
 
 class TxtPretrainReader(PretrainReader):
