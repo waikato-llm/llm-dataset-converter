@@ -1,8 +1,8 @@
 import abc
 from dataclasses import dataclass
-from typing import Iterable, List
+from typing import Iterable, List, Dict, Optional
 
-from ldc.core import DOMAIN_PAIRS
+from ldc.core import DOMAIN_PAIRS, MetaDataHandler
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
@@ -13,7 +13,7 @@ PAIRDATA_FIELDS = [PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT]
 
 
 @dataclass
-class PairData:
+class PairData(MetaDataHandler):
     """
     Container for pair data.
     """
@@ -21,6 +21,33 @@ class PairData:
     input: str
     output: str
     meta: dict = None
+
+    def has_metadata(self) -> bool:
+        """
+        Returns whether meta-data is present.
+
+        :return: True if meta-data present
+        :rtype: bool
+        """
+        return self.meta is not None
+
+    def get_metadata(self) -> Optional[Dict]:
+        """
+        Returns the meta-data.
+
+        :return: the meta-data, None if not available
+        :rtype: dict
+        """
+        return self.meta
+
+    def set_metadata(self, metadata: Optional[Dict]):
+        """
+        Sets the meta-data to use.
+
+        :param metadata: the new meta-data, can be None
+        :type metadata: dict
+        """
+        self.meta = metadata
 
     @classmethod
     def parse(cls, d):

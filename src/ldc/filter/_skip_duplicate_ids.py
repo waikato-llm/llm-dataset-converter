@@ -1,6 +1,6 @@
 from typing import List
 
-from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, get_metadata
 from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
@@ -85,18 +85,7 @@ class SkipDuplicateIDs(Filter):
         :return: the potentially updated record or None if to drop
         """
         # get meta data
-        meta = None
-        if isinstance(data, PairData):
-            meta = data.meta
-        elif isinstance(data, PretrainData):
-            meta = data.meta
-        elif isinstance(data, TranslationData):
-            meta = data.meta
-        else:
-            if hasattr(data, "meta"):
-                obj = getattr(data, "meta")
-                if isinstance(obj, dict):
-                    meta = obj
+        meta = get_metadata(data)
 
         # get ID
         id_ = None

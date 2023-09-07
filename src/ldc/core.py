@@ -3,7 +3,7 @@ import logging
 import os
 
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List, Union, Dict, Optional
 
 ENV_LLM_LOGLEVEL = "LLM_LOGLEVEL"
 """ environment variable for the global default logging level. """
@@ -349,6 +349,55 @@ class InputConsumer(object):
         :rtype: list
         """
         raise NotImplementedError()
+
+
+class MetaDataHandler(object):
+    """
+    Mixing for classes that manage meta-data.
+    """
+
+    def has_metadata(self) -> bool:
+        """
+        Returns whether meta-data is present.
+
+        :return: True if meta-data present
+        :rtype: bool
+        """
+        raise NotImplementedError()
+
+    def get_metadata(self) -> Optional[Dict]:
+        """
+        Returns the meta-data.
+
+        :return: the meta-data, None if not available
+        :rtype: dict
+        """
+        raise NotImplementedError()
+
+    def set_metadata(self, metadata: Optional[Dict]):
+        """
+        Sets the meta-data to use.
+
+        :param metadata: the new meta-data, can be None
+        :type metadata: dict
+        """
+        raise NotImplementedError()
+
+
+def get_metadata(o) -> Optional[Dict]:
+    """
+    Retrieves the meta-data from the specified object.
+
+    :param o: the object to get the meta-data from
+    :return: the meta-data, None if not available
+    """
+    if isinstance(o, MetaDataHandler):
+        return o.get_metadata()
+    if hasattr(o, "meta"):
+        obj = getattr(o, "meta")
+        if isinstance(obj, dict):
+            return obj
+    return None
 
 
 def classes_to_str(classes: List):

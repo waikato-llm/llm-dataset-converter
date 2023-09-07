@@ -3,8 +3,7 @@ import numpy as np
 
 from typing import List
 
-from ldc.core import DOMAIN_ANY
-from ldc.core import LOGGING_WARN
+from ldc.core import DOMAIN_ANY, LOGGING_WARN, get_metadata
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -150,14 +149,9 @@ class Split(Filter):
                 self._counter = 0
 
         # get meta data
-        if isinstance(data, PairData):
-            meta = data.meta
-        elif isinstance(data, PretrainData):
-            meta = data.meta
-        elif isinstance(data, TranslationData):
-            meta = data.meta
-        else:
-            raise Exception("Unhandled data type: %s" % str(type(data)))
+        meta = get_metadata(data)
+        if meta is None:
+            raise Exception("No meta-data available for type: %s" % str(type(data)))
 
         # find split according to schedule
         split = None

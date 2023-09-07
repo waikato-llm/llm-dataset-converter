@@ -1,19 +1,46 @@
 import abc
 from dataclasses import dataclass
-from typing import Iterable, List
+from typing import Iterable, List, Dict, Optional
 
-from ldc.core import DOMAIN_TRANSLATION
+from ldc.core import DOMAIN_TRANSLATION, MetaDataHandler
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
 
 @dataclass
-class TranslationData:
+class TranslationData(MetaDataHandler):
     """
     Container for pretrain data.
     """
     translations: dict  # lookup: language -> text
     meta: dict = None
+
+    def has_metadata(self) -> bool:
+        """
+        Returns whether meta-data is present.
+
+        :return: True if meta-data present
+        :rtype: bool
+        """
+        return self.meta is not None
+
+    def get_metadata(self) -> Optional[Dict]:
+        """
+        Returns the meta-data.
+
+        :return: the meta-data, None if not available
+        :rtype: dict
+        """
+        return self.meta
+
+    def set_metadata(self, metadata: Optional[Dict]):
+        """
+        Sets the meta-data to use.
+
+        :param metadata: the new meta-data, can be None
+        :type metadata: dict
+        """
+        self.meta = metadata
 
     @classmethod
     def parse(cls, d: dict) -> 'TranslationData':
