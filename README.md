@@ -22,6 +22,10 @@ The following repository contains a curated list of datasets for LLMs:
 
 https://github.com/Zjh-819/LLMDataHub
 
+The HUgging Face Hub has an abundance of datasets as well:
+
+https://huggingface.co/datasets
+
 
 ## Dataset formats
 
