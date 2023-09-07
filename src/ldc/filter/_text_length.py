@@ -161,6 +161,9 @@ class TextLength(Filter):
                 for lang in self.languages:
                     if lang in data.translations:
                         lengths.append(len(data.translations[lang]))
+                    else:
+                        # missing language gets length 0
+                        lengths.append(0)
         else:
             raise Exception("Unhandled data type: %s" % str(type(data)))
 
