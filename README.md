@@ -87,8 +87,8 @@ readers:
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n
 filters:
    keyword, language, metadata, multi-filter, pairs-to-pretrain, 
-   pretrain-sentences, skip-duplicate-ids, skip-duplicate-text, split, 
-   text-length, translation-to-pretrain
+   pretrain-sentences, require-languages, reset-ids, skip-duplicate-ids, 
+   skip-duplicate-text, split, text-length, translation-to-pretrain
 writers:
    to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
    to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
@@ -191,6 +191,7 @@ Filters:
 * [multi-filter](plugins/multi-filter.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [pretrain-sentences](plugins/pretrain-sentences.md)
+* [require-languages](plugins/require-languages.md)
 * [reset-ids](plugins/reset-ids.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
 * [skip-duplicate-text](plugins/skip-duplicate-text.md)

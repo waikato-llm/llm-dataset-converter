@@ -77,7 +77,8 @@ setup(
             "text-length=ldc.filter:TextLength",
             "translation-to-pretrain=ldc.filter:TranslationToPretrain",
             "pretrain-sentences=ldc.pretrain:PretrainSentences",
-            "language=ldc.translation:Language"
+            "language=ldc.translation:Language",
+            "require-languages=ldc.translation:RequireLanguages"
         ],
         "ldc.writers": [
             "to-csv-pt=ldc.pretrain:CsvPretrainWriter",
