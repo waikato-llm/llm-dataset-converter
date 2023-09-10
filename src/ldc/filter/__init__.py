@@ -1,4 +1,5 @@
 from ._core import Filter, MultiFilter, FILTER_ACTIONS, FILTER_ACTION_KEEP, FILTER_ACTION_DISCARD
+from ._change_case import ChangeCase
 from ._keyword import Keyword
 from ._metadata import MetaData
 from ._pairs_to_pretrain import PairsToPretrain

@@ -66,6 +66,7 @@ setup(
             "from-txt-t9n=ldc.translation:TxtTranslationReader"
         ],
         "ldc.filters": [
+            "change-case=ldc.filter:ChangeCase",
             "keyword=ldc.filter:Keyword",
             "metadata=ldc.filter:MetaData",
             "multi-filter=ldc.filter:MultiFilter",

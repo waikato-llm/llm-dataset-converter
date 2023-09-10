@@ -185,6 +185,7 @@ optional arguments:
 ## Other plugins
 
 Filters:  
+* [change-case](plugins/change-case.md)
 * [keyword](plugins/keyword.md)
 * [language](plugins/language.md)
 * [metadata](plugins/metadata.md)
