@@ -276,3 +276,37 @@ def split_into_sentences(lines: List[str], end_chars: str = DEFAULT_END_CHARS) -
                 line = ""
 
     return result
+
+
+def combine_sentences(sentences: List[str], max_sentences: int) -> List[str]:
+    """
+    Combines the lines (each representing a single sentence) into lines with at
+    most the specified number of sentences.
+    
+    :param sentences: the sentences to combine
+    :type sentences: list
+    :param max_sentences: the maximum number of sentences per output line
+    :type max_sentences: int
+    :return: the new lines
+    :rtype: list
+    """
+    if max_sentences <= 1:
+        return sentences
+
+    result = []
+    current = []
+    for sentence in sentences:
+        if len(current) < max_sentences:
+            # append full stop?
+            if len(sentence.strip()) > 1:
+                if sentence[-1] not in DEFAULT_END_CHARS:
+                    sentence += "."
+            current.append(sentence)
+        else:
+            result.append(" ".join(current))
+            current = []
+
+    if len(current) > 0:
+        result.append(" ".join(current))
+
+    return result

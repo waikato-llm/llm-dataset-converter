@@ -12,6 +12,7 @@ usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
                    [--sentences] [-c END_CHARS] [-q QUOTE_CHARS]
                    [--block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]]
                    [--block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]]
+                   [-m MAX_SENTENCES]
 
 Reads pretrain data from plain text files, with each file representing a data
 record. Text files can be split into lines and forwarded as separate records
@@ -45,4 +46,6 @@ optional arguments:
   --block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]
                         The ending strings for blocks to remove (default:
                         None)
+  -m MAX_SENTENCES, --max_sentences MAX_SENTENCES
+                        The maximum number of sentences per line. (default: 1)
 ```

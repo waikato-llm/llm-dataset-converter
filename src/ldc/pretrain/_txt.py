@@ -5,7 +5,7 @@ from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.io import locate_files, open_file, generate_output, is_compressed
-from ._core import PretrainData, PretrainReader, StreamPretrainWriter, assemble_preformatted, split_into_sentences
+from ._core import PretrainData, PretrainReader, StreamPretrainWriter, assemble_preformatted, split_into_sentences, combine_sentences
 
 METADATA_LINE = "line"
 
@@ -19,7 +19,7 @@ class TxtPretrainReader(PretrainReader):
                  expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
                  quote_chars: str = DEFAULT_QUOTE_CHARS,
                  block_removal_start: List[str] = None, block_removal_end: List[str] = None,
-                 logging_level: str = LOGGING_WARN):
+                 max_sentences: int = 1, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -40,6 +40,8 @@ class TxtPretrainReader(PretrainReader):
         :type block_removal_start: list
         :param block_removal_end: the end of blocks to remove
         :type block_removal_end: list
+        :param max_sentences: the maximum number of sentences per line
+        :type max_sentences: int
         :param logging_level: the logging level to use
         :type logging_level: str
         """
@@ -53,6 +55,7 @@ class TxtPretrainReader(PretrainReader):
         self.quote_chars = quote_chars
         self.block_removal_start = block_removal_start
         self.block_removal_end = block_removal_end
+        self.max_sentences = max_sentences
         self._inputs = None
         self._current_input = None
 
@@ -92,6 +95,7 @@ class TxtPretrainReader(PretrainReader):
         parser.add_argument("-q", "--quote_chars", type=str, help="The characters that represent quotes.", default=DEFAULT_QUOTE_CHARS, required=False)
         parser.add_argument("--block_removal_start", type=str, help="The starting strings for blocks to remove", required=False, nargs="*")
         parser.add_argument("--block_removal_end", type=str, help="The ending strings for blocks to remove", required=False, nargs="*")
+        parser.add_argument("-m", "--max_sentences", type=int, help="The maximum number of sentences per line.", default=1, required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -111,6 +115,7 @@ class TxtPretrainReader(PretrainReader):
         self.quote_chars = ns.quote_chars
         self.block_removal_start = ns.block_removal_start
         self.block_removal_end = ns.block_removal_end
+        self.max_sentences = ns.max_sentences
 
     def initialize(self):
         """
@@ -129,6 +134,8 @@ class TxtPretrainReader(PretrainReader):
         if (self.block_removal_start is not None) and (self.block_removal_end is not None):
             if len(self.block_removal_start) != len(self.block_removal_end):
                 raise Exception("Differing number of block removal starts and ends: %d != %d" % (len(self.block_removal_start), len(self.block_removal_end)))
+        if self.max_sentences < 1:
+            raise Exception("At least one sentence per line is required, currently set: %d" % self.max_sentences)
 
     def _remove_blocks(self, lines: List[str]) -> List[str]:
         """
@@ -173,6 +180,7 @@ class TxtPretrainReader(PretrainReader):
         pre = len(lines)
         result = assemble_preformatted(lines, end_chars=self.end_chars, quote_chars=self.quote_chars)
         result = split_into_sentences(result, end_chars=self.end_chars)
+        result = combine_sentences(result, max_sentences=self.max_sentences)
         post = len(result)
         self.logger().info("assembling sentences, #lines: %d -> %d" % (pre, post))
         return result
