@@ -286,7 +286,8 @@ The following command downloads the file `vocab.json` from the Hugging Face
 project [lysandre/arxiv-nlp](https://huggingface.co/lysandre/arxiv-nlp):
 
 ```bash
-llm-hf-download \
+llm-download \
+  huggingface \
   -l INFO \
   -i lysandre/arxiv-nlp \
   -f vocab.json \
@@ -298,7 +299,8 @@ The next command gets the file `part_1_200000.parquet` from the dataset
 (if you don't specify a filename, the complete dataset will get downloaded):
 
 ```bash
-llm-hf-download \
+llm-download \
+  huggingface \
   -l INFO \
   -i nampdn-ai/tiny-codes \
   -t dataset \
