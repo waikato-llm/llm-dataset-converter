@@ -78,7 +78,7 @@ def is_help_requested(args: List[str]) -> Tuple[bool, bool, str]:
     return help_requested, plugin_details, plugin_name
 
 
-def _enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72) -> str:
+def enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72) -> str:
     """
     Turns the list of plugin names into a string.
 
@@ -188,9 +188,9 @@ def print_usage(plugin_details: bool = False):
     print()
     print("Tool for converting between large language model (LLM) dataset formats.")
     print()
-    print("readers:\n" + _enumerate_plugins(available_readers().keys(), prefix="   "))
-    print("filters:\n" + _enumerate_plugins(available_filters().keys(), prefix="   "))
-    print("writers:\n" + _enumerate_plugins(available_writers().keys(), prefix="   "))
+    print("readers:\n" + enumerate_plugins(available_readers().keys(), prefix="   "))
+    print("filters:\n" + enumerate_plugins(available_filters().keys(), prefix="   "))
+    print("writers:\n" + enumerate_plugins(available_writers().keys(), prefix="   "))
     print()
     print("optional arguments:")
     print("  -h, --help            show basic help message and exit")
