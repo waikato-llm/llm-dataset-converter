@@ -9,15 +9,18 @@ from typing import Dict, Iterator, List
 from pkg_resources import working_set, EntryPoint
 
 from ldc.core import CommandlineHandler
+from ldc.download import Downloader
 from ldc.filter import Filter
 from ldc.io import Reader, Writer
 
 # the entry points defined in setup.py
+ENTRY_POINT_DOWNLOADERS = "ldc.downloaders"
 ENTRY_POINT_READERS = "ldc.readers"
 ENTRY_POINT_FILTERS = "ldc.filters"
 ENTRY_POINT_WRITERS = "ldc.writers"
 
 # dictionaries for caching the available plugins
+AVAILABLE_DOWNLOADERS = None
 AVAILABLE_READERS = None
 AVAILABLE_FILTERS = None
 AVAILABLE_WRITERS = None
@@ -29,6 +32,7 @@ ENV_LDC_MODULES = "LDC_MODULES"
 # the default modules to inspect (for development)
 # can be overridden with LDC_MODULES environment variable
 DEFAULT_LDC_MODULES = ",".join([
+    "ldc.download",
     "ldc.filter",
     "ldc.pretrain",
     "ldc.supervised.pairs",
@@ -138,6 +142,24 @@ def _register_from_env() -> bool:
     return os.getenv(ENV_LDC_MODULES) is not None
 
 
+def available_downloaders(modules: List[str] = None) -> Dict[str, CommandlineHandler]:
+    """
+    Returns all available downloaders.
+
+    :param modules: the list of modules to use instead of env variable or default modules
+    :type modules: list
+    :return: the dict of downloader objects
+    :rtype: dict
+    """
+    global AVAILABLE_DOWNLOADERS
+    if AVAILABLE_DOWNLOADERS is None:
+        AVAILABLE_DOWNLOADERS = _register_from_entry_point(ENTRY_POINT_DOWNLOADERS)
+        # fallback for development
+        if (len(AVAILABLE_DOWNLOADERS) == 0) or _register_from_env() or (modules is not None):
+            AVAILABLE_DOWNLOADERS = _register_from_modules(Downloader, modules)
+    return AVAILABLE_DOWNLOADERS
+
+
 def available_readers(modules: List[str] = None) -> Dict[str, CommandlineHandler]:
     """
     Returns all available readers.
@@ -204,6 +226,7 @@ def available_plugins(modules: List[str] = None) -> Dict[str, CommandlineHandler
     global AVAILABLE_PLUGINS
     if AVAILABLE_PLUGINS is None:
         AVAILABLE_PLUGINS = dict()
+        AVAILABLE_PLUGINS.update(available_downloaders(modules))
         AVAILABLE_PLUGINS.update(available_readers(modules))
         AVAILABLE_PLUGINS.update(available_filters(modules))
         AVAILABLE_PLUGINS.update(available_writers(modules))

@@ -48,6 +48,9 @@ setup(
             "llm-help=ldc.help:sys_main",
             "llm-hf-download=ldc.huggingface.download:sys_main",
         ],
+        "ldc.downloaders": [
+            "huggingface=ldc.download:Huggingface"
+        ],
         "ldc.readers": [
             "from-csv-pt=ldc.pretrain:CsvPretrainReader",
             "from-jsonlines-pt=ldc.pretrain:JsonLinesPretrainReader",

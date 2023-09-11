@@ -7,8 +7,8 @@ import traceback
 from typing import List
 
 from ldc.core import init_logging, CommandlineHandler
-from ldc.registry import register_plugins, available_readers, available_filters, available_writers
-from ldc.registry import ENTRY_POINT_READERS, ENTRY_POINT_FILTERS, ENTRY_POINT_WRITERS
+from ldc.registry import register_plugins, available_downloaders, available_readers, available_filters, available_writers
+from ldc.registry import ENTRY_POINT_DOWNLOADERS, ENTRY_POINT_READERS, ENTRY_POINT_FILTERS, ENTRY_POINT_WRITERS
 
 ENTRY_POINTS = "llm-entry-points"
 
@@ -65,6 +65,7 @@ def output_entry_points(modules: List[str] = None):
 
     # generate entry points
     entry_points = dict()
+    entry_points[ENTRY_POINT_DOWNLOADERS] = _to_entry_points(list(available_downloaders().values()))
     entry_points[ENTRY_POINT_READERS] = _to_entry_points(list(available_readers().values()))
     entry_points[ENTRY_POINT_FILTERS] = _to_entry_points(list(available_filters().values()))
     entry_points[ENTRY_POINT_WRITERS] = _to_entry_points(list(available_writers().values()))
