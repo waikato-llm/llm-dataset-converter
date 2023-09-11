@@ -70,25 +70,25 @@ def _plugin_entry_points(group: str) -> Iterator[EntryPoint]:
     return working_set.iter_entry_points(group, None)
 
 
-def _can_register_plugin(h: CommandlineHandler) -> bool:
+def _register_plugin(d: Dict[str, CommandlineHandler], o: CommandlineHandler):
     """
     Adds the plugin to the registry dictionary under its name.
+    Ensures that names are unique and throws an Exception if not.
 
-    :param d: the registry dictionary to extend
+    :param d: the dictionary to add the handler to
     :type d: dict
-    :param h: the plugin to add
-    :type h: CommandlineHandler
-    :return: whether the plugin can be registered
+    :param o: the plugin to register
+    :type o: CommandlineHandler
     """
     global _ALL_PLUGINS
     if _ALL_PLUGINS is None:
         _ALL_PLUGINS = dict()
-    if h.name() in _ALL_PLUGINS:
-        result = False
+    if o.name() in _ALL_PLUGINS:
+        raise Exception("Duplicate plugin name encountered: name=%s, existing type=%s, new type=%s)"
+                        % (o.name(), str(type(_ALL_PLUGINS[o.name()])), str(type(o))))
     else:
-        result = True
-        _ALL_PLUGINS[h.name()] = h
-    return result
+        _ALL_PLUGINS[o.name()] = o
+        d[o.name()] = o
 
 
 def _register_from_entry_point(group: str) -> Dict[str, CommandlineHandler]:
@@ -104,11 +104,7 @@ def _register_from_entry_point(group: str) -> Dict[str, CommandlineHandler]:
     for item in _plugin_entry_points(group):
         module = importlib.import_module(item.module_name)
         cls = getattr(module, item.attrs[0])
-        o = cls()
-        if _can_register_plugin(o):
-            result[o.name()] = o
-        else:
-            raise Exception("Duplicate plugin name encountered: %s" % o.name())
+        _register_plugin(result, cls())
     return result
 
 
@@ -133,11 +129,7 @@ def _register_from_modules(cls, modules: List[str] = None):
             c = getattr(module, att)
             if inspect.isclass(c) and issubclass(c, cls):
                 try:
-                    o = c()
-                    if _can_register_plugin(o):
-                        result[o.name()] = o
-                    else:
-                        raise Exception("Duplicate plugin name encountered: %s" % o.name())
+                    _register_plugin(result, c())
                 except NotImplementedError:
                     pass
                 except:
