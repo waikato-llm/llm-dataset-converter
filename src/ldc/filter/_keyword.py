@@ -61,7 +61,7 @@ class Keyword(Filter):
         :return: the description
         :rtype: str
         """
-        return "Keeps or discards data records based on keyword(s)."
+        return "Keeps or discards data records based on keyword(s). Search is done in lower-case."
 
     def domains(self) -> List[str]:
         """
@@ -98,7 +98,7 @@ class Keyword(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for", required=True, nargs="+")
+        parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for (lower case)", required=True, nargs="+")
         parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
             LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
             LOCATIONS_PRETRAIN))
