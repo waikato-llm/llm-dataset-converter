@@ -70,6 +70,7 @@ setup(
         ],
         "ldc.filters": [
             "change-case=ldc.filter:ChangeCase",
+            "find-substr=ldc.filter:FindSubstring",
             "keyword=ldc.filter:Keyword",
             "metadata=ldc.filter:MetaData",
             "multi-filter=ldc.filter:MultiFilter",

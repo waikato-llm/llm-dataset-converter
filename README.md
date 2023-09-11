@@ -176,6 +176,7 @@ Downloaders:
 
 Filters:  
 * [change-case](plugins/change-case.md)
+* [find-substr](plugins/find-substr.md)
 * [keyword](plugins/keyword.md)
 * [language](plugins/language.md)
 * [metadata](plugins/metadata.md)
