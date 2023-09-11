@@ -19,8 +19,6 @@ DOMAIN_SUFFIX_LOOKUP = {
     DOMAIN_TRANSLATION: "t9n",
 }
 
-CONVERT = "llm-convert"
-
 
 LOGGING_DEBUG = "DEBUG"
 LOGGING_INFO = "INFO"
@@ -130,7 +128,7 @@ class Session:
     options: argparse.Namespace = None
     """ global options. """
 
-    logger: logging.Logger = logging.getLogger(CONVERT)
+    logger: logging.Logger = logging.getLogger("llm-dataset-converter")
     """ the global logger. """
 
     count: int = 0

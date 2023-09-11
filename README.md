@@ -86,9 +86,10 @@ readers:
    from-parquet-pr, from-parquet-pt, from-parquet-t9n, from-tsv-pr, 
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n
 filters:
-   keyword, language, metadata, multi-filter, pairs-to-pretrain, 
-   pretrain-sentences, require-languages, reset-ids, skip-duplicate-ids, 
-   skip-duplicate-text, split, text-length, translation-to-pretrain
+   change-case, keyword, language, metadata, multi-filter, 
+   pairs-to-pretrain, pretrain-sentences, require-languages, reset-ids, 
+   skip-duplicate-ids, skip-duplicate-text, split, text-length, 
+   translation-to-pretrain
 writers:
    to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
    to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
@@ -106,35 +107,21 @@ optional arguments:
                         directory to the writer (default: None)
 ```
 
-### [Hugging Face](https://huggingface.co/) datasets/files download
+### Download
 
 ```
-usage: llm-hf-download [-h] -i REPO_ID [-t {None,model,dataset,space}]
-                       [-f [FILENAME [FILENAME ...]]] [-r REVISION]
-                       [-o OUTPUT_DIR] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: llm-download [-h|--help|--help-all|-help-plugin NAME]
+                    downloader
 
-Tool for downloading files or datasets from Hugging Face
-(https://huggingface.co/) for local conversion.
+Tool for downloading data for large language models (LLMs).
+
+downloaders:
+   huggingface
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -i REPO_ID, --repo_id REPO_ID
-                        The name of the Hugging Face repository/dataset to
-                        download (default: None)
-  -t {None,model,dataset,space}, --repo_type {None,model,dataset,space}
-                        The type of the repository (default: None)
-  -f [FILENAME [FILENAME ...]], --filename [FILENAME [FILENAME ...]]
-                        The name of the file to download rather than the full
-                        dataset (default: None)
-  -r REVISION, --revision REVISION
-                        The revision of the dataset to download, omit for
-                        latest (default: None)
-  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
-                        The directory to store the data in, stores it in the
-                        default Hugging Face cache directory when omitted.
-                        (default: None)
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: INFO)
+  -h, --help            show basic help message and exit
+  --help-all            show basic help message plus help on all plugins and exit
+  --help-plugin NAME    show help message for plugin NAME and exit
 ```
 
 ### Generating help screens for plugins
@@ -183,6 +170,9 @@ optional arguments:
 
 
 ## Other plugins
+
+Downloaders:
+* [huggingface](plugins/huggingface.md)
 
 Filters:  
 * [change-case](plugins/change-case.md)

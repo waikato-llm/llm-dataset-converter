@@ -1,13 +1,8 @@
-import argparse
 import os
-import sys
-from typing import List, Dict, Tuple, Iterable, Optional
+from typing import List, Dict, Tuple, Iterable
 
-from ldc.core import OutputProducer, InputConsumer, DomainHandler, check_compatibility, classes_to_str, Session, CONVERT
-from ldc.core import LOGGING_LEVELS, LOGGING_WARN, set_logging_level
-from ldc.io import Reader, Writer, COMPRESSION_FORMATS
-from ldc.filter import Filter, MultiFilter
-from ldc.registry import available_readers, available_filters, available_writers, available_plugins
+from ldc.core import OutputProducer, InputConsumer, DomainHandler, classes_to_str
+from ldc.registry import available_plugins
 
 
 HELP_FORMAT_TEXT = "text"
@@ -135,7 +130,8 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
             result += "accepts: " + classes_to_str(plugin.accepts()) + "\n"
         if isinstance(plugin, OutputProducer):
             result += "generates: " + classes_to_str(plugin.generates()) + "\n"
-        result += "\n"
+        result = result.strip()
+        result += "\n\n"
         result += plugin.format_help() + "\n"
     elif help_format == HELP_FORMAT_MARKDOWN:
         suffix = ".md"
@@ -147,7 +143,8 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
             result += "* accepts: " + classes_to_str(plugin.accepts()) + "\n"
         if isinstance(plugin, OutputProducer):
             result += "* generates: " + classes_to_str(plugin.generates()) + "\n"
-        result += "\n"
+        result = result.strip()
+        result += "\n\n"
         result += plugin.description() + "\n"
         result += "\n"
         result += "```\n"
@@ -165,122 +162,3 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
             output_file = output_path
         with open(output_file, "w") as fp:
             fp.write(result)
-
-
-def print_usage(plugin_details: bool = False):
-    """
-    Prints the program usage to stdout.
-    Ensure global options are in sync with parser in parse_args method below.
-
-    :param plugin_details: whether to output the plugin details as well
-    :type plugin_details: bool
-    """
-    cmd = "usage: " + CONVERT
-    prefix = " " * (len(cmd) + 1)
-    compression_formats = "None," + ",".join(COMPRESSION_FORMATS)
-    logging_levels = ",".join(LOGGING_LEVELS)
-    print(cmd + " [-h|--help|--help-all|-help-plugin NAME]")
-    print(prefix + "[-c {%s}]" % compression_formats)
-    print(prefix + "[-l {%s}]" % logging_levels)
-    print(prefix + "reader")
-    print(prefix + "[filter [filter [...]]]")
-    print(prefix + "writer")
-    print()
-    print("Tool for converting between large language model (LLM) dataset formats.")
-    print()
-    print("readers:\n" + enumerate_plugins(available_readers().keys(), prefix="   "))
-    print("filters:\n" + enumerate_plugins(available_filters().keys(), prefix="   "))
-    print("writers:\n" + enumerate_plugins(available_writers().keys(), prefix="   "))
-    print()
-    print("optional arguments:")
-    print("  -h, --help            show basic help message and exit")
-    print("  --help-all            show basic help message plus help on all plugins and exit")
-    print("  --help-plugin NAME    show help message for plugin NAME and exit")
-    print("  -l {%s}, --logging_level {%s}" % (logging_levels, logging_levels))
-    print("                        the logging level to use (default: WARN)")
-    print("  -c {%s}, --compression {%s}" % (compression_formats, compression_formats))
-    print("                        the type of compression to use when only providing an output")
-    print("                        directory to the writer (default: None)")
-    print()
-    if plugin_details:
-        plugins = available_plugins()
-        for k in sorted(plugins.keys()):
-            generate_plugin_usage(k)
-
-
-def parse_args(args: List[str], require_reader: bool = True, require_writer: bool = True) -> Tuple[Optional[Reader], Optional[Filter], Optional[Writer], Session]:
-    """
-    Parses the arguments.
-
-    :param args: the arguments to parse
-    :type args: list
-    :param require_reader: whether a reader is required
-    :type require_reader: bool
-    :param require_writer: whether a writer is required
-    :type require_writer: bool
-    :return: tuple of (reader, filter, writer, session), the filter can be None
-    :rtype: tuple
-    """
-    # help requested?
-    help_requested, plugin_details, plugin_name = is_help_requested(args)
-    if help_requested:
-        if plugin_name is not None:
-            generate_plugin_usage(plugin_name)
-        else:
-            print_usage(plugin_details=plugin_details)
-        sys.exit(0)
-
-    parsed = split_args(args, list(available_plugins().keys()))
-    all_readers = available_readers()
-    all_writers = available_writers()
-    all_filters = available_filters()
-    reader = None
-    writer = None
-    filters = []
-    for arg in parsed:
-        if arg in all_readers:
-            if reader is None:
-                reader = all_readers[arg]
-                reader.parse_args(parsed[arg])
-            else:
-                raise Exception("Only one reader can be defined!")
-            continue
-        if arg in all_writers:
-            if writer is None:
-                writer = all_writers[arg]
-                writer.parse_args(parsed[arg])
-            else:
-                raise Exception("Only one writer can be defined!")
-            continue
-        if arg in all_filters:
-            f = all_filters[arg]
-            f.parse_args(parsed[arg])
-            filters.append(f)
-
-    # checks whether valid pipeline
-    if (reader is None) and require_reader:
-        raise Exception("No reader defined!")
-    if (writer is None) and require_writer:
-        raise Exception("No writer defined!")
-    if len(filters) == 0:
-        filter_ = None
-    elif len(filters) == 1:
-        filter_ = filters[0]
-    else:
-        filter_ = MultiFilter(filters=filters)
-
-    # check domain compatibility
-    if filter_ is not None:
-        check_compatibility([reader, filter_, writer])
-    else:
-        check_compatibility([reader, writer])
-
-    # global options?
-    # see print_usage() method above
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN)
-    parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
-    session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
-    set_logging_level(session.logger, session.options.logging_level)
-
-    return reader, filter_, writer, session

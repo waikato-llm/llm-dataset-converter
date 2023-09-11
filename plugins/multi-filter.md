@@ -2,7 +2,7 @@
 
 * domain(s): any
 * accepts: 
-* generates: 
+* generates:
 
 Combines multiple filters.
 

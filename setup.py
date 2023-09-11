@@ -46,7 +46,7 @@ setup(
             "llm-convert=ldc.convert:sys_main",
             "llm-entry-points=ldc.entry_points:sys_main",
             "llm-help=ldc.help:sys_main",
-            "llm-hf-download=ldc.huggingface.download:sys_main",
+            "llm-download=ldc.download:sys_main",
         ],
         "ldc.downloaders": [
             "huggingface=ldc.download:Huggingface"
