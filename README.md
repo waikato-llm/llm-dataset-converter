@@ -51,7 +51,7 @@ The following dataset formats are supported:
 
 <sup>1</sup> Compression not available when concatenating content in single file.
 
-<sup>2</sup> Format defined here: https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md
+<sup>2</sup> Format defined [here](https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md).
 
 <sup>3</sup> Translation data itself is stored as JSON dictionary.
 
