@@ -61,7 +61,7 @@ class Keyword(Filter):
         :return: the description
         :rtype: str
         """
-        return "Keeps or discards data records based on keyword(s). Search is done in lower-case."
+        return "Keeps or discards data records based on keyword(s). Search is performed in lower-case."
 
     def domains(self) -> List[str]:
         """

@@ -4,15 +4,15 @@
 * accepts: PairData, PretrainData, TranslationData
 * generates: PairData, PretrainData, TranslationData
 
-Keeps or discards data records based on keyword(s). Search is done in lower-case.
+Keeps or discards data records based on keyword(s). Search is performed in lower-case.
 
 ```
 usage: keyword [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -k KEYWORD
                [KEYWORD ...] [-L {any,instruction,input,output,content}]
                [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
-Keeps or discards data records based on keyword(s). Search is done in lower-
-case.
+Keeps or discards data records based on keyword(s). Search is performed in
+lower-case.
 
 optional arguments:
   -h, --help            show this help message and exit
