@@ -9,7 +9,7 @@ import pyzstd
 
 from typing import Union, Iterable, List, Optional
 
-from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, Session, SessionHandler
+from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, DomainHandler, Session, SessionHandler
 from ldc.core import LOGGING_WARN
 
 
@@ -178,7 +178,7 @@ def generate_output(input_path: str, output_path: str, ext: str, compression: st
         return output_path
 
 
-class Reader(CommandlineHandler, OutputProducer, SessionHandler, abc.ABC):
+class Reader(CommandlineHandler, OutputProducer, DomainHandler, SessionHandler, abc.ABC):
     """
     Ancestor of classes that read data.
     """
@@ -232,7 +232,7 @@ class Reader(CommandlineHandler, OutputProducer, SessionHandler, abc.ABC):
         raise NotImplementedError()
 
 
-class Writer(CommandlineHandler, InputConsumer, SessionHandler, abc.ABC):
+class Writer(CommandlineHandler, InputConsumer, DomainHandler, SessionHandler, abc.ABC):
     """
     Ancestor of classes that write data.
     """

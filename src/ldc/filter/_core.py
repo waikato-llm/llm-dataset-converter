@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, Session, DOMAIN_ANY
+from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, DomainHandler, SessionHandler, Session, DOMAIN_ANY
 from ldc.core import LOGGING_WARN
 
 FILTER_ACTION_KEEP = "keep"
@@ -9,7 +9,7 @@ FILTER_ACTION_DISCARD = "discard"
 FILTER_ACTIONS = [FILTER_ACTION_KEEP, FILTER_ACTION_DISCARD]
 
 
-class Filter(CommandlineHandler, InputConsumer, OutputProducer, SessionHandler, abc.ABC):
+class Filter(CommandlineHandler, InputConsumer, OutputProducer, DomainHandler, SessionHandler, abc.ABC):
     """
     Base class for filters.
     """

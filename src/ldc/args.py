@@ -3,7 +3,7 @@ import os
 import sys
 from typing import List, Dict, Tuple, Iterable, Optional
 
-from ldc.core import OutputProducer, InputConsumer, check_compatibility, classes_to_str, Session, CONVERT
+from ldc.core import OutputProducer, InputConsumer, DomainHandler, check_compatibility, classes_to_str, Session, CONVERT
 from ldc.core import LOGGING_LEVELS, LOGGING_WARN, set_logging_level
 from ldc.io import Reader, Writer, COMPRESSION_FORMATS
 from ldc.filter import Filter, MultiFilter
@@ -129,7 +129,8 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
     if help_format == HELP_FORMAT_TEXT:
         suffix = ".txt"
         result += "\n" + plugin_name + "\n" + "=" * len(plugin_name) + "\n"
-        result += "domain(s): " + ", ".join(plugin.domains()) + "\n"
+        if isinstance(plugin, DomainHandler):
+            result += "domain(s): " + ", ".join(plugin.domains()) + "\n"
         if isinstance(plugin, InputConsumer):
             result += "accepts: " + classes_to_str(plugin.accepts()) + "\n"
         if isinstance(plugin, OutputProducer):
@@ -140,7 +141,8 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
         suffix = ".md"
         result += "#"*heading_level + " " + plugin_name + "\n"
         result += "\n"
-        result += "* domain(s): " + ", ".join(plugin.domains()) + "\n"
+        if isinstance(plugin, DomainHandler):
+            result += "* domain(s): " + ", ".join(plugin.domains()) + "\n"
         if isinstance(plugin, InputConsumer):
             result += "* accepts: " + classes_to_str(plugin.accepts()) + "\n"
         if isinstance(plugin, OutputProducer):

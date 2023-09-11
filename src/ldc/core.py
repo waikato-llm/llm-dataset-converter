@@ -179,7 +179,7 @@ class Session:
 
 class SessionHandler(object):
     """
-    Mixing for classes that support session objects.
+    Mixin for classes that support session objects.
     """
 
     @property
@@ -199,6 +199,21 @@ class SessionHandler(object):
 
         :param s: the session object
         :type s: Session
+        """
+        raise NotImplementedError()
+
+
+class DomainHandler(object):
+    """
+    Mixin for classes that manage domains.
+    """
+
+    def domains(self) -> List[str]:
+        """
+        Returns the domains of the handler.
+
+        :return: the domains
+        :rtype: list
         """
         raise NotImplementedError()
 
@@ -233,15 +248,6 @@ class CommandlineHandler(object):
 
         :return: the description
         :rtype: str
-        """
-        raise NotImplementedError()
-
-    def domains(self) -> List[str]:
-        """
-        Returns the domains of the handler.
-
-        :return: the domains
-        :rtype: list
         """
         raise NotImplementedError()
 
@@ -353,7 +359,7 @@ class InputConsumer(object):
 
 class MetaDataHandler(object):
     """
-    Mixing for classes that manage meta-data.
+    Mixin for classes that manage meta-data.
     """
 
     def has_metadata(self) -> bool:
@@ -423,9 +429,10 @@ def ensure_valid_domains(handler: CommandlineHandler):
     :param handler: the handler to check
     :type handler: CommandlineHandler
     """
-    domains = handler.domains()
-    if (domains is None) or (len(domains) == 0):
-        raise Exception("No domain(s) specified: " + handler.name())
+    if isinstance(handler, DomainHandler):
+        domains = handler.domains()
+        if (domains is None) or (len(domains) == 0):
+            raise Exception("No domain(s) specified: " + handler.name())
 
 
 def check_compatibility(handlers: List[CommandlineHandler]):
@@ -474,7 +481,7 @@ def domain_suffix(o: Union[str, CommandlineHandler]) -> str:
     :return: the suffix
     :rtype: str
     """
-    if isinstance(o, CommandlineHandler):
+    if isinstance(o, DomainHandler):
         domain = o.domains()
         if len(domain) == 0:
             raise Exception("Require one domain to determine suffix (%s)!" % str(type(o)))
