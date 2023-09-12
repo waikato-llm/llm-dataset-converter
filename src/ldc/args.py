@@ -1,16 +1,4 @@
-import os
 from typing import List, Dict, Tuple, Iterable
-
-from ldc.core import OutputProducer, InputConsumer, DomainHandler, classes_to_str
-from ldc.registry import available_plugins
-
-
-HELP_FORMAT_TEXT = "text"
-HELP_FORMAT_MARKDOWN = "markdown"
-HELP_FORMATS = [
-    HELP_FORMAT_TEXT,
-    HELP_FORMAT_MARKDOWN,
-]
 
 
 def split_args(args: List[str], handlers: List[str]) -> Dict[str, List[str]]:
@@ -22,7 +10,7 @@ def split_args(args: List[str], handlers: List[str]) -> Dict[str, List[str]]:
     :type args: list
     :param handlers: the list of valid handler names
     :type handlers: list
-    :return: the dictionary for handler name / options list
+    :return: the dictionary for handler index / handler name + options list
     :rtype: dict
     """
     handlers = set(handlers)
@@ -32,15 +20,18 @@ def split_args(args: List[str], handlers: List[str]) -> Dict[str, List[str]]:
 
     for arg in args:
         if arg in handlers:
-            result[last_handler] = last_args
+            if len(last_handler) > 0:
+                result[str(len(result))] = last_args
+            else:
+                result[""] = last_args
             last_handler = arg
-            last_args = []
+            last_args = [arg]
             continue
         else:
             last_args.append(arg)
 
-    if last_handler is not None:
-        result[last_handler] = last_args
+    if len(last_args) > 0:
+        result[str(len(result))] = last_args
 
     return result
 
@@ -99,66 +90,3 @@ def enumerate_plugins(plugins: Iterable[str], prefix: str = "", width: int = 72)
     if len(line) > 0:
         result.append(line)
     return "\n".join(result)
-
-
-def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1,
-                          output_path: str = None):
-    """
-    Generates the usage help screen for the specified plugin.
-
-    :param plugin_name: the plugin to generate the usage for (name used on command-line)
-    :type plugin_name: str
-    :param help_format: the format to use for the output
-    :type help_format: str
-    :param heading_level: the level to use for the heading (markdown)
-    :type heading_level: int
-    :param output_path: the directory (automatically generates output name from plugin name and output format) or file to store the generated help in, uses stdout if None
-    :type output_path: str
-    """
-    if help_format not in HELP_FORMATS:
-        raise Exception("Unhandled help format: %s" % help_format)
-
-    plugin = available_plugins()[plugin_name]
-
-    result = ""
-    if help_format == HELP_FORMAT_TEXT:
-        suffix = ".txt"
-        result += "\n" + plugin_name + "\n" + "=" * len(plugin_name) + "\n"
-        if isinstance(plugin, DomainHandler):
-            result += "domain(s): " + ", ".join(plugin.domains()) + "\n"
-        if isinstance(plugin, InputConsumer):
-            result += "accepts: " + classes_to_str(plugin.accepts()) + "\n"
-        if isinstance(plugin, OutputProducer):
-            result += "generates: " + classes_to_str(plugin.generates()) + "\n"
-        result = result.strip()
-        result += "\n\n"
-        result += plugin.format_help() + "\n"
-    elif help_format == HELP_FORMAT_MARKDOWN:
-        suffix = ".md"
-        result += "#"*heading_level + " " + plugin_name + "\n"
-        result += "\n"
-        if isinstance(plugin, DomainHandler):
-            result += "* domain(s): " + ", ".join(plugin.domains()) + "\n"
-        if isinstance(plugin, InputConsumer):
-            result += "* accepts: " + classes_to_str(plugin.accepts()) + "\n"
-        if isinstance(plugin, OutputProducer):
-            result += "* generates: " + classes_to_str(plugin.generates()) + "\n"
-        result = result.strip()
-        result += "\n\n"
-        result += plugin.description() + "\n"
-        result += "\n"
-        result += "```\n"
-        result += plugin.format_help()
-        result += "```\n"
-    else:
-        raise Exception("Unhandled help format: %s" % help_format)
-
-    if output_path is None:
-        print(result)
-    else:
-        if os.path.isdir(output_path):
-            output_file = os.path.join(output_path, plugin.name() + suffix)
-        else:
-            output_file = output_path
-        with open(output_file, "w") as fp:
-            fp.write(result)

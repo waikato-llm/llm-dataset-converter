@@ -1,3 +1,4 @@
+import copy
 import sys
 import traceback
 
@@ -61,11 +62,14 @@ def _parse_args(args: List[str]) -> Optional[Downloader]:
     parsed = split_args(args, list(available_downloaders().keys()))
     all_downloaders = available_downloaders()
     downloader = None
-    for arg in parsed:
-        if arg in all_downloaders:
+    for key in parsed:
+        if len(key) == 0:
+            continue
+        name = parsed[key][0]
+        if name in all_downloaders:
             if downloader is None:
-                downloader = all_downloaders[arg]
-                downloader.parse_args(parsed[arg])
+                downloader = copy.deepcopy(all_downloaders[name])
+                downloader.parse_args(parsed[key][1:])
             else:
                 raise Exception("Only one downloader can be defined!")
             continue

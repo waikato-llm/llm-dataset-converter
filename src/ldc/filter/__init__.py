@@ -8,5 +8,6 @@ from ._reset_ids import ResetIDs
 from ._skip_duplicate_ids import SkipDuplicateIDs
 from ._skip_duplicate_text import SkipDuplicateText
 from ._split import Split
+from ._tee import Tee
 from ._text_length import TextLength
 from ._translation_to_pretrain import TranslationToPretrain

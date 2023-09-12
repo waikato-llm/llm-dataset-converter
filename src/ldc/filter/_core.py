@@ -156,8 +156,8 @@ class MultiFilter(Filter):
         """
         super().initialize()
         for f in self.filters:
-            f.initialize()
             f.session = self.session
+            f.initialize()
 
     def process(self, data):
         """

@@ -35,13 +35,15 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
     reader.session = session
     if filter_ is not None:
         filter_.session = session
-    writer.session = session
+    if writer is not None:
+        writer.session = session
 
     # initialize
     reader.initialize()
     if filter_ is not None:
         filter_.initialize()
-    writer.initialize()
+    if writer is not None:
+        writer.initialize()
 
     # process data
     try:
@@ -58,17 +60,19 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                             data.append(item)
                     if session.count % 1000 == 0:
                         session.logger.info("%d records processed..." % session.count)
-                writer.write_batch(data)
+                    writer.write_batch(data)
                 session.logger.info("%d records processed in total." % session.count)
-            elif isinstance(writer, StreamWriter):
+            elif isinstance(writer, StreamWriter) or (writer is None):
                 for item in reader.read():
                     session.count += 1
                     if filter_ is None:
-                        writer.write_stream(item)
+                        if writer is not None:
+                            writer.write_stream(item)
                     else:
                         item = filter_.process(item)
                         if item is not None:
-                            writer.write_stream(item)
+                            if writer is not None:
+                                writer.write_stream(item)
                     if session.count % 1000 == 0:
                         session.logger.info("%d records processed..." % session.count)
                 session.logger.info("%d records processed in total." % session.count)
@@ -81,4 +85,5 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
     reader.finalize()
     if filter_ is not None:
         filter_.finalize()
-    writer.finalize()
+    if writer is not None:
+        writer.finalize()

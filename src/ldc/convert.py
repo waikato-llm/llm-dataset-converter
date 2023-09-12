@@ -1,4 +1,5 @@
 import argparse
+import copy
 import logging
 import sys
 import traceback
@@ -100,24 +101,27 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
     reader = None
     writer = None
     filters = []
-    for arg in parsed:
-        if arg in all_readers:
+    for key in parsed:
+        if len(key) == 0:
+            continue
+        name = parsed[key][0]
+        if name in all_readers:
             if reader is None:
-                reader = all_readers[arg]
-                reader.parse_args(parsed[arg])
+                reader = copy.deepcopy(all_readers[name])
+                reader.parse_args(parsed[key][1:])
             else:
                 raise Exception("Only one reader can be defined!")
             continue
-        if arg in all_writers:
+        if name in all_writers:
             if writer is None:
-                writer = all_writers[arg]
-                writer.parse_args(parsed[arg])
+                writer = copy.deepcopy(all_writers[name])
+                writer.parse_args(parsed[key][1:])
             else:
                 raise Exception("Only one writer can be defined!")
             continue
-        if arg in all_filters:
-            f = all_filters[arg]
-            f.parse_args(parsed[arg])
+        if name in all_filters:
+            f = copy.deepcopy(all_filters[name])
+            f.parse_args(parsed[key][1:])
             filters.append(f)
 
     # checks whether valid pipeline
@@ -133,10 +137,11 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
         filter_ = MultiFilter(filters=filters)
 
     # check domain compatibility
-    if filter_ is not None:
-        check_compatibility([reader, filter_, writer])
-    else:
-        check_compatibility([reader, writer])
+    if writer is not None:
+        if filter_ is not None:
+            check_compatibility([reader, filter_, writer])
+        else:
+            check_compatibility([reader, writer])
 
     # global options?
     # see print_usage() method above
@@ -160,9 +165,9 @@ def main(args=None):
     init_logging()
     _args = sys.argv[1:] if (args is None) else args
     try:
-        reader, filter_, writer, session = _parse_args(_args)
+        reader, filter_, writer, session = _parse_args(_args, require_writer=False)
     except Exception as e:
-        print(e, file=sys.stderr)
+        traceback.print_exc()
         print("options: %s" % str(_args), file=sys.stderr)
         _print_usage()
         sys.exit(1)

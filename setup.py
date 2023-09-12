@@ -79,6 +79,7 @@ setup(
             "skip-duplicate-ids=ldc.filter:SkipDuplicateIDs",
             "skip-duplicate-text=ldc.filter:SkipDuplicateText",
             "split=ldc.filter:Split",
+            "tee=ldc.filter:Tee",
             "text-length=ldc.filter:TextLength",
             "translation-to-pretrain=ldc.filter:TranslationToPretrain",
             "pretrain-sentences=ldc.pretrain:PretrainSentences",
