@@ -1,6 +1,7 @@
 import abc
 import argparse
 import csv
+import traceback
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
@@ -125,27 +126,31 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         self._current_reader = self._init_reader(self._current_input)
 
         for row in self._current_reader:
-            id_ = None
-            if self.col_id is not None:
-                if self.no_header and (self.idx_id > -1):
-                    id_ = row[self.idx_id]
+            try:
+                id_ = None
+                if self.col_id is not None:
+                    if self.no_header and (self.idx_id > -1):
+                        id_ = row[self.idx_id]
+                    else:
+                        id_ = row[self.col_id]
+
+                meta = None
+                if id_ is not None:
+                    meta = {"id": id_}
+
+                if self.no_header:
+                    yield PretrainData(
+                        content=row[self.idx_content],
+                        meta=meta
+                    )
                 else:
-                    id_ = row[self.col_id]
-
-            meta = None
-            if id_ is not None:
-                meta = {"id": id_}
-
-            if self.no_header:
-                yield PretrainData(
-                    content=row[self.idx_content],
-                    meta=meta
-                )
-            else:
-                yield PretrainData(
-                    content=row[self.col_content],
-                    meta=meta
-                )
+                    yield PretrainData(
+                        content=row[self.col_content],
+                        meta=meta
+                    )
+            except:
+                self.logger().error("Failed to process row: %s" % str(row))
+                traceback.print_exc()
 
     def has_finished(self) -> bool:
         """

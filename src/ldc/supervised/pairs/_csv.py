@@ -1,6 +1,7 @@
 import abc
 import argparse
 import csv
+import traceback
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
@@ -145,41 +146,45 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         self._current_reader = self._init_reader(self._current_input)
 
         for row in self._current_reader:
-            val_instruction = None
-            val_input = None
-            val_output = None
-            if self.no_header:
-                if self.idx_instruction > -1:
-                    val_instruction = row[self.idx_instruction]
-                if self.idx_input > -1:
-                    val_input = row[self.idx_input]
-                if self.idx_output > -1:
-                    val_output = row[self.idx_output]
-            else:
-                if self.col_instruction is not None:
-                    val_instruction = row[self.col_instruction]
-                if self.col_input is not None:
-                    val_input = row[self.col_input]
-                if self.col_output is not None:
-                    val_output = row[self.col_output]
-
-            id_ = None
-            if self.col_id is not None:
+            try:
+                val_instruction = None
+                val_input = None
+                val_output = None
                 if self.no_header:
-                    id_ = row[self.idx_id]
+                    if self.idx_instruction > -1:
+                        val_instruction = row[self.idx_instruction]
+                    if self.idx_input > -1:
+                        val_input = row[self.idx_input]
+                    if self.idx_output > -1:
+                        val_output = row[self.idx_output]
                 else:
-                    id_ = row[self.col_id]
+                    if self.col_instruction is not None:
+                        val_instruction = row[self.col_instruction]
+                    if self.col_input is not None:
+                        val_input = row[self.col_input]
+                    if self.col_output is not None:
+                        val_output = row[self.col_output]
 
-            meta = None
-            if id_ is not None:
-                meta = {"id": id_}
+                id_ = None
+                if self.col_id is not None:
+                    if self.no_header:
+                        id_ = row[self.idx_id]
+                    else:
+                        id_ = row[self.col_id]
 
-            yield PairData(
-                instruction=val_instruction,
-                input=val_input,
-                output=val_output,
-                meta=meta,
-            )
+                meta = None
+                if id_ is not None:
+                    meta = {"id": id_}
+
+                yield PairData(
+                    instruction=val_instruction,
+                    input=val_input,
+                    output=val_output,
+                    meta=meta,
+                )
+            except:
+                self.logger().error("Failed to process row: %s" % str(row))
+                traceback.print_exc()
 
     def has_finished(self) -> bool:
         """

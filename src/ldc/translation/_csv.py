@@ -1,6 +1,7 @@
 import abc
 import argparse
 import csv
+import traceback
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
@@ -132,25 +133,29 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
 
         count = 0
         for row in self._current_reader:
-            count += 1
-            translations = dict()
-            for index in self.indices:
-                cell = row[index]
-                if cell is not None:
-                    cell = cell.strip()
-                    if len(cell) > 0:
-                        translations[self.languages[index]] = cell
+            try:
+                count += 1
+                translations = dict()
+                for index in self.indices:
+                    cell = row[index]
+                    if cell is not None:
+                        cell = cell.strip()
+                        if len(cell) > 0:
+                            translations[self.languages[index]] = cell
 
-            meta = dict()
-            if self.idx_id > -1:
-                meta["id"] = row[self.idx_id]
-            else:
-                meta["id"] = str(count)
+                meta = dict()
+                if self.idx_id > -1:
+                    meta["id"] = row[self.idx_id]
+                else:
+                    meta["id"] = str(count)
 
-            yield TranslationData(
-                translations=translations,
-                meta=meta,
-            )
+                yield TranslationData(
+                    translations=translations,
+                    meta=meta,
+                )
+            except:
+                self.logger().error("Failed to process row: %s" % str(row))
+                traceback.print_exc()
 
     def has_finished(self) -> bool:
         """
