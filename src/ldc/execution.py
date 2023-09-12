@@ -50,31 +50,40 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
         while not reader.has_finished():
             if isinstance(writer, BatchWriter):
                 data = []
-                for item in reader.read():
-                    session.count += 1
-                    if filter_ is None:
-                        data.append(item)
-                    else:
-                        item = filter_.process(item)
-                        if item is not None:
+                try:
+                    for item in reader.read():
+                        session.count += 1
+                        if filter_ is None:
                             data.append(item)
-                    if session.count % 1000 == 0:
-                        session.logger.info("%d records processed..." % session.count)
-                writer.write_batch(data)
+                        else:
+                            item = filter_.process(item)
+                            if item is not None:
+                                data.append(item)
+                        if session.count % 1000 == 0:
+                            session.logger.info("%d records processed..." % session.count)
+                except:
+                    traceback.print_exc()
+                try:
+                    writer.write_batch(data)
+                except:
+                    traceback.print_exc()
                 session.logger.info("%d records processed in total." % session.count)
             elif isinstance(writer, StreamWriter) or (writer is None):
-                for item in reader.read():
-                    session.count += 1
-                    if filter_ is None:
-                        if writer is not None:
-                            writer.write_stream(item)
-                    else:
-                        item = filter_.process(item)
-                        if item is not None:
+                try:
+                    for item in reader.read():
+                        session.count += 1
+                        if filter_ is None:
                             if writer is not None:
                                 writer.write_stream(item)
-                    if session.count % 1000 == 0:
-                        session.logger.info("%d records processed..." % session.count)
+                        else:
+                            item = filter_.process(item)
+                            if item is not None:
+                                if writer is not None:
+                                    writer.write_stream(item)
+                        if session.count % 1000 == 0:
+                            session.logger.info("%d records processed..." % session.count)
+                except:
+                    traceback.print_exc()
                 session.logger.info("%d records processed in total." % session.count)
             else:
                 raise Exception("Neither BatchWriter nor StreamWriter!")
