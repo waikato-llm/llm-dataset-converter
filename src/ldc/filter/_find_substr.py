@@ -106,7 +106,7 @@ class FindSubstring(Filter):
             LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
             LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
-        parser.add_argument("-a", "--action", choices=FILTER_ACTIONS, default=FILTER_ACTION_KEEP, help="How to react when a keyword is encountered")
+        parser.add_argument("-a", "--action", choices=FILTER_ACTIONS, default=FILTER_ACTION_KEEP, help="How to react when a substring is found")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -117,7 +117,7 @@ class FindSubstring(Filter):
         :type ns: argparse.Namespace
         """
         super()._apply_args(ns)
-        self.substrings = ns.keyword[:]
+        self.substrings = ns.sub_string[:]
         self.action = ns.action
         self.location = ns.location
         self.languages = ns.language
