@@ -7,7 +7,7 @@
 Changes the case of text, e.g., to all lower case.
 
 ```
-usage: change-case [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: change-case [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
                    [-c {unchanged,lower,upper,title}]
                    [-L {any,instruction,input,output,content}]
                    [-g [LANGUAGE [LANGUAGE ...]]]
@@ -18,6 +18,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
+  -N LOGGER_NAME, --logger_name LOGGER_NAME
+                        The custom name to use for the logger, uses the plugin
+                        name by default (default: None)
   -c {unchanged,lower,upper,title}, --case {unchanged,lower,upper,title}
                         How to change the case of the text (default: lower)
   -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}

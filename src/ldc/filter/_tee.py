@@ -18,16 +18,19 @@ class Tee(Filter):
     Forwards the data coming through to the sub-flow.
     """
 
-    def __init__(self, sub_flow: List[CommandlineHandler] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, sub_flow: List[CommandlineHandler] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
         :param sub_flow: the filter(s)/writer to forward the data to
         :type sub_flow: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.sub_flow = sub_flow
         self._filter = None
         self._writer = None

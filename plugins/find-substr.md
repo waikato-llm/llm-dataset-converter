@@ -7,8 +7,8 @@
 Keeps or discards data records based on sub-string(s) text matching. Search is performed in lower-case.
 
 ```
-usage: find-substr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -s SUB_STRING
-                   [SUB_STRING ...]
+usage: find-substr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
+                   -s SUB_STRING [SUB_STRING ...]
                    [-L {any,instruction,input,output,content}]
                    [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
@@ -19,6 +19,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
+  -N LOGGER_NAME, --logger_name LOGGER_NAME
+                        The custom name to use for the logger, uses the plugin
+                        name by default (default: None)
   -s SUB_STRING [SUB_STRING ...], --sub_string SUB_STRING [SUB_STRING ...]
                         The substrings to look for (lower case) (default:
                         None)

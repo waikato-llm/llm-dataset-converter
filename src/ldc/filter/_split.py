@@ -20,7 +20,7 @@ class Split(Filter):
     """
 
     def __init__(self, split_ratios: List[int] = None, split_names: List[str] = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -28,10 +28,12 @@ class Split(Filter):
         :type split_ratios: list
         :param split_names: the names for the splits (will be stored in the meta-data)
         :type split_names: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.split_ratios = split_ratios
         self.split_names = split_names
         self._schedule = None

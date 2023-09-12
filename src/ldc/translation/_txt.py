@@ -29,12 +29,11 @@ class TxtTranslationReader(TranslationReader):
     def __init__(self, source: Union[str, List[str]] = None,
                  col_id: str = None, col_lang: str = None, col_content: str = None, col_sep: str = ":",
                  lang_in_id: bool = False, expr_lang: str = None, expr_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
-        :param logging_level: the logging level to use
         :param col_id: the 1-based index of the column containing the ID
         :type col_id: str
         :param col_lang: the 1-based index of the column containing the language, can be None
@@ -49,9 +48,12 @@ class TxtTranslationReader(TranslationReader):
         :type expr_lang: str
         :param expr_id: the regexp to extract the actual ID as first group  (only if lang_in_id=True)
         :type expr_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
+        :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.col_id = col_id
         self.idx_id = -1
@@ -226,7 +228,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
     """
 
     def __init__(self, target: str = None, num_digits: int = 6, line_format: str = "%s-%s: %s" % (PH_LANG, PH_ID, PH_CONTENT),
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -236,10 +238,12 @@ class TxtTranslationWriter(StreamTranslationWriter):
         :type num_digits: int
         :param line_format: the format for the line, available placeholders: {LANG}, {ID}, {CONTENT}
         :type line_format: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.num_digits = num_digits
         self.line_format = line_format

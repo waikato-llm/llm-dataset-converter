@@ -13,16 +13,18 @@ class ResetIDs(Filter):
     Resets the IDs in the meta-data.
     """
 
-    def __init__(self, offset: int = 0, logging_level: str = LOGGING_WARN):
+    def __init__(self, offset: int = 0, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
         :param offset: the offset for the restarting of the ID counter
         :type offset: int
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.offset = offset
         self._counter = offset
 

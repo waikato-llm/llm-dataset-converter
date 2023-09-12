@@ -10,7 +10,7 @@ class PretrainSentences(PretrainFilter):
     """
 
     def __init__(self, end_chars: str = DEFAULT_END_CHARS, quote_chars: str = DEFAULT_QUOTE_CHARS,
-                 max_sentences: int = 1, logging_level: str = LOGGING_WARN):
+                 max_sentences: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -20,10 +20,12 @@ class PretrainSentences(PretrainFilter):
         :type quote_chars: str
         :param max_sentences: the maximum number of sentences per line
         :type max_sentences: int
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.end_chars = end_chars
         self.quote_chars = quote_chars
         self.max_sentences = max_sentences

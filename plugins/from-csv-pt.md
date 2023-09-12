@@ -6,8 +6,8 @@
 Reads pretrain data in CSV format.
 
 ```
-usage: from-csv-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                   [INPUT ...] [-c COL] [--col_id COL] [-n]
+usage: from-csv-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
+                   -i INPUT [INPUT ...] [-c COL] [--col_id COL] [-n]
 
 Reads pretrain data in CSV format.
 
@@ -15,6 +15,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
+  -N LOGGER_NAME, --logger_name LOGGER_NAME
+                        The custom name to use for the logger, uses the plugin
+                        name by default (default: None)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the CSV file(s) to read; glob syntax is
                         supported (default: None)

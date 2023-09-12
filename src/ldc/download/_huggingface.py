@@ -14,7 +14,8 @@ class Huggingface(Downloader):
     """
 
     def __init__(self, repo_id: str = None, repo_type: str = None, filename: Union[str, List[str]] = None,
-                 revision: str = None, output_dir: str = None, logging_level: str = LOGGING_WARN):
+                 revision: str = None, output_dir: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the downloader.
 
@@ -28,10 +29,12 @@ class Huggingface(Downloader):
         :type revision: str
         :param output_dir: the directory to store the data in, None for default Hugging Face cache dir
         :type output_dir: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.repo_id = repo_id
         self.repo_type = repo_type
         self.filename = filename

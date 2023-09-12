@@ -7,9 +7,10 @@ Reads pretrain data from plain text files, with each file representing a data re
 Text files can be split into lines and forwarded as separate records as well.
 
 ```
-usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -i INPUT
-                   [INPUT ...] [-s] [-r [EXPR_REMOVE [EXPR_REMOVE ...]]] [-e]
-                   [--sentences] [-c END_CHARS] [-q QUOTE_CHARS]
+usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
+                   -i INPUT [INPUT ...] [-s]
+                   [-r [EXPR_REMOVE [EXPR_REMOVE ...]]] [-e] [--sentences]
+                   [-c END_CHARS] [-q QUOTE_CHARS]
                    [--block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]]
                    [--block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]]
                    [-m MAX_SENTENCES]
@@ -22,6 +23,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
+  -N LOGGER_NAME, --logger_name LOGGER_NAME
+                        The custom name to use for the logger, uses the plugin
+                        name by default (default: None)
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the text file(s) to read; glob syntax is
                         supported (default: None)

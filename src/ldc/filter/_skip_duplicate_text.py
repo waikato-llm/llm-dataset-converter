@@ -16,7 +16,8 @@ class SkipDuplicateText(Filter):
     Suppresses records with text that has already passed through.
     """
 
-    def __init__(self, location: str = LOCATION_ANY, languages: List[str] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, location: str = LOCATION_ANY, languages: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -24,10 +25,12 @@ class SkipDuplicateText(Filter):
         :type location: str
         :param languages: the languages to restrict the keywords to, None to check all
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         if location not in LOCATIONS:
             raise Exception("Invalid location: %s" % location)
         self.location = location

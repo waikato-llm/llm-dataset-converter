@@ -11,16 +11,18 @@ class RequireLanguages(TranslationFilter):
     Discards records if the required languages aren't present.
     """
 
-    def __init__(self, languages: List[str] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
         :param languages: the languages to enforce presence
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.languages = languages
         self.kept = 0
         self.discarded = 0

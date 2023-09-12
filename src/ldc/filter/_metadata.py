@@ -16,7 +16,8 @@ class MetaData(Filter):
     """
 
     def __init__(self, field: str = None, action: str = FILTER_ACTION_KEEP,
-                 comparison: str = COMPARISON_EQUAL, value=None, logging_level: str = LOGGING_WARN):
+                 comparison: str = COMPARISON_EQUAL, value=None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -27,10 +28,12 @@ class MetaData(Filter):
         :param comparison: the comparison to perform
         :type comparison: str
         :param value: the value to compare with
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
 
         if action not in FILTER_ACTIONS:
             raise Exception("Invalid action: %s" % action)

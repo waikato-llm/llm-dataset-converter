@@ -19,7 +19,7 @@ class ParquetTranslationReader(TranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -28,10 +28,12 @@ class ParquetTranslationReader(TranslationReader):
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.col_content = col_content
         self.col_id = col_id
@@ -148,7 +150,8 @@ class ParquetTranslationWriter(BatchTranslationWriter):
     Writer for Parquet database files.
     """
 
-    def __init__(self, target: str = None, col_content: str = None, col_id: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, col_content: str = None, col_id: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -158,10 +161,12 @@ class ParquetTranslationWriter(BatchTranslationWriter):
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.col_content = col_content
         self.col_id = col_id

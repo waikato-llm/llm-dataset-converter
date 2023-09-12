@@ -7,8 +7,9 @@
 Keeps or discards data records based on text length constraints.
 
 ```
-usage: text-length [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-m MIN_LENGTH]
-                   [-M MAX_LENGTH] [-L {any,instruction,input,output,content}]
+usage: text-length [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
+                   [-m MIN_LENGTH] [-M MAX_LENGTH]
+                   [-L {any,instruction,input,output,content}]
                    [-g [LANGUAGE [LANGUAGE ...]]]
 
 Keeps or discards data records based on text length constraints.
@@ -17,6 +18,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
+  -N LOGGER_NAME, --logger_name LOGGER_NAME
+                        The custom name to use for the logger, uses the plugin
+                        name by default (default: None)
   -m MIN_LENGTH, --min_length MIN_LENGTH
                         The minimum text length, ignored if <0 (default: -1)
   -M MAX_LENGTH, --max_length MAX_LENGTH

@@ -19,7 +19,7 @@ class TxtPretrainReader(PretrainReader):
                  expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
                  quote_chars: str = DEFAULT_QUOTE_CHARS,
                  block_removal_start: List[str] = None, block_removal_end: List[str] = None,
-                 max_sentences: int = 1, logging_level: str = LOGGING_WARN):
+                 max_sentences: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -42,10 +42,12 @@ class TxtPretrainReader(PretrainReader):
         :type block_removal_end: list
         :param max_sentences: the maximum number of sentences per line
         :type max_sentences: int
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.split_lines = split_lines
         self.skip_empty = skip_empty
@@ -274,7 +276,8 @@ class TxtPretrainWriter(StreamPretrainWriter):
     Writer for the plain text files.
     """
 
-    def __init__(self, target: str = None, num_digits: int = 6, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, num_digits: int = 6,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -282,10 +285,14 @@ class TxtPretrainWriter(StreamPretrainWriter):
         :type target: str
         :param num_digits: the number of digits to use for the output file names
         :type num_digits: int
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.num_digits = num_digits
         self._output = None

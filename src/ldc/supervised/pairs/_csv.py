@@ -15,7 +15,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -30,10 +30,12 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.no_header = no_header
         self.col_instruction = col_instruction
@@ -206,7 +208,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter, abc.ABC):
 
     def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -222,10 +224,12 @@ class AbstractCsvLikePairsWriter(BatchPairWriter, abc.ABC):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.no_header = no_header
         self.col_instruction = col_instruction
@@ -363,8 +367,7 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, skip_duplicate_ids: bool = False,
-                 logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -379,13 +382,14 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
-        :param skip_duplicate_ids: with a ID column defined, duplicate rows can be skipped
-        :type skip_duplicate_ids: bool
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, col_id=col_id, logging_level=logging_level)
+                         col_output=col_output, col_id=col_id,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -435,7 +439,7 @@ class CsvPairsWriter(AbstractCsvLikePairsWriter):
 
     def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -451,11 +455,13 @@ class CsvPairsWriter(AbstractCsvLikePairsWriter):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(target=target, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, col_id=col_id, logging_level=logging_level)
+                         col_output=col_output, col_id=col_id, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -511,8 +517,7 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, skip_duplicate_ids: bool = False,
-                 logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -527,13 +532,12 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
-        :param skip_duplicate_ids: with a ID column defined, duplicate rows can be skipped
-        :type skip_duplicate_ids: bool
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, col_id=col_id, logging_level=logging_level)
+                         col_output=col_output, col_id=col_id,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -583,7 +587,7 @@ class TsvPairsWriter(AbstractCsvLikePairsWriter):
 
     def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -599,11 +603,13 @@ class TsvPairsWriter(AbstractCsvLikePairsWriter):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(target=target, no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, col_id=col_id, logging_level=logging_level)
+                         col_output=col_output, col_id=col_id, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """

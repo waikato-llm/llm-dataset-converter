@@ -14,7 +14,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, no_header: bool = False,
-                 col_id: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -25,10 +25,12 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         :type no_header: bool
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.col_content = col_content
         self.idx_content = -1
@@ -171,7 +173,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
     """
 
     def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
-                 split_lines: bool = False, logging_level: str = LOGGING_WARN):
+                 split_lines: bool = False, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -185,10 +187,12 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         :type col_id: str
         :param split_lines: whether to split the lines of the text into separate records
         :type split_lines: bool
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.col_content = col_content
         self.no_header = no_header
@@ -317,7 +321,7 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None,
-                 col_id: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -326,11 +330,13 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_content=col_content,
-                         col_id=col_id, logging_level=logging_level)
+                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -379,7 +385,7 @@ class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
     """
 
     def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -391,11 +397,13 @@ class CsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :type no_header: bool
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(target=target, col_content=col_content, no_header=no_header, col_id=col_id,
-                         logging_level=logging_level)
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -450,7 +458,7 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None,
-                 col_id: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -459,11 +467,13 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_content=col_content,
-                         col_id=col_id, logging_level=logging_level)
+                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -512,7 +522,7 @@ class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
     """
 
     def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -524,11 +534,13 @@ class TsvPretrainWriter(AbstractCsvLikePretrainWriter):
         :type no_header: bool
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(target=target, col_content=col_content, no_header=no_header, col_id=col_id,
-                         logging_level=logging_level)
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """

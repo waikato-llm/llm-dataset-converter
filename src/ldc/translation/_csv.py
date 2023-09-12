@@ -14,7 +14,8 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
-                 columns: List[str] = None, languages: List[str] = None, logging_level: str = LOGGING_WARN):
+                 columns: List[str] = None, languages: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -27,10 +28,12 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.no_header = no_header
         self.col_id = col_id
@@ -175,7 +178,7 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC):
     """
 
     def __init__(self, target: str = None, no_header: bool = False, no_col_id: bool = False,
-                 languages: List[str] = None, logging_level: str = LOGGING_WARN):
+                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -187,10 +190,12 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC):
         :type no_col_id: bool
         :param languages: the list of languages to output
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.languages = languages
         self.no_header = no_header
@@ -312,7 +317,8 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
-                 columns: List[str] = None, languages: List[str] = None, logging_level: str = LOGGING_WARN):
+                 columns: List[str] = None, languages: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -325,11 +331,13 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, columns=columns, languages=languages,
-                         col_id=col_id, logging_level=logging_level)
+                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -378,7 +386,7 @@ class CsvTranslationWriter(AbstractCsvLikeTranslationWriter):
     """
 
     def __init__(self, target: str = None, no_header: bool = False,
-                 languages: List[str] = None, logging_level: str = LOGGING_WARN):
+                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -388,10 +396,13 @@ class CsvTranslationWriter(AbstractCsvLikeTranslationWriter):
         :type no_header: bool
         :param languages: the list of languages to output
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, no_header=no_header, languages=languages, logging_level=logging_level)
+        super().__init__(target=target, no_header=no_header, languages=languages,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -446,7 +457,8 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
-                 columns: List[str] = None, languages: List[str] = None, logging_level: str = LOGGING_WARN):
+                 columns: List[str] = None, languages: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -459,11 +471,13 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type col_id: str
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, columns=columns, languages=languages,
-                         col_id=col_id, logging_level=logging_level)
+                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -512,7 +526,7 @@ class TsvTranslationWriter(AbstractCsvLikeTranslationWriter):
     """
 
     def __init__(self, target: str = None, no_header: bool = False,
-                 languages: List[str] = None, logging_level: str = LOGGING_WARN):
+                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -522,10 +536,13 @@ class TsvTranslationWriter(AbstractCsvLikeTranslationWriter):
         :type no_header: bool
         :param languages: the list of languages to output
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(target=target, no_header=no_header, languages=languages, logging_level=logging_level)
+        super().__init__(target=target, no_header=no_header, languages=languages,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """

@@ -14,14 +14,16 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, DomainHandler, S
     Base class for filters.
     """
 
-    def __init__(self, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self._session = None
         self._last_input = None
 
@@ -87,16 +89,18 @@ class MultiFilter(Filter):
     Combines multiple filters.
     """
 
-    def __init__(self, filters: List[Filter] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, filters: List[Filter] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initialize with the specified filters.
 
         :param filters: the filters to use
         :type filters: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.filters = None if (filters is None) else filters[:]
 
     def name(self) -> str:

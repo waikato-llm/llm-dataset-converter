@@ -13,16 +13,18 @@ class TranslationToPretrain(Filter):
     Converts records of translation records to pretrain ones.
     """
 
-    def __init__(self, lang: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, lang: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
         :param lang: the ID of the language to turn into pretrain records
         :type lang: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.lang = lang
 
     def name(self) -> str:

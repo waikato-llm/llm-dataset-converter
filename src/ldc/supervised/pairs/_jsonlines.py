@@ -14,7 +14,7 @@ class JsonLinesPairReader(PairReader):
 
     def __init__(self, source: Union[str, List[str]] = None,
                  att_instruction: str = None, att_input: str = None, att_output: str = None, att_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -27,10 +27,12 @@ class JsonLinesPairReader(PairReader):
         :type att_output: str
         :param att_id: the (optional) attribute the ID
         :type att_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.att_instruction = att_instruction
         self.att_input = att_input
@@ -165,7 +167,7 @@ class JsonLinesPairWriter(BatchPairWriter):
 
     def __init__(self, target: str = None,
                  att_instruction: str = None, att_input: str = None, att_output: str = None, att_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -179,10 +181,12 @@ class JsonLinesPairWriter(BatchPairWriter):
         :type att_output: str
         :param att_id: the (optional) attribute with the ID
         :type att_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.att_instruction = att_instruction
         self.att_input = att_input

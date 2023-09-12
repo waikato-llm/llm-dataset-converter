@@ -16,7 +16,8 @@ class Keyword(Filter):
     """
 
     def __init__(self, keywords: List[str] = None, action: str = FILTER_ACTION_KEEP,
-                 location: str = LOCATION_ANY, languages: List[str] = None, logging_level: str = LOGGING_WARN):
+                 location: str = LOCATION_ANY, languages: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -28,10 +29,12 @@ class Keyword(Filter):
         :type location: str
         :param languages: the languages to restrict the keywords to, None to check all
         :type languages: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
 
         if action not in FILTER_ACTIONS:
             raise Exception("Invalid action: %s" % action)

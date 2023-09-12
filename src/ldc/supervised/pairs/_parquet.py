@@ -17,7 +17,7 @@ class ParquetPairsReader(PairReader):
 
     def __init__(self, source: Union[str, List[str]] = None,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -30,10 +30,12 @@ class ParquetPairsReader(PairReader):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.col_instruction = col_instruction
         self.col_input = col_input
@@ -164,7 +166,7 @@ class ParquetPairsWriter(BatchPairWriter):
 
     def __init__(self, target: str = None,
                  col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -178,10 +180,12 @@ class ParquetPairsWriter(BatchPairWriter):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.col_instruction = col_instruction
         self.col_input = col_input

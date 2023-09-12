@@ -183,14 +183,16 @@ class Reader(CommandlineHandler, OutputProducer, DomainHandler, SessionHandler, 
     Ancestor of classes that read data.
     """
 
-    def __init__(self, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self._session = None
 
     @property
@@ -237,14 +239,16 @@ class Writer(CommandlineHandler, InputConsumer, DomainHandler, SessionHandler, a
     Ancestor of classes that write data.
     """
 
-    def __init__(self, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
         self._session = None
         self._last_input = None
 

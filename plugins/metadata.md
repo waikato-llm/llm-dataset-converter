@@ -7,8 +7,8 @@
 Keeps or discards data records based on meta-data comparisons. Performs the following comparison: METADATA_VALUE COMPARISON VALUE. Records that do not have the required field get discarded automatically.
 
 ```
-usage: metadata [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] -f FIELD -v VALUE
-                [-c {lt,le,eq,ne,ge,gt}] [-a {keep,discard}]
+usage: metadata [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME] -f
+                FIELD -v VALUE [-c {lt,le,eq,ne,ge,gt}] [-a {keep,discard}]
 
 Keeps or discards data records based on meta-data comparisons. Performs the
 following comparison: METADATA_VALUE COMPARISON VALUE. Records that do not
@@ -18,6 +18,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
                         The logging level to use (default: WARN)
+  -N LOGGER_NAME, --logger_name LOGGER_NAME
+                        The custom name to use for the logger, uses the plugin
+                        name by default (default: None)
   -f FIELD, --field FIELD
                         The meta-data field to use in the comparison (default:
                         None)

@@ -13,16 +13,18 @@ class PairsToPretrain(Filter):
     Converts records of prompt/output pairs to pretrain ones.
     """
 
-    def __init__(self, data_fields: List[str] = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, data_fields: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
         :param data_fields: the list of data fields to turn into pretrain content
         :type data_fields: list
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
 
         if data_fields is not None:
             for data_field in data_fields:

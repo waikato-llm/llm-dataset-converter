@@ -221,14 +221,17 @@ class CommandlineHandler(object):
     Base class for objects handle arguments.
     """
 
-    def __init__(self, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the handler.
 
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         self.logging_level = logging_level
+        self.logger_name = logger_name
         self._logger = None
 
     def name(self) -> str:
@@ -257,7 +260,11 @@ class CommandlineHandler(object):
         :rtype: logging.Logger
         """
         if self._logger is None:
-            self._logger = logging.getLogger(self.name())
+            if (self.logger_name is not None) and (len(self.logger_name) > 0):
+                logger_name = self.logger_name
+            else:
+                logger_name = self.name()
+            self._logger = logging.getLogger(logger_name)
             set_logging_level(self._logger, self.logging_level)
         return self._logger
 
@@ -273,6 +280,7 @@ class CommandlineHandler(object):
             prog=self.name(),
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
+        parser.add_argument("-N", "--logger_name", type=str, default=None, help="The custom name to use for the logger, uses the plugin name by default", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -283,6 +291,8 @@ class CommandlineHandler(object):
         :type ns: argparse.Namespace
         """
         self.logging_level = ns.logging_level
+        self.logger_name = ns.logger_name
+        self._logger = None
 
     def parse_args(self, args: List[str]) -> 'CommandlineHandler':
         """

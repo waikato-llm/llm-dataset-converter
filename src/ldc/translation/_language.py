@@ -16,7 +16,7 @@ class Language(TranslationFilter):
     """
 
     def __init__(self, languages: List[str] = None, action: str = KEYWORD_ACTION_KEEP,
-                 logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -24,10 +24,12 @@ class Language(TranslationFilter):
         :type languages: list
         :param action: the action to perform
         :type action: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(logging_level=logging_level)
+        super().__init__(logger_name=logger_name, logging_level=logging_level)
 
         if action not in KEYWORD_ACTIONS:
             raise Exception("Invalid action: %s" % action)
