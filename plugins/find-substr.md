@@ -33,6 +33,5 @@ optional arguments:
                         The languages to inspect; inspects all if not
                         specified (default: None)
   -a {keep,discard}, --action {keep,discard}
-                        How to react when a keyword is encountered (default:
-                        keep)
+                        How to react when a substring is found (default: keep)
 ```

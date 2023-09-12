@@ -26,7 +26,7 @@ optional arguments:
   -M MAX_LENGTH, --max_length MAX_LENGTH
                         The maximum text length, ignored if <0 (default: -1)
   -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
-                        Where to look for the keywords; pairs:
+                        Where to look for the text; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)
   -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
