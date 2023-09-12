@@ -190,6 +190,7 @@ Filters:
 * [split](plugins/split.md)
 * [tee](plugins/tee.md)
 * [text-length](plugins/text-length.md)
+* [translation-to-pairs](plugins/translation-to-pairs.md)
 * [translation-to-pretrain](plugins/translation-to-pretrain.md)
 
 

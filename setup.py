@@ -81,6 +81,7 @@ setup(
             "split=ldc.filter:Split",
             "tee=ldc.filter:Tee",
             "text-length=ldc.filter:TextLength",
+            "translation-to-pairs=ldc.filter:TranslationToPairs",
             "translation-to-pretrain=ldc.filter:TranslationToPretrain",
             "pretrain-sentences=ldc.pretrain:PretrainSentences",
             "language=ldc.translation:Language",
