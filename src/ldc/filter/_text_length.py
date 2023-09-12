@@ -12,7 +12,7 @@ from ldc.translation import TranslationData
 
 class TextLength(Filter):
     """
-    Keeps or discards data records based on keyword(s).
+    Keeps or discards data records based on text length constraints.
     """
 
     def __init__(self, min_length: int = None, max_length: int = None,
@@ -25,7 +25,7 @@ class TextLength(Filter):
         :type min_length: int
         :param max_length: the maximum text length, ignored if None
         :type max_length: int
-        :param location: in which part of the data to look for the keywords
+        :param location: in which part of the data to look for the text
         :type location: str
         :param languages: the languages to restrict the check to, None to check all
         :type languages: list
@@ -101,7 +101,7 @@ class TextLength(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-m", "--min_length", type=int, help="The minimum text length, ignored if <0", default=-1, required=False)
         parser.add_argument("-M", "--max_length", type=int, help="The maximum text length, ignored if <0", default=-1, required=False)
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
+        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the text; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
         return parser
 
