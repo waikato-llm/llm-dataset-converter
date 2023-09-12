@@ -1,5 +1,5 @@
 import argparse
-from typing import List, Set
+from typing import List
 
 from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
@@ -181,9 +181,12 @@ class FindSubstring(Filter):
 
         # check for substrings
         found = False
-        for substring in self.substrings:
-            if substring in strings:
-                found = True
+        for s in strings:
+            for sub in self.substrings:
+                if sub in s:
+                    found = True
+                    break
+            if found:
                 break
 
         if self.action == FILTER_ACTION_KEEP:
