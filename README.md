@@ -86,9 +86,9 @@ readers:
    from-parquet-pr, from-parquet-pt, from-parquet-t9n, from-tsv-pr, 
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n
 filters:
-   change-case, keyword, language, metadata, multi-filter, 
+   change-case, find-substr, keyword, language, metadata, multi-filter, 
    pairs-to-pretrain, pretrain-sentences, require-languages, reset-ids, 
-   skip-duplicate-ids, skip-duplicate-text, split, text-length, 
+   skip-duplicate-ids, skip-duplicate-text, split, tee, text-length, 
    translation-to-pretrain
 writers:
    to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
