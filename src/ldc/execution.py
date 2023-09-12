@@ -60,7 +60,7 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                             data.append(item)
                     if session.count % 1000 == 0:
                         session.logger.info("%d records processed..." % session.count)
-                    writer.write_batch(data)
+                writer.write_batch(data)
                 session.logger.info("%d records processed in total." % session.count)
             elif isinstance(writer, StreamWriter) or (writer is None):
                 for item in reader.read():
