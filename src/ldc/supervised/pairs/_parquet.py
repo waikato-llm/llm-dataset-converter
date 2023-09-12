@@ -191,6 +191,7 @@ class ParquetPairsWriter(BatchPairWriter):
         self.col_input = col_input
         self.col_output = col_output
         self.col_id = col_id
+        self._current_output = None
         self._output = None
         self._output_writer = None
 
@@ -256,10 +257,10 @@ class ParquetPairsWriter(BatchPairWriter):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
-        if self._has_input_changed(update=True):
+        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, ".parquet"):
             self.finalize()
-            output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
-            self.logger().info("Writing to: " + output)
+            self._current_output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
+            self.logger().info("Writing to: " + self._current_output)
             # create dictionary
             d_instruction = []
             d_input = []
@@ -286,7 +287,7 @@ class ParquetPairsWriter(BatchPairWriter):
             # create pandas dataframe
             df = pd.DataFrame.from_dict(d)
             table = pa.Table.from_pandas(df)
-            pq.write_table(table, output)
+            pq.write_table(table, self._current_output)
 
     def finalize(self):
         """

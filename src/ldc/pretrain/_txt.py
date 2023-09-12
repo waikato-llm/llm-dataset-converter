@@ -295,6 +295,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.num_digits = num_digits
+        self._current_output = None
         self._output = None
         self._writer = None
         self._concatenate = False

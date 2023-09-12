@@ -166,6 +166,7 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
         self.target = target
         self.att_content = att_content
         self.att_id = att_id
+        self._current_output = None
         self._output = None
         self._writer = None
 
@@ -227,13 +228,13 @@ class JsonLinesPretrainWriter(BatchPretrainWriter):
         :param data: the data to write as iterable of PretrainData
         :type data: Iterable
         """
-        if self._has_input_changed(update=True):
+        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, ".jsonl"):
             self.finalize()
-            output = generate_output(self.session.current_input, self.target, ".jsonl", self.session.options.compression)
-            self.logger().info("Writing to: " + output)
-            self._output = open_file(output, mode="wt")
+            self._current_output = generate_output(self.session.current_input, self.target, ".jsonl", self.session.options.compression)
+            self.logger().info("Writing to: " + self._current_output)
+            self._output = open_file(self._current_output, mode="wt")
+            self._writer = jsonlines.Writer(self._output)
 
-        self._writer = jsonlines.Writer(self._output)
         for item in data:
             d = {self.att_content: item.content}
             if self.att_id is not None:

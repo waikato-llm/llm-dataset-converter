@@ -299,6 +299,26 @@ class Writer(CommandlineHandler, InputConsumer, DomainHandler, SessionHandler, a
         """
         self._last_input = current_input
 
+    def _output_needs_changing(self, current_output: str, target: str, ext: str) -> bool:
+        """
+        Checks whether the output needs changing.
+
+        :param current_output: the current output
+        :type current_output: str
+        :param target: the output target
+        :type target: str
+        :param ext: the extension for the output file, incl dot
+        :type ext: str
+        :return: True if the output needs to change
+        :rtype: bool
+        """
+        if current_output is None:
+            return True
+        output = generate_output(self.session.current_input, target, ext, self.session.options.compression)
+        if current_output != output:
+            return True
+        return False
+
 
 class StreamWriter(Writer, abc.ABC):
     """

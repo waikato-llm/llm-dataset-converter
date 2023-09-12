@@ -203,6 +203,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         self.no_header = no_header
         self.col_id = col_id
         self.split_lines = split_lines
+        self._current_output = None
         self._output = None
         self._output_writer = None
 
@@ -278,11 +279,11 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         :param data: the data to write as iterable of PretrainData
         :type data: Iterable
         """
-        if self._has_input_changed(update=True):
+        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, self._get_extension()):
             self.finalize()
-            output = generate_output(self.session.current_input, self.target, self._get_extension(), self.session.options.compression)
-            self.logger().info("Writing to: " + output)
-            self._output = open_file(output, mode="wt")
+            self._current_output = generate_output(self.session.current_input, self.target, self._get_extension(), self.session.options.compression)
+            self.logger().info("Writing to: " + self._current_output)
+            self._output = open_file(self._current_output, mode="wt")
             self._output_writer = self._init_writer(self._output)
             if not self.no_header:
                 row = []

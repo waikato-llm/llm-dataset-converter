@@ -247,6 +247,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
         self.target = target
         self.num_digits = num_digits
         self.line_format = line_format
+        self._current_output = None
         self._output = None
         self._writer = None
         self._concatenate = False
