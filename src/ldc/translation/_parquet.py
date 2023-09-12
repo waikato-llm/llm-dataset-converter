@@ -240,7 +240,7 @@ class ParquetTranslationWriter(BatchTranslationWriter):
             d_content = []
             d_ids = []
             for row in data:
-                d_content.append(json.dumps(row.translations))
+                d_content.append(json.dumps(row.translations, ensure_ascii=False))
                 if self.col_id is not None:
                     if (row.meta is not None) and ("id" in row.meta):
                         d_ids.append(row.meta["id"])

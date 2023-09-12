@@ -184,7 +184,7 @@ class AlpacaWriter(BatchPairWriter):
             self.logger().info("Writing to: " + self._current_output)
             self._output = open_file(self._current_output, mode="wt")
 
-        json.dump([x.to_dict() for x in data], self._output)
+        json.dump([x.to_dict() for x in data], self._output, ensure_ascii=False)
 
     def finalize(self):
         """
