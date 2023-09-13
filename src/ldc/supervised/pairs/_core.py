@@ -76,6 +76,8 @@ class PairData(MetaDataHandler):
         atts = ["instruction", "input", "output"]
         for att in atts:
             value = getattr(self, att)
+            if (value is None) and (att == "input"):
+                value = ""
             if value is not None:
                 result[att] = value
         return result
