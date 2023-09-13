@@ -371,6 +371,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         if self._concatenate:
             mode = "w" if self._first_item else "a"
             self._first_item = False
+            self.logger().info("Writing to: %s" % self.target)
             with open(self.target, mode) as fp:
                 fp.write(data.content)
                 fp.write("\n")
@@ -383,5 +384,6 @@ class TxtPretrainWriter(StreamPretrainWriter):
             else:
                 fname = self._fname_format % self.session.count
             output = generate_output(fname, self.target, ".txt", self.session.options.compression)
+            self.logger().info("Writing to: %s" % output)
             with open(output, "w") as fp:
                 fp.write(data.content)

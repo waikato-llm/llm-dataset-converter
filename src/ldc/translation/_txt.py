@@ -347,6 +347,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
         if self._concatenate:
             mode = "w" if self._first_item else "a"
             self._first_item = False
+            self.logger().info("Writing to: %s" % self.target)
             with open(self.target, mode) as fp:
                 self._write_data(fp, id_, data)
         else:
@@ -355,5 +356,6 @@ class TxtTranslationWriter(StreamTranslationWriter):
             except:
                 fname = str(id_) + ".txt"
             output = generate_output(fname, self.target, ".txt", self.session.options.compression)
+            self.logger().info("Writing to: %s" % output)
             with open(output, "w") as fp:
                 self._write_data(fp, id_, data)
