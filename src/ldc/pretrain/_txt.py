@@ -370,8 +370,9 @@ class TxtPretrainWriter(StreamPretrainWriter):
         """
         if self._concatenate:
             mode = "w" if self._first_item else "a"
+            if self._first_item:
+                self.logger().info("Writing to: %s" % self.target)
             self._first_item = False
-            self.logger().info("Writing to: %s" % self.target)
             with open(self.target, mode) as fp:
                 fp.write(data.content)
                 fp.write("\n")
