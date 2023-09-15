@@ -43,6 +43,7 @@ setup(
     author_email='fracpete@waikato.ac.nz',
     entry_points={
         "console_scripts": [
+            "llm-append=ldc.append:sys_main",
             "llm-convert=ldc.convert:sys_main",
             "llm-download=ldc.download:sys_main",
             "llm-entry-points=ldc.entry_points:sys_main",

@@ -124,6 +124,26 @@ optional arguments:
   --help-plugin NAME    show help message for plugin NAME and exit
 ```
 
+### Combining multiple files (one-after-the-other)
+
+```
+usage: llm-append [-h] -i FILE [FILE ...] [-o FILE]
+                  [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+
+Tool for combining multiple text files by appending them.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i FILE [FILE ...], --input_file FILE [FILE ...]
+                        The files to append. (default: None)
+  -o FILE, --output_file FILE
+                        The path of the file to store the combined data in;
+                        outputs it to stdout if omitted or a directory
+                        (default: None)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+```
+
 ### Combining multiple files (side-by-side)
 
 ```
