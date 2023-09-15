@@ -44,9 +44,10 @@ setup(
     entry_points={
         "console_scripts": [
             "llm-convert=ldc.convert:sys_main",
+            "llm-download=ldc.download:sys_main",
             "llm-entry-points=ldc.entry_points:sys_main",
             "llm-help=ldc.help:sys_main",
-            "llm-download=ldc.download:sys_main",
+            "llm-paste=ldc.paste:sys_main",
         ],
         "ldc.downloaders": [
             "huggingface=ldc.download:Huggingface"

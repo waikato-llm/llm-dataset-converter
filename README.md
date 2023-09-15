@@ -124,6 +124,30 @@ optional arguments:
   --help-plugin NAME    show help message for plugin NAME and exit
 ```
 
+### Combining multiple files (side-by-side)
+
+```
+usage: llm-paste [-h] -i FILE [FILE ...] [-o FILE] [-s [SEP [SEP ...]]]
+                 [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+
+Tool for combining multiple text files by placing them side-by-side.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i FILE [FILE ...], --input_file FILE [FILE ...]
+                        The files to combine side-by-side. (default: None)
+  -o FILE, --output_file FILE
+                        The path of the file to store the combined data in;
+                        outputs it to stdout if omitted or a directory
+                        (default: None)
+  -s [SEP [SEP ...]], --separator [SEP [SEP ...]]
+                        The separators to use between the files; uses TAB if
+                        not supplied; use '{T}' as placeholder for tab
+                        (default: None)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+```
+
 ### Generating help screens for plugins
 
 ```
