@@ -1,9 +1,13 @@
+import abc
 import argparse
 import logging
 import os
 
 from dataclasses import dataclass
 from typing import List, Union, Dict, Optional
+
+from seppl import Plugin
+
 
 ENV_LLM_LOGLEVEL = "LLM_LOGLEVEL"
 """ environment variable for the global default logging level. """
@@ -216,7 +220,7 @@ class DomainHandler(object):
         raise NotImplementedError()
 
 
-class CommandlineHandler(object):
+class CommandlineHandler(Plugin, abc.ABC):
     """
     Base class for objects handle arguments.
     """
@@ -230,27 +234,10 @@ class CommandlineHandler(object):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
+        super().__init__()
         self.logging_level = logging_level
         self.logger_name = logger_name
         self._logger = None
-
-    def name(self) -> str:
-        """
-        Returns the name of the handler, used as sub-command.
-
-        :return: the name
-        :rtype: str
-        """
-        raise NotImplementedError()
-
-    def description(self) -> str:
-        """
-        Returns a description of the handler.
-
-        :return: the description
-        :rtype: str
-        """
-        raise NotImplementedError()
 
     def logger(self) -> logging.Logger:
         """
@@ -275,10 +262,7 @@ class CommandlineHandler(object):
         :return: the parser
         :rtype: argparse.ArgumentParser
         """
-        parser = argparse.ArgumentParser(
-            description=self.description(),
-            prog=self.name(),
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser = super()._create_argparser()
         parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
         parser.add_argument("-N", "--logger_name", type=str, default=None, help="The custom name to use for the logger, uses the plugin name by default", required=False)
         return parser
@@ -290,37 +274,10 @@ class CommandlineHandler(object):
         :param ns: the parsed arguments
         :type ns: argparse.Namespace
         """
+        super()._apply_args(ns)
         self.logging_level = ns.logging_level
         self.logger_name = ns.logger_name
         self._logger = None
-
-    def parse_args(self, args: List[str]) -> 'CommandlineHandler':
-        """
-        Parses the command-line arguments.
-
-        :param args: the arguments to parse
-        :type args: list
-        :return: itself
-        :rtype: CommandlineHandler
-        """
-        parser = self._create_argparser()
-        self._apply_args(parser.parse_args(args))
-        return self
-
-    def print_help(self):
-        """
-        Outputs the help in the console.
-        """
-        self._create_argparser().print_help()
-
-    def format_help(self) -> str:
-        """
-        Returns the formatted help string.
-
-        :return: the help string
-        :rtype: str
-        """
-        return self._create_argparser().format_help()
 
     def initialize(self):
         """

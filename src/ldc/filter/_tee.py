@@ -1,11 +1,10 @@
 import argparse
 import copy
-import shlex
 
 from typing import List
 
 from ldc.core import LOGGING_WARN, CommandlineHandler, DOMAIN_ANY
-from ldc.args import split_args
+from seppl import split_args, split_cmdline
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
@@ -107,7 +106,7 @@ class Tee(Filter):
 
         # split command-line into valid plugin subsets
         all = available_plugins()
-        args = shlex.split(cmdline)
+        args = split_cmdline(cmdline)
         valid = []
         valid.extend(available_filters().keys())
         valid.extend(available_writers().keys())

@@ -6,6 +6,7 @@ import traceback
 
 from typing import List
 
+from seppl import Plugin
 from ldc.core import init_logging, CommandlineHandler
 from ldc.registry import register_plugins, available_downloaders, available_readers, available_filters, available_writers
 from ldc.registry import ENTRY_POINT_DOWNLOADERS, ENTRY_POINT_READERS, ENTRY_POINT_FILTERS, ENTRY_POINT_WRITERS
@@ -13,7 +14,7 @@ from ldc.registry import ENTRY_POINT_DOWNLOADERS, ENTRY_POINT_READERS, ENTRY_POI
 ENTRY_POINTS = "llm-entry-points"
 
 
-def _to_entry_point(plugin: CommandlineHandler) -> str:
+def _to_entry_point(plugin: Plugin) -> str:
     """
     Turns the plugin into an entry point.
 
@@ -39,7 +40,7 @@ def _to_entry_point(plugin: CommandlineHandler) -> str:
     return result
 
 
-def _to_entry_points(plugins: List[CommandlineHandler]) -> List[str]:
+def _to_entry_points(plugins: List[Plugin]) -> List[str]:
     """
     Turns the plugins into a list of entry points.
 

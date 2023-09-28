@@ -4,7 +4,7 @@ import traceback
 
 from typing import List, Optional
 
-from ldc.args import enumerate_plugins, is_help_requested, split_args
+from seppl import enumerate_plugins, is_help_requested, split_args
 from ldc.core import init_logging
 from ldc.download import Downloader
 from ldc.help import generate_plugin_usage
