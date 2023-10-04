@@ -1,58 +1,15 @@
 import argparse
-import importlib
-import json
 import sys
 import traceback
-
 from typing import List
 
-from seppl import Plugin
-from ldc.core import init_logging, CommandlineHandler
-from ldc.registry import register_plugins, available_downloaders, available_readers, available_filters, available_writers
+from ldc.core import init_logging
 from ldc.registry import ENTRY_POINT_DOWNLOADERS, ENTRY_POINT_READERS, ENTRY_POINT_FILTERS, ENTRY_POINT_WRITERS
+from ldc.registry import register_plugins, available_downloaders, available_readers, available_filters, \
+    available_writers
+from seppl import generate_entry_points
 
 ENTRY_POINTS = "llm-entry-points"
-
-
-def _to_entry_point(plugin: Plugin) -> str:
-    """
-    Turns the plugin into an entry point.
-
-    :param plugin: the object to convert
-    :type plugin: CommandlineHandler
-    :return: the generated entry point
-    :rtype: str
-    """
-    m = plugin.__module__
-
-    # can we hide a private module?
-    parts = m.split(".")
-    if parts[-1].startswith("_"):
-        parts.pop()
-        m = ".".join(parts)
-        try:
-            importlib.import_module(m)
-        except:
-            # can't remove the last and private module, so we'll stick with the full path
-            m = plugin.__module__
-
-    result = plugin.name() + "=" + m + ":" + plugin.__class__.__name__
-    return result
-
-
-def _to_entry_points(plugins: List[Plugin]) -> List[str]:
-    """
-    Turns the plugins into a list of entry points.
-
-    :param plugins: the plugins to convert
-    :type plugins: list
-    :return: the list of entry points
-    :rtype: list
-    """
-    result = list()
-    for plugin in plugins:
-        result.append(_to_entry_point(plugin))
-    return result
 
 
 def output_entry_points(modules: List[str] = None):
@@ -66,17 +23,12 @@ def output_entry_points(modules: List[str] = None):
 
     # generate entry points
     entry_points = dict()
-    entry_points[ENTRY_POINT_DOWNLOADERS] = _to_entry_points(list(available_downloaders().values()))
-    entry_points[ENTRY_POINT_READERS] = _to_entry_points(list(available_readers().values()))
-    entry_points[ENTRY_POINT_FILTERS] = _to_entry_points(list(available_filters().values()))
-    entry_points[ENTRY_POINT_WRITERS] = _to_entry_points(list(available_writers().values()))
-    keys = list(entry_points.keys())
-    for k in keys:
-        if len(entry_points[k]) == 0:
-            entry_points.pop(k)
+    entry_points[ENTRY_POINT_DOWNLOADERS] = list(available_downloaders().values())
+    entry_points[ENTRY_POINT_READERS] = list(available_readers().values())
+    entry_points[ENTRY_POINT_FILTERS] = list(available_filters().values())
+    entry_points[ENTRY_POINT_WRITERS] = list(available_writers().values())
 
-    # output
-    print("entry_points=" + json.dumps(entry_points, indent=4))
+    print(generate_entry_points(entry_points))
 
 
 def main(args=None):
