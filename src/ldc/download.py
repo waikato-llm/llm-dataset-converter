@@ -4,7 +4,7 @@ import traceback
 
 from typing import List, Optional
 
-from seppl import enumerate_plugins, is_help_requested, split_args
+from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
 from ldc.core import init_logging
 from ldc.download import Downloader
 from ldc.help import generate_plugin_usage
@@ -41,14 +41,14 @@ def _print_usage(plugin_details: bool = False):
             generate_plugin_usage(plugin)
 
 
-def _parse_args(args: List[str]) -> Optional[Downloader]:
+def _parse_args(args: List[str]) -> Downloader:
     """
     Parses the arguments.
 
     :param args: the arguments to parse
     :type args: list
-    :return: tuple of (reader, filter, writer, session), the filter can be None
-    :rtype: tuple
+    :return: the downloader
+    :rtype: Downloader
     """
     # help requested?
     help_requested, plugin_details, plugin_name = is_help_requested(args)
@@ -59,26 +59,14 @@ def _parse_args(args: List[str]) -> Optional[Downloader]:
             _print_usage(plugin_details=plugin_details)
         sys.exit(0)
 
-    parsed = split_args(args, list(available_downloaders().keys()))
-    all_downloaders = available_downloaders()
-    downloader = None
-    for key in parsed:
-        if len(key) == 0:
-            continue
-        name = parsed[key][0]
-        if name in all_downloaders:
-            if downloader is None:
-                downloader = copy.deepcopy(all_downloaders[name])
-                downloader.parse_args(parsed[key][1:])
-            else:
-                raise Exception("Only one downloader can be defined!")
-            continue
-
-    # checks whether valid setup
-    if downloader is None:
+    args = split_args(args, list(available_downloaders().keys()))
+    downloaders = args_to_objects(args, available_downloaders(), allow_global_options=False)
+    if len(downloaders) == 0:
         raise Exception("No downloader defined!")
-
-    return downloader
+    elif len(downloaders) > 1:
+        raise Exception("Only one downloader can be defined!")
+    else:
+        return downloaders[0]
 
 
 def main(args=None):

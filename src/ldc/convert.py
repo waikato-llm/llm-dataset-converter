@@ -1,12 +1,11 @@
 import argparse
-import copy
 import logging
 import sys
 import traceback
 
 from typing import List, Tuple, Optional, Dict
 
-from seppl import enumerate_plugins, is_help_requested, split_args
+from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
 from ldc.core import init_logging, LOGGING_LEVELS, LOGGING_WARN, check_compatibility, CommandlineHandler, Session, set_logging_level
 from ldc.help import generate_plugin_usage
 from ldc.io import COMPRESSION_FORMATS, Reader, Writer
@@ -95,34 +94,30 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
         sys.exit(0)
 
     parsed = split_args(args, list(_available_plugins().keys()))
-    all_readers = available_readers()
-    all_writers = available_writers()
-    all_filters = available_filters()
+    plugins = args_to_objects(parsed, _available_plugins(), allow_global_options=True)
     reader = None
     writer = None
     filters = []
-    for key in parsed:
-        if len(key) == 0:
-            continue
-        name = parsed[key][0]
-        if name in all_readers:
+    for plugin in plugins:
+        if isinstance(plugin, Reader):
             if reader is None:
-                reader = copy.deepcopy(all_readers[name])
-                reader.parse_args(parsed[key][1:])
+                reader = plugin
+                continue
             else:
                 raise Exception("Only one reader can be defined!")
+
+        if isinstance(plugin, Filter):
+            filters.append(plugin)
             continue
-        if name in all_writers:
+
+        if isinstance(plugin, Writer):
             if writer is None:
-                writer = copy.deepcopy(all_writers[name])
-                writer.parse_args(parsed[key][1:])
+                writer = plugin
+                continue
             else:
                 raise Exception("Only one writer can be defined!")
-            continue
-        if name in all_filters:
-            f = copy.deepcopy(all_filters[name])
-            f.parse_args(parsed[key][1:])
-            filters.append(f)
+
+        raise Exception("Unhandled plugin type: %s" % str(type(plugin)))
 
     # checks whether valid pipeline
     if (reader is None) and require_reader:

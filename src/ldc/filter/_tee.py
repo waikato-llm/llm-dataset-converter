@@ -1,14 +1,12 @@
 import argparse
-import copy
-
 from typing import List
 
 from ldc.core import LOGGING_WARN, CommandlineHandler, DOMAIN_ANY
-from seppl import split_args, split_cmdline
+from ldc.io import Writer, BatchWriter, StreamWriter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
-from ldc.io import Writer, BatchWriter, StreamWriter
+from seppl import split_args, split_cmdline, Plugin
 from ._core import Filter, MultiFilter
 
 
@@ -91,7 +89,7 @@ class Tee(Filter):
         parser.add_argument("-f", "--sub_flow", type=str, default=None, help="The command-line defining the subflow (filter(s)/writer).")
         return parser
 
-    def _parse_commandline(self, cmdline: str) -> List[CommandlineHandler]:
+    def _parse_commandline(self, cmdline: str) -> List[Plugin]:
         """
         Parses the command-line and returns the list of plugins it represents.
         Raises an exception in case of an invalid sub-flow.
@@ -100,32 +98,15 @@ class Tee(Filter):
         :type cmdline: str 
         :return: 
         """
-        from ldc.registry import available_plugins, available_filters, available_writers
-
-        result = []
+        from ldc.registry import available_filters, available_writers
+        from seppl import args_to_objects
 
         # split command-line into valid plugin subsets
-        all = available_plugins()
-        args = split_cmdline(cmdline)
-        valid = []
-        valid.extend(available_filters().keys())
-        valid.extend(available_writers().keys())
-        plugins = split_args(args, valid)
-
-        # configure plugins
-        for key in plugins:
-            if len(key) == 0:
-                if len(plugins[""]) > 0:
-                    raise Exception("No global option allowed!")
-                else:
-                    # ignore it
-                    continue
-            name = plugins[key][0]
-            plugin = copy.deepcopy(all[name])
-            plugin.parse_args(plugins[key][1:])
-            result.append(plugin)
-
-        return result
+        valid = dict()
+        valid.update(available_filters())
+        valid.update(available_writers())
+        args = split_args(split_cmdline(cmdline), list(valid.keys()))
+        return args_to_objects(args, valid, allow_global_options=False)
 
     def _apply_args(self, ns: argparse.Namespace):
         """
