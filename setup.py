@@ -37,7 +37,7 @@ setup(
         "pyarrow",
         "pyzstd",
         "huggingface-hub",
-        "seppl>=0.0.2",
+        "seppl>=0.0.3",
     ],
     version="0.0.1",
     author='Peter Reutemann',
