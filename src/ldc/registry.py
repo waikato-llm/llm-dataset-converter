@@ -4,7 +4,7 @@ from typing import Dict, List
 from ldc.download import Downloader
 from ldc.filter import Filter
 from ldc.io import Reader, Writer
-from seppl import Registry, Plugin
+from seppl import Registry, Plugin, MODE_DYNAMIC
 
 # the entry points defined in setup.py
 ENTRY_POINT_DOWNLOADERS = "ldc.downloaders"
@@ -25,7 +25,7 @@ DEFAULT_LDC_MODULES = ",".join([
     "ldc.translation",
 ])
 
-REGISTRY = Registry(default_modules=DEFAULT_LDC_MODULES, env_modules=ENV_LDC_MODULES, enforce_uniqueness=True)
+REGISTRY = Registry(mode=MODE_DYNAMIC, default_modules=DEFAULT_LDC_MODULES, env_modules=ENV_LDC_MODULES, enforce_uniqueness=True)
 
 LLM_REGISTRY = "llm-registry"
 
