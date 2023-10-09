@@ -1,7 +1,7 @@
 # to-alpaca
 
 * domain(s): pairs
-* accepts: PairData
+* accepts: ldc.supervised.pairs.PairData
 
 Writes prompt/output pairs in Alpaca-like JSON format.
 

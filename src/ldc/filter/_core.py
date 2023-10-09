@@ -1,8 +1,9 @@
 import abc
 from typing import List
 
-from ldc.core import CommandlineHandler, InputConsumer, OutputProducer, DomainHandler, SessionHandler, Session, DOMAIN_ANY
+from ldc.core import CommandlineHandler, DomainHandler, SessionHandler, Session, DOMAIN_ANY
 from ldc.core import LOGGING_WARN
+from seppl import InputConsumer, OutputProducer
 
 FILTER_ACTION_KEEP = "keep"
 FILTER_ACTION_DISCARD = "discard"

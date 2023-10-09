@@ -1,7 +1,7 @@
 # to-jsonlines-pt
 
 * domain(s): pretrain
-* accepts: PretrainData
+* accepts: ldc.pretrain.PretrainData
 
 Writes pretrain data in JsonLines-like JSON format.
 

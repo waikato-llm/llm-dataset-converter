@@ -1,8 +1,8 @@
 # keyword
 
 * domain(s): pairs, pretrain, translation
-* accepts: PairData, PretrainData, TranslationData
-* generates: PairData, PretrainData, TranslationData
+* accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
+* generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
 
 Keeps or discards data records based on keyword(s). Search is performed in lower-case.
 

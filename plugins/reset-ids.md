@@ -1,8 +1,8 @@
 # reset-ids
 
 * domain(s): pairs, pretrain, translation
-* accepts: PairData, PretrainData, TranslationData
-* generates: PairData, PretrainData, TranslationData
+* accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
+* generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
 
 Resets the IDs in the meta-data using consecutive integer ones.
 

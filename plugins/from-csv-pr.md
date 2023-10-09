@@ -1,7 +1,7 @@
 # from-csv-pr
 
 * domain(s): pairs
-* generates: PairData
+* generates: ldc.supervised.pairs.PairData
 
 Reads prompt/output pairs in CSV format.
 

@@ -8,7 +8,8 @@ from typing import List
 
 from ldc.registry import register_plugins, available_plugins
 from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
-from ldc.core import OutputProducer, InputConsumer, DomainHandler, classes_to_str
+from ldc.core import DomainHandler
+from seppl import OutputProducer, InputConsumer, classes_to_str
 
 HELP = "llm-help"
 

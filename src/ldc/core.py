@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import List, Union, Dict, Optional
 
 from seppl import Plugin
+from seppl import check_compatibility as seppl_check_compatibility
 
 
 ENV_LLM_LOGLEVEL = "LLM_LOGLEVEL"
@@ -292,36 +293,6 @@ class CommandlineHandler(Plugin, abc.ABC):
         self.logger().info("Finalizing...")
 
 
-class OutputProducer(object):
-    """
-    Mixin for classes that generate output.
-    """
-
-    def generates(self) -> List:
-        """
-        Returns the list of classes that get produced.
-
-        :return: the list of classes
-        :rtype: list
-        """
-        raise NotImplementedError()
-
-
-class InputConsumer(object):
-    """
-    Mixin for classes that consume input.
-    """
-
-    def accepts(self) -> List:
-        """
-        Returns the list of classes that are accepted.
-
-        :return: the list of classes
-        :rtype: list
-        """
-        raise NotImplementedError()
-
-
 class MetaDataHandler(object):
     """
     Mixin for classes that manage meta-data.
@@ -371,70 +342,37 @@ def get_metadata(o) -> Optional[Dict]:
     return None
 
 
-def classes_to_str(classes: List):
-    """
-    Turns a list of classes into a string.
-
-    :param classes: the list of classes to convert
-    :type classes: list
-    :return: the generated string
-    :rtype: str
-    """
-    classes_str = list()
-    for cls in classes:
-        classes_str.append(cls.__name__)
-    return ", ".join(classes_str)
-
-
-def ensure_valid_domains(handler: CommandlineHandler):
+def ensure_valid_domains(plugin: Plugin):
     """
     Checks whether valid domains are specified.
     Raises an exception if not valid.
 
-    :param handler: the handler to check
-    :type handler: CommandlineHandler
+    :param plugin: the handler to check
+    :type plugin: CommandlineHandler
     """
-    if isinstance(handler, DomainHandler):
-        domains = handler.domains()
+    if isinstance(plugin, DomainHandler):
+        domains = plugin.domains()
         if (domains is None) or (len(domains) == 0):
-            raise Exception("No domain(s) specified: " + handler.name())
+            raise Exception("No domain(s) specified: " + plugin.name())
 
 
-def check_compatibility(handlers: List[CommandlineHandler]):
+def check_compatibility(plugins: List[Plugin]):
     """
-    Checks whether the handlers are compatible based on their domains.
+    Checks whether the plugins are compatible based on domains and inputs/outputs.
     Raises an exception if not compatible.
 
-    :param handlers: the handlers to check
-    :type handlers: CommandlineHandler
+    :param plugins: the list of plugins to check
+    :type plugins: list
     """
-    if len(handlers) == 0:
+    seppl_check_compatibility(plugins)
+
+    if len(plugins) == 1:
+        ensure_valid_domains(plugins[0])
         return
 
-    if len(handlers) == 1:
-        ensure_valid_domains(handlers[0])
-        return
-
-    for i in range(len(handlers) - 1):
-        handler1 = handlers[i]
-        handler2 = handlers[i + 1]
-        ensure_valid_domains(handler1)
-        ensure_valid_domains(handler2)
-        if not isinstance(handler1, OutputProducer):
-            raise Exception(handler1.name() + " is not an OutputProducer!")
-        if not isinstance(handler2, InputConsumer):
-            raise Exception(handler2.name() + " is not an InputConsumer!")
-        classes1 = handler1.generates()
-        classes2 = handler2.accepts()
-        compatible = False
-        for class1 in classes1:
-            if class1 in classes2:
-                compatible = True
-                break
-        if not compatible:
-            raise Exception(
-                "Output(s) of " + handler1.name() + " not compatible with input(s) of " + handler2.name() + ": "
-                + classes_to_str(classes1) + " != " + classes_to_str(classes2))
+    for i in range(len(plugins) - 1):
+        ensure_valid_domains(plugins[i])
+        ensure_valid_domains(plugins[i + 1])
 
 
 def domain_suffix(o: Union[str, CommandlineHandler]) -> str:

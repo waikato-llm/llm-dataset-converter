@@ -1,7 +1,7 @@
 # to-txt-t9n
 
 * domain(s): translation
-* accepts: TranslationData
+* accepts: ldc.translation.TranslationData
 
 Writes translation data to plain text files.
 When providing an output directory, either uses the current session counter as the filename or, if present, the 'id' value from the meta-data.

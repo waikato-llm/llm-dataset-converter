@@ -1,7 +1,7 @@
 # from-txt-pt
 
 * domain(s): pretrain
-* generates: PretrainData
+* generates: ldc.pretrain.PretrainData
 
 Reads pretrain data from plain text files, with each file representing a data record.
 Text files can be split into lines and forwarded as separate records as well.

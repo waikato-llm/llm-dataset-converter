@@ -9,8 +9,9 @@ import pyzstd
 
 from typing import Union, Iterable, List, Optional
 
-from ldc.core import CommandlineHandler, OutputProducer, InputConsumer, DomainHandler, Session, SessionHandler
+from ldc.core import CommandlineHandler, DomainHandler, Session, SessionHandler
 from ldc.core import LOGGING_WARN
+from seppl import OutputProducer, InputConsumer
 
 
 COMPRESSION_BZIP2 = "bz2"

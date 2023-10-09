@@ -1,8 +1,8 @@
 # split
 
 * domain(s): any
-* accepts: PairData, PretrainData, TranslationData
-* generates: PairData, PretrainData, TranslationData
+* accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
+* generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
 
 Splits the incoming records into the specified split ratios by setting the split meta-data value. Also stores the split names in the current session.
 

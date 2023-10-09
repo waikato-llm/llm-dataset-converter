@@ -1,7 +1,7 @@
 # to-parquet-t9n
 
 * domain(s): translation
-* accepts: TranslationData
+* accepts: ldc.translation.TranslationData
 
 Writes translation data in Parquet database format. The translation data is output in JSON format: { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." }
 

@@ -1,7 +1,7 @@
 # from-parquet-t9n
 
 * domain(s): translation
-* generates: TranslationData
+* generates: ldc.translation.TranslationData
 
 Reads translations from Parquet database files. The translation data must be in JSON format: { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." }
 

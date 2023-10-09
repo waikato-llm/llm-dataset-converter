@@ -1,7 +1,7 @@
 # to-csv-pr
 
 * domain(s): pairs
-* accepts: PairData
+* accepts: ldc.supervised.pairs.PairData
 
 Writes prompt/output pairs in CSV format.
 

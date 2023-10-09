@@ -1,7 +1,7 @@
 # to-csv-t9n
 
 * domain(s): translation
-* accepts: TranslationData
+* accepts: ldc.translation.TranslationData
 
 Writes translation data in CSV format.
 

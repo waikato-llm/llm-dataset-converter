@@ -1,8 +1,8 @@
 # pairs-to-pretrain
 
 * domain(s): pairs, pretrain
-* accepts: PairData
-* generates: PretrainData
+* accepts: ldc.supervised.pairs.PairData
+* generates: ldc.pretrain.PretrainData
 
 Converts records of prompt/output pairs to pretrain ones.
 

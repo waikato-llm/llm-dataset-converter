@@ -1,7 +1,7 @@
 # from-alpaca
 
 * domain(s): pairs
-* generates: PairData
+* generates: ldc.supervised.pairs.PairData
 
 Reads prompt/output pairs in Alpaca-like JSON format.
 

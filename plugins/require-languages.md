@@ -1,8 +1,8 @@
 # require-languages
 
 * domain(s): translation
-* accepts: TranslationData
-* generates: TranslationData
+* accepts: ldc.translation.TranslationData
+* generates: ldc.translation.TranslationData
 
 Discards records if the required languages aren't present.
 

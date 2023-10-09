@@ -1,7 +1,7 @@
 # from-tsv-t9n
 
 * domain(s): translation
-* generates: TranslationData
+* generates: ldc.translation.TranslationData
 
 Reads translation data in TSV format.
 

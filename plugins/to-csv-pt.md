@@ -1,7 +1,7 @@
 # to-csv-pt
 
 * domain(s): pretrain
-* accepts: PretrainData
+* accepts: ldc.pretrain.PretrainData
 
 Writes pretrain data in CSV format.
 

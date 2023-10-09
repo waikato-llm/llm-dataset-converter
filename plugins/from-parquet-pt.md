@@ -1,7 +1,7 @@
 # from-parquet-pt
 
 * domain(s): pretrain
-* generates: PretrainData
+* generates: ldc.pretrain.PretrainData
 
 Reads text from Parquet database files to use for pretraining.
 
