@@ -47,7 +47,6 @@ setup(
             "llm-append=ldc.append:sys_main",
             "llm-convert=ldc.convert:sys_main",
             "llm-download=ldc.download:sys_main",
-            "llm-entry-points=ldc.entry_points:sys_main",
             "llm-help=ldc.help:sys_main",
             "llm-paste=ldc.paste:sys_main",
         ],
