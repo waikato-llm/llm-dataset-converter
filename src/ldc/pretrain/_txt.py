@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+import traceback
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
@@ -233,8 +234,12 @@ class TxtPretrainReader(PretrainReader):
         for input_file in self._inputs:
             self.session.current_input = input_file
             self.logger().info("Reading from: " + str(input_file))
-            with open_file(self.session.current_input, mode="rt") as fp:
-                lines = fp.readlines()
+            try:
+                with open_file(self.session.current_input, mode="rt") as fp:
+                    lines = fp.readlines()
+            except:
+                self.logger().warning("Failed to read: %s\n%s" % (self.session.current_input, traceback.format_exc(1)))
+                continue
 
             # remove blocks?
             if self.block_removal_start is not None:
