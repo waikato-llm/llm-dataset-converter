@@ -2,6 +2,7 @@ from ._core import Filter, MultiFilter, FILTER_ACTIONS, FILTER_ACTION_KEEP, FILT
 from ._change_case import ChangeCase, CASES, CASE_UNCHANGED, CASE_LOWER, CASE_UPPER, CASE_TITLE
 from ._find_substr import FindSubstring
 from ._keyword import Keyword
+from ._max_records import MaxRecords
 from ._metadata import MetaData
 from ._pairs_to_pretrain import PairsToPretrain
 from ._reset_ids import ResetIDs
