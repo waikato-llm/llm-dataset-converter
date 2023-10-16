@@ -1,4 +1,5 @@
 import argparse
+import re
 from typing import List
 
 from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
@@ -15,7 +16,8 @@ class FindSubstring(Filter):
     Keeps or discards data records based on presence of substrings.
     """
 
-    def __init__(self, substrings: List[str] = None, action: str = FILTER_ACTION_KEEP,
+    def __init__(self, substrings: List[str] = None, is_regexp: bool = False,
+                 action: str = FILTER_ACTION_KEEP,
                  location: str = LOCATION_ANY, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
@@ -23,6 +25,8 @@ class FindSubstring(Filter):
 
         :param substrings: the list of substrings to look for (lower case)
         :type substrings: list
+        :param is_regexp: whether the substrings represent regular expressions
+        :type is_regexp: bool
         :param action: the action to perform
         :type action: str
         :param location: in which part of the data to look for the substrings
@@ -42,6 +46,7 @@ class FindSubstring(Filter):
             raise Exception("Invalid location: %s" % location)
 
         self.substrings = substrings
+        self.is_regexp = is_regexp
         self.action = action
         self.location = location
         self.languages = languages
@@ -64,7 +69,7 @@ class FindSubstring(Filter):
         :return: the description
         :rtype: str
         """
-        return "Keeps or discards data records based on sub-string(s) text matching. Search is performed in lower-case."
+        return "Keeps or discards data records based on sub-string(s) text matching. Search is performed in lower-case. Optionally, the sub-strings can represent regular expressions used for searching the strings."
 
     def domains(self) -> List[str]:
         """
@@ -102,6 +107,7 @@ class FindSubstring(Filter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-s", "--sub_string", type=str, help="The substrings to look for (lower case)", required=True, nargs="+")
+        parser.add_argument("-r", "--is_regexp", action="store_true", help="Whether the sub-strings represent regular expressions", required=False)
         parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the substrings; pairs: " + ",".join(
             LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
             LOCATIONS_PRETRAIN))
@@ -118,6 +124,7 @@ class FindSubstring(Filter):
         """
         super()._apply_args(ns)
         self.substrings = ns.sub_string[:]
+        self.is_regexp = ns.is_regexp
         self.action = ns.action
         self.location = ns.location
         self.languages = ns.language
@@ -129,7 +136,8 @@ class FindSubstring(Filter):
         super().initialize()
         if (self.substrings is None) or (len(self.substrings) == 0):
             raise Exception("No substrings provided!")
-        self.substrings = [x.lower() for x in self.substrings]
+        if not self.is_regexp:
+            self.substrings = [x.lower() for x in self.substrings]
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
         self.kept = 0
@@ -183,9 +191,14 @@ class FindSubstring(Filter):
         found = False
         for s in strings:
             for sub in self.substrings:
-                if sub in s:
-                    found = True
-                    break
+                if self.is_regexp:
+                    if re.search(sub, s) is not None:
+                        found = True
+                        break
+                else:
+                    if sub in s:
+                        found = True
+                        break
             if found:
                 break
 
