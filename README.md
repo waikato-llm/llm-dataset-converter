@@ -212,6 +212,7 @@ Filters:
 * [metadata](plugins/metadata.md)
 * [multi-filter](plugins/multi-filter.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
+* [pretrain-max-length](plugins/pretrain-max-length.md)
 * [pretrain-sentences](plugins/pretrain-sentences.md)
 * [require-languages](plugins/require-languages.md)
 * [reset-ids](plugins/reset-ids.md)
