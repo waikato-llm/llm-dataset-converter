@@ -1,8 +1,7 @@
-import copy
 import sys
 import traceback
 
-from typing import List, Optional
+from typing import List
 
 from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
 from ldc.core import init_logging
