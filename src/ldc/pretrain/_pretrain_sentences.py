@@ -6,7 +6,7 @@ from ._core import PretrainData, PretrainFilter, assemble_preformatted, split_in
 
 class PretrainSentences(PretrainFilter):
     """
-    Keeps or discards data records based on keyword(s).
+    Splits pretrain text data into sentences and puts them on separate lines (using new-lines).
     """
 
     def __init__(self, end_chars: str = DEFAULT_END_CHARS, quote_chars: str = DEFAULT_QUOTE_CHARS,
