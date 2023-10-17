@@ -1,5 +1,6 @@
 import abc
 from dataclasses import dataclass
+import string
 from typing import Iterable, List, Dict, Optional
 
 from ldc.core import DOMAIN_PRETRAIN, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS, MetaDataHandler
@@ -309,4 +310,62 @@ def combine_sentences(sentences: List[str], max_sentences: int) -> List[str]:
     if len(current) > 0:
         result.append(" ".join(current))
 
+    return result
+
+
+def find_word_boundary(s: str, pos: int, before: bool) -> int:
+    """
+    Finds the closest word boundary starting from the specified position.
+    In the case that no whitespace/punctuation can be found, the initial position gets returned.
+
+    :param s: the string to search
+    :type s: str
+    :param pos: the position to start the search for a whitespace on
+    :type pos: int
+    :param before: whether to look before or after the position for a word boundary
+    :return: the position
+    :rtype: int
+    """
+    result = pos
+
+    if before:
+        for i in range(pos, -1, -1):
+            if (s[i] in string.whitespace) or (s[i] in string.punctuation):
+                result = i
+                break
+    else:
+        for i in range(pos, len(s)):
+            if (s[i] in string.whitespace) or (s[i] in string.punctuation):
+                result = i
+                break
+
+    return result
+
+
+def apply_max_length(lines: List[str], max_length: int) -> List[str]:
+    """
+    Ensures that no line is longer than the specified maximum length.
+    If a line should be longer, it is split at the word boundary below the limit.
+
+    :param lines: the lines to process
+    :type lines: list
+    :param max_length: the maximum length for a line, <= 0 for unbounded
+    :type max_length: int
+    :return: the processed lines
+    :rtype: int
+    """
+    if max_length <= 0:
+        return lines
+
+    result = []
+    for line in lines:
+        line = line.strip()
+        while len(line) > 0:
+            if len(line) > max_length:
+                pos = find_word_boundary(line, max_length, True)
+                result.append(line[:pos])
+                line = line[pos:].strip()
+            else:
+                result.append(line)
+                line = ""
     return result
