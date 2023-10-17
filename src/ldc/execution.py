@@ -2,6 +2,7 @@ import traceback
 from typing import Union, List, Optional
 
 from ldc.filter import Filter, MultiFilter
+from ldc.core import initialize_handler
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter, Session
 
 
@@ -39,11 +40,14 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
         writer.session = session
 
     # initialize
-    reader.initialize()
+    if not initialize_handler(reader, "reader"):
+        return
     if filter_ is not None:
-        filter_.initialize()
+        if not initialize_handler(filter_, "filter"):
+            return
     if writer is not None:
-        writer.initialize()
+        if not initialize_handler(writer, "writer"):
+            return
 
     # process data
     try:

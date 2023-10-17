@@ -2,6 +2,8 @@ import abc
 import argparse
 import logging
 import os
+import sys
+import traceback
 
 from dataclasses import dataclass
 from typing import List, Union, Dict, Optional
@@ -401,3 +403,31 @@ def domain_suffix(o: Union[str, CommandlineHandler]) -> str:
         return DOMAIN_SUFFIX_LOOKUP[domain]
     else:
         return domain
+
+
+def initialize_handler(handler: CommandlineHandler, handler_type: str, raise_again: bool = False) -> bool:
+    """
+    Initializes the commandline handler and outputs the stacktrace and help screen
+    if it fails to do so. Optionally, the exception can be raised again (to propagate).
+
+    :param handler: the handler to initialize
+    :type handler: CommandlineHandler
+    :param handler_type: the name of the type to use in the error message (eg "reader")
+    :type handler_type: str
+    :param raise_again: whether to raise the Exception again
+    :type raise_again: bool
+    :return: whether the initialization was successful
+    :rtype: str
+    """
+    try:
+        handler.initialize()
+        return True
+    except Exception as e:
+        print("\nFailed to initialize %s '%s':\n" % (handler_type, handler.name()), file=sys.stderr)
+        traceback.print_exc()
+        print()
+        handler.print_help()
+        print()
+        if raise_again:
+            raise e
+        return False

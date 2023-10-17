@@ -1,8 +1,8 @@
 import abc
 from typing import List
 
-from ldc.core import CommandlineHandler, DomainHandler, SessionHandler, Session, DOMAIN_ANY
-from ldc.core import LOGGING_WARN
+from ldc.core import CommandlineHandler, DomainHandler, SessionHandler, Session, DOMAIN_ANY, LOGGING_WARN
+from ldc.core import initialize_handler
 from seppl import InputConsumer, OutputProducer
 
 FILTER_ACTION_KEEP = "keep"
@@ -162,7 +162,7 @@ class MultiFilter(Filter):
         super().initialize()
         for f in self.filters:
             f.session = self.session
-            f.initialize()
+            initialize_handler(f, "filter", raise_again=True)
 
     def process(self, data):
         """
