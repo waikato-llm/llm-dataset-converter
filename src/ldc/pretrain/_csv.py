@@ -7,6 +7,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
+from ldc.utils import str_to_column_index
 
 
 class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
@@ -84,20 +85,13 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         """
         super().initialize()
 
-        try:
-            self.idx_content = int(self.col_content) - 1
-        except:
-            self.idx_content = -1
+        self.idx_content = str_to_column_index(self.col_content)
         if not self.no_header and (self.col_content is None):
             raise Exception("Header row expected in files but no content column specified!")
         if self.no_header and (self.idx_content == -1):
             raise Exception("No Header row expected in files but no content index specified!")
 
-        try:
-            self.idx_id = int(self.col_id) - 1
-        except:
-            self.idx_id = -1
-
+        self.idx_id = str_to_column_index(self.col_id)
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
     def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:

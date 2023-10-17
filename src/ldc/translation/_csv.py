@@ -7,6 +7,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
+from ldc.utils import str_to_column_index
 
 
 class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
@@ -91,18 +92,12 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         super().initialize()
         self.indices = []
         for col in self.columns:
-            try:
-                self.indices.append(int(col) - 1)
-            except:
-                raise Exception("Failed to parse column: %s" % col)
+            self.indices.append(str_to_column_index(col, fail_on_nondigit=True))
         if len(self.columns) != len(self.languages):
             raise Exception("Number of columns and languages differ: %d != %d" % (len(self.columns), len(self.languages)))
 
         if (self.col_id is not None) and (len(self.col_id) > 0):
-            try:
-                self.idx_id = int(self.col_id) - 1
-            except:
-                raise Exception("Failed to parse ID column as integer: %s" % self.col_id)
+            self.idx_id = str_to_column_index(self.col_id)
 
         self._inputs = locate_files(self.source, fail_if_empty=True)
 

@@ -7,6 +7,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
+from ldc.utils import str_to_column_index
 
 
 class AbstractCsvLikePairsReader(PairReader, abc.ABC):
@@ -96,27 +97,15 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        try:
-            self.idx_instruction = int(self.col_instruction) - 1
-        except:
-            self.idx_instruction = -1
-        try:
-            self.idx_input = int(self.col_input) - 1
-        except:
-            self.idx_input = -1
-        try:
-            self.idx_output = int(self.col_output) - 1
-        except:
-            self.idx_output = -1
+        self.idx_instruction = str_to_column_index(self.col_instruction)
+        self.idx_input = str_to_column_index(self.col_input)
+        self.idx_output = str_to_column_index(self.col_output)
         if not self.no_header and (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
             raise Exception("Header row expected but no columns specified!")
         if self.no_header and (self.idx_instruction == -1) and (self.idx_input == -1) and (self.idx_output == -1):
             raise Exception("No header row expected but no column indices specified!")
 
-        try:
-            self.idx_id = int(self.col_id) - 1
-        except:
-            self.idx_id = -1
+        self.idx_id = str_to_column_index(self.col_id) - 1
 
         self._inputs = locate_files(self.source, fail_if_empty=True)
 

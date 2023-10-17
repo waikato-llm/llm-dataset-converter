@@ -6,6 +6,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output, is_compressed
 from ._core import TranslationData, TranslationReader, StreamTranslationWriter
+from ldc.utils import str_to_column_index
 
 
 PH_TAB = "{TAB}"
@@ -130,18 +131,9 @@ class TxtTranslationReader(TranslationReader):
         super().initialize()
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
-        try:
-            self.idx_id = int(self.col_id) - 1
-        except:
-            self.idx_id = -1
-        try:
-            self.idx_lang = int(self.col_lang) - 1
-        except:
-            self.idx_lang = -1
-        try:
-            self.idx_content = int(self.col_content) - 1
-        except:
-            self.idx_content = -1
+        self.idx_id = str_to_column_index(self.col_id)
+        self.idx_lang = str_to_column_index(self.col_lang)
+        self.idx_content = str_to_column_index(self.col_content)
 
         if self.idx_id == -1:
             raise Exception("No column specified for the ID!")
