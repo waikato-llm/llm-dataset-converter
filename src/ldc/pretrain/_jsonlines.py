@@ -5,6 +5,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
+from ldc.utils import add_meta_data
 
 
 class JsonLinesPretrainReader(PretrainReader):
@@ -113,7 +114,7 @@ class JsonLinesPretrainReader(PretrainReader):
 
             meta = None
             if id_ is not None:
-                meta = {"id": id_}
+                meta = add_meta_data(meta, "id", id_)
 
             yield PretrainData(
                 content=val_content,

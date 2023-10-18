@@ -8,6 +8,7 @@ import pyarrow.parquet as pq
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
+from ldc.utils import add_meta_data
 
 
 class ParquetPretrainReader(PretrainReader):
@@ -122,15 +123,13 @@ class ParquetPretrainReader(PretrainReader):
 
             # ID?
             if id_ is not None:
-                meta = {"id": id_}
+                meta = add_meta_data(meta, "id", id_)
 
             # additional meta-data columns
             if self.col_meta is not None:
-                if meta is None:
-                    meta = {}
                 for c in self.col_meta:
-                    if (c in row) and (row[c] is not None):
-                        meta[c] = row[c]
+                    if c in row:
+                        meta = add_meta_data(meta, c, row[c])
 
             yield PretrainData(
                 content=val_content,

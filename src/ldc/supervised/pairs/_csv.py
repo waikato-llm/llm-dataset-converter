@@ -7,7 +7,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
-from ldc.utils import str_to_column_index
+from ldc.utils import str_to_column_index, add_meta_data
 
 
 class AbstractCsvLikePairsReader(PairReader, abc.ABC):
@@ -163,7 +163,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
 
                 meta = None
                 if id_ is not None:
-                    meta = {"id": id_}
+                    meta = add_meta_data(meta, "id", id_)
 
                 yield PairData(
                     instruction=val_instruction,

@@ -7,7 +7,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
-from ldc.utils import str_to_column_index
+from ldc.utils import str_to_column_index, add_meta_data
 
 
 class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
@@ -138,11 +138,11 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
                         if len(cell) > 0:
                             translations[self.languages[index]] = cell
 
-                meta = dict()
+                meta = None
                 if self.idx_id > -1:
-                    meta["id"] = row[self.idx_id]
+                    meta = add_meta_data(meta, "id", row[self.idx_id])
                 else:
-                    meta["id"] = str(count)
+                    meta = add_meta_data(meta, "id", str(count))
 
                 yield TranslationData(
                     translations=translations,

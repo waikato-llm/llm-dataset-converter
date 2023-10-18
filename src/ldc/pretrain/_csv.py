@@ -7,7 +7,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
-from ldc.utils import str_to_column_index
+from ldc.utils import str_to_column_index, add_meta_data
 
 
 class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
@@ -16,7 +16,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, no_header: bool = False,
-                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -27,6 +27,8 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         :type no_header: bool
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -39,6 +41,8 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         self.no_header = no_header
         self.col_id = col_id
         self.idx_id = -1
+        self.col_meta = col_meta
+        self.idx_meta = None
         self._inputs = None
         self._current_input = None
         self._current_reader = None
@@ -63,6 +67,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         parser.add_argument("-i", "--input", type=str, help=self._get_input_description(), required=True, nargs="+")
         parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the text content", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
+        parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name (or 1-based index) of the columns to store in the meta-data", required=False, nargs="*")
         parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
         return parser
 
@@ -77,6 +82,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         self.source = ns.input
         self.col_content = ns.col_content
         self.col_id = ns.col_id
+        self.col_meta = ns.col_meta
         self.no_header = ns.no_header
 
     def initialize(self):
@@ -92,6 +98,12 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
             raise Exception("No Header row expected in files but no content index specified!")
 
         self.idx_id = str_to_column_index(self.col_id)
+
+        if self.col_meta is not None:
+            self.idx_meta = []
+            for c in self.col_meta:
+                self.idx_meta.append(str_to_column_index(c))
+
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
     def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
@@ -129,8 +141,21 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
                         id_ = row[self.col_id]
 
                 meta = None
+
+                # ID?
                 if id_ is not None:
-                    meta = {"id": id_}
+                    meta = add_meta_data(meta, "id", id_)
+
+                # additional meta-data columns
+                if self.col_meta is not None:
+                    if self.no_header:
+                        for i in self.idx_meta:
+                            if i > -1:
+                                meta = add_meta_data(meta, str(i), row[i])
+                    else:
+                        for c in self.col_meta:
+                            if c in row:
+                                meta = add_meta_data(meta, c, row[c])
 
                 if self.no_header:
                     yield PretrainData(
