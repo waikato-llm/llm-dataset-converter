@@ -346,7 +346,7 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None,
-                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -355,13 +355,16 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_content=col_content,
-                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
+                         col_id=col_id, col_meta=col_meta,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -483,7 +486,7 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None,
-                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -492,13 +495,16 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, col_content=col_content,
-                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
+                         col_id=col_id, col_meta=col_meta,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """

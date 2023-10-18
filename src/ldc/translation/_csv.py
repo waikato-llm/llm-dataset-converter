@@ -16,7 +16,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
-                 columns: List[str] = None, languages: List[str] = None,
+                 col_meta: List[str] = None, columns: List[str] = None, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.

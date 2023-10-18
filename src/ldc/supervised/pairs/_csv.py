@@ -17,7 +17,8 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, col_meta: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
