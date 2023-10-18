@@ -5,7 +5,7 @@ For converting large language model (LLM) datasets from one format into another.
 ## Installation
 
 ```bash
-pip install git+https://github.com/waikato-datamining/llm-dataset-converter.git
+pip install git+https://github.com/waikato-llm/llm-dataset-converter.git
 ```
 
 ## Docker
