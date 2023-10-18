@@ -14,7 +14,7 @@ class JsonLinesPretrainReader(PretrainReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, att_content: str = None, att_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -23,6 +23,8 @@ class JsonLinesPretrainReader(PretrainReader):
         :type att_content: str
         :param att_id: the (optional) attribute the ID
         :type att_id: str
+        :param att_meta: the attributes to store in the meta-data, can be None
+        :type att_meta: list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -32,6 +34,7 @@ class JsonLinesPretrainReader(PretrainReader):
         self.source = source
         self.att_content = att_content
         self.att_id = att_id
+        self.att_meta = att_meta
         self._inputs = None
         self._current_input = None
         self._reader = None
@@ -65,6 +68,7 @@ class JsonLinesPretrainReader(PretrainReader):
         parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("--att_content", metavar="ATT", type=str, default=None, help="The attribute with the text content", required=False)
         parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The attribute the record ID (gets stored under 'id' in meta-data)", required=False)
+        parser.add_argument("--att_meta", metavar="ATT", type=str, default=None, help="The attributes to store in the meta-data", required=False, nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -78,6 +82,7 @@ class JsonLinesPretrainReader(PretrainReader):
         self.source = ns.input
         self.att_content = ns.att_content
         self.att_id = ns.att_id
+        self.att_meta = ns.att_meta
 
     def initialize(self):
         """
@@ -113,8 +118,16 @@ class JsonLinesPretrainReader(PretrainReader):
                 id_ = item[self.att_id]
 
             meta = None
+
+            # ID?
             if id_ is not None:
                 meta = add_meta_data(meta, "id", id_)
+
+            # additional meta-data columns
+            if self.att_meta is not None:
+                for c in self.att_meta:
+                    if c in item:
+                        meta = add_meta_data(meta, c, item[c])
 
             yield PretrainData(
                 content=val_content,

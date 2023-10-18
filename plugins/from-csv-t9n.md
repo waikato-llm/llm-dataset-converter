@@ -9,6 +9,7 @@ Reads translation data in CSV format.
 usage: from-csv-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                     [-N LOGGER_NAME] -i INPUT [INPUT ...] -c COL [COL ...] -g
                     LANG [LANG ...] [-n] [--col_id COL]
+                    [--col_meta [COL [COL ...]]]
 
 Reads translation data in CSV format.
 
@@ -31,4 +32,7 @@ optional arguments:
   -n, --no_header       For files with no header row (default: False)
   --col_id COL          The 1-based column containing the row ID (default:
                         None)
+  --col_meta [COL [COL ...]]
+                        The name (or 1-based index) of the columns to store in
+                        the meta-data (default: None)
 ```

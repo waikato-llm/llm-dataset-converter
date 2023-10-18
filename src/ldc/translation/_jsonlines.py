@@ -5,6 +5,7 @@ from typing import Iterable, List, Union
 from ldc.core import LOGGING_WARN, domain_suffix
 from ldc.io import locate_files, open_file, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
+from ldc.utils import add_meta_data
 
 DATA_EXAMPLE = '{ "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." } }'
 DATA_DEFINITION_URL = "https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md"
@@ -16,11 +17,13 @@ class JsonLinesTranslationReader(TranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param att_meta: the attributes to store in the meta-data, can be None
+        :type att_meta: list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -28,6 +31,7 @@ class JsonLinesTranslationReader(TranslationReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.att_meta = att_meta
         self._inputs = None
         self._current_input = None
         self._reader = None
@@ -59,6 +63,7 @@ class JsonLinesTranslationReader(TranslationReader):
         """
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("--att_meta", metavar="ATT", type=str, default=None, help="The attributes to store in the meta-data", required=False, nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -70,6 +75,7 @@ class JsonLinesTranslationReader(TranslationReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.att_meta = ns.att_meta
 
     def initialize(self):
         """
@@ -97,8 +103,17 @@ class JsonLinesTranslationReader(TranslationReader):
             if "translation" in item:
                 translations = item["translation"]
 
+                meta = None
+
+                # additional meta-data columns
+                if self.att_meta is not None:
+                    for c in self.att_meta:
+                        if c in item:
+                            meta = add_meta_data(meta, c, item[c])
+
                 yield TranslationData(
                     translations=translations,
+                    meta=meta,
                 )
 
     def has_finished(self) -> bool:

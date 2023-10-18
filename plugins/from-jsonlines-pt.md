@@ -9,6 +9,7 @@ Reads pretrain data in JsonLines-like JSON format.
 usage: from-jsonlines-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                          [-N LOGGER_NAME] -i INPUT [INPUT ...]
                          [--att_content ATT] [--att_id ATT]
+                         [--att_meta [ATT [ATT ...]]]
 
 Reads pretrain data in JsonLines-like JSON format.
 
@@ -25,4 +26,7 @@ optional arguments:
   --att_content ATT     The attribute with the text content (default: None)
   --att_id ATT          The attribute the record ID (gets stored under 'id' in
                         meta-data) (default: None)
+  --att_meta [ATT [ATT ...]]
+                        The attributes to store in the meta-data (default:
+                        None)
 ```

@@ -8,6 +8,7 @@ Reads translation in JsonLines-like JSON format. Example: { "translation": { "en
 ```
 usage: from-jsonlines-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                           [-N LOGGER_NAME] -i INPUT [INPUT ...]
+                          [--att_meta [ATT [ATT ...]]]
 
 Reads translation in JsonLines-like JSON format. Example: { "translation": {
 "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o
@@ -23,4 +24,7 @@ optional arguments:
   -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                         Path to the JsonLines file(s) to read; glob syntax is
                         supported (default: None)
+  --att_meta [ATT [ATT ...]]
+                        The attributes to store in the meta-data (default:
+                        None)
 ```

@@ -7,7 +7,8 @@ Reads pretrain data in CSV format.
 
 ```
 usage: from-csv-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                   -i INPUT [INPUT ...] [-c COL] [--col_id COL] [-n]
+                   -i INPUT [INPUT ...] [-c COL] [--col_id COL]
+                   [--col_meta [COL [COL ...]]] [-n]
 
 Reads pretrain data in CSV format.
 
@@ -27,5 +28,8 @@ optional arguments:
   --col_id COL          The name (or 1-based index if no header row) of the
                         column with the row IDs (gets stored under 'id' in
                         meta-data) (default: None)
+  --col_meta [COL [COL ...]]
+                        The name (or 1-based index) of the columns to store in
+                        the meta-data (default: None)
   -n, --no_header       For files with no header row (default: False)
 ```

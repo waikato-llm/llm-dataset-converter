@@ -8,7 +8,8 @@ Reads prompt/output pairs in TSV format.
 ```
 usage: from-tsv-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
                    -i INPUT [INPUT ...] [--col_instruction COL]
-                   [--col_input COL] [--col_output COL] [--col_id COL] [-n]
+                   [--col_input COL] [--col_output COL] [--col_id COL]
+                   [--col_meta [COL [COL ...]]] [-n]
 
 Reads prompt/output pairs in TSV format.
 
@@ -32,5 +33,8 @@ optional arguments:
   --col_id COL          The name (or 1-based index if no header row) of the
                         column with the row IDs (gets stored under 'id' in
                         meta-data) (default: None)
+  --col_meta [COL [COL ...]]
+                        The name (or 1-based index) of the columns to store in
+                        the meta-data (default: None)
   -n, --no_header       For files with no header row (default: False)
 ```

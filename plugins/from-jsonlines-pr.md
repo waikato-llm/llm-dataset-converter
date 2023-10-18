@@ -10,6 +10,7 @@ usage: from-jsonlines-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                          [-N LOGGER_NAME] -i INPUT [INPUT ...]
                          [--att_instruction ATT] [--att_input ATT]
                          [--att_output ATT] [--att_id ATT]
+                         [--att_meta [ATT [ATT ...]]]
 
 Reads prompt/output pairs in JsonLines-like JSON format.
 
@@ -29,4 +30,7 @@ optional arguments:
   --att_output ATT      The attribute with the outputs (default: None)
   --att_id ATT          The attribute the record ID (gets stored under 'id' in
                         meta-data) (default: None)
+  --att_meta [ATT [ATT ...]]
+                        The attributes to store in the meta-data (default:
+                        None)
 ```
