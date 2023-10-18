@@ -1,9 +1,10 @@
 import argparse
+import re
 from typing import List, Tuple
 
 from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
-from ldc.core import COMPARISONS, COMPARISON_LESSTHAN, COMPARISON_LESSOREQUAL, COMPARISON_EQUAL, COMPARISON_NOTEQUAL, \
-    COMPARISON_GREATEROREQUAL, COMPARISON_GREATERTHAN, COMPARISON_HELP
+from ldc.core import COMPARISONS_EXT, COMPARISON_LESSTHAN, COMPARISON_LESSOREQUAL, COMPARISON_EQUAL, COMPARISON_NOTEQUAL, \
+    COMPARISON_GREATEROREQUAL, COMPARISON_GREATERTHAN, COMPARISON_CONTAINS, COMPARISON_MATCHES, COMPARISON_EXT_HELP
 from ldc.filter import Filter, FILTER_ACTIONS, FILTER_ACTION_KEEP, FILTER_ACTION_DISCARD
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -37,7 +38,7 @@ class MetaData(Filter):
 
         if action not in FILTER_ACTIONS:
             raise Exception("Invalid action: %s" % action)
-        if comparison not in COMPARISONS:
+        if comparison not in COMPARISONS_EXT:
             raise Exception("Invalid comparison: %s" % comparison)
 
         self.field = field
@@ -104,7 +105,8 @@ class MetaData(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-f", "--field", type=str, help="The meta-data field to use in the comparison", required=True)
         parser.add_argument("-v", "--value", type=str, help="The value to use in the comparison", required=True)
-        parser.add_argument("-c", "--comparison", choices=COMPARISONS, default=COMPARISON_EQUAL, help="How to compare the value with the meta-data value; " + COMPARISON_HELP)
+        parser.add_argument("-c", "--comparison", choices=COMPARISONS_EXT, default=COMPARISON_EQUAL, help="How to compare the value with the meta-data value; " + COMPARISON_EXT_HELP
+                            + "; in case of '" + COMPARISON_CONTAINS + "' and '" + COMPARISON_MATCHES + "' the supplied value represents the substring to find/regexp to search with")
         parser.add_argument("-a", "--action", choices=FILTER_ACTIONS, default=FILTER_ACTION_KEEP, help="How to react when a keyword is encountered")
         return parser
 
@@ -180,7 +182,12 @@ class MetaData(Filter):
             self.discarded += 1
             return None
 
-        v1, v2 = self._ensure_same_type(meta[self.field], self.value)
+        v1 = meta[self.field]
+        v2 = self.value
+        if self.comparison in [COMPARISON_CONTAINS, COMPARISON_MATCHES]:
+            v1 = str(v1)
+        else:
+            v1, v2 = self._ensure_same_type(v1, v2)
 
         # compare
         if self.comparison == COMPARISON_LESSTHAN:
@@ -195,6 +202,10 @@ class MetaData(Filter):
             comp_result = v1 > v2
         elif self.comparison == COMPARISON_GREATEROREQUAL:
             comp_result = v1 >= v2
+        elif self.comparison == COMPARISON_CONTAINS:
+            comp_result = v2 in v1
+        elif self.comparison == COMPARISON_MATCHES:
+            comp_result = re.search(v2, v1) is not None
         else:
             raise Exception("Unhandled comparison: %s" % self.comparison)
 
