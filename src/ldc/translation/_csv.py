@@ -26,6 +26,8 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         :type no_header: bool
         :param col_id: the (optional) 1-based column containing the row ID
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param columns: the columns with the language data (1-based indices)
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
@@ -40,6 +42,8 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         self.no_header = no_header
         self.col_id = col_id
         self.idx_id = -1
+        self.col_meta = col_meta
+        self.idx_meta = None
         self.columns = columns
         self.languages = languages
         self.indices = None
@@ -69,6 +73,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         parser.add_argument("-g", "--languages", metavar="LANG", type=str, default=None, help="The language IDs (ISO 639-1) corresponding to the columns", required=True, nargs="+")
         parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The 1-based column containing the row ID", required=False)
+        parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name (or 1-based index) of the columns to store in the meta-data", required=False, nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -84,6 +89,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         self.languages = ns.languages[:]
         self.no_header = ns.no_header
         self.col_id = ns.col_id
+        self.col_meta = ns.col_meta
 
     def initialize(self):
         """
@@ -98,6 +104,11 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
 
         if (self.col_id is not None) and (len(self.col_id) > 0):
             self.idx_id = str_to_column_index(self.col_id)
+
+        if self.col_meta is not None:
+            self.idx_meta = []
+            for c in self.col_meta:
+                self.idx_meta.append(str_to_column_index(c))
 
         self._inputs = locate_files(self.source, fail_if_empty=True)
 
@@ -139,10 +150,23 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
                             translations[self.languages[index]] = cell
 
                 meta = None
+
+                # ID?
                 if self.idx_id > -1:
                     meta = add_meta_data(meta, "id", row[self.idx_id])
                 else:
                     meta = add_meta_data(meta, "id", str(count))
+
+                # additional meta-data columns
+                if self.col_meta is not None:
+                    if self.no_header:
+                        for i in self.idx_meta:
+                            if i > -1:
+                                meta = add_meta_data(meta, str(i), row[i])
+                    else:
+                        for c in self.col_meta:
+                            if c in row:
+                                meta = add_meta_data(meta, c, row[c])
 
                 yield TranslationData(
                     translations=translations,
@@ -318,7 +342,7 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
-                 columns: List[str] = None, languages: List[str] = None,
+                 col_meta: List[str] = None, columns: List[str] = None, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
@@ -328,6 +352,8 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type no_header: bool
         :param col_id: the (optional) 1-based column containing the row ID
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param columns: the columns with the language data (1-based indices)
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
@@ -338,7 +364,7 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, columns=columns, languages=languages,
-                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
+                         col_id=col_id, col_meta=col_meta, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -458,7 +484,7 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_id: str = None,
-                 columns: List[str] = None, languages: List[str] = None,
+                 col_meta: List[str] = None, columns: List[str] = None, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
@@ -470,6 +496,8 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type columns: list
         :param col_id: the (optional) 1-based column containing the row ID
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
         :param logger_name: the name to use for the logger
@@ -478,7 +506,7 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type logging_level: str
         """
         super().__init__(source=source, no_header=no_header, columns=columns, languages=languages,
-                         col_id=col_id, logger_name=logger_name, logging_level=logging_level)
+                         col_id=col_id, col_meta=col_meta, logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
