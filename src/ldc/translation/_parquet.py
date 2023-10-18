@@ -19,7 +19,7 @@ class ParquetTranslationReader(TranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, col_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -28,6 +28,8 @@ class ParquetTranslationReader(TranslationReader):
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -37,6 +39,7 @@ class ParquetTranslationReader(TranslationReader):
         self.source = source
         self.col_content = col_content
         self.col_id = col_id
+        self.col_meta = col_meta
         self._inputs = None
         self._current_input = None
         self._current_table = None
@@ -70,6 +73,7 @@ class ParquetTranslationReader(TranslationReader):
         parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column with the translation data to retrieve", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
+        parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name of the columns to store in the meta-data", required=False, nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -83,6 +87,7 @@ class ParquetTranslationReader(TranslationReader):
         self.source = ns.input
         self.col_content = ns.col_content
         self.col_id = ns.col_id
+        self.col_meta = ns.col_meta
 
     def initialize(self):
         """
@@ -119,8 +124,18 @@ class ParquetTranslationReader(TranslationReader):
                 id_ = row[self.col_id]
 
             meta = None
+
+            # ID?
             if id_ is not None:
                 meta = {"id": id_}
+
+            # additional meta-data columns
+            if self.col_meta is not None:
+                if meta is None:
+                    meta = {}
+                for c in self.col_meta:
+                    if (c in row) and (row[c] is not None):
+                        meta[c] = row[c]
 
             yield TranslationData(
                 translations=val_content,

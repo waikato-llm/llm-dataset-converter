@@ -9,6 +9,7 @@ Reads text from Parquet database files to use for pretraining.
 usage: from-parquet-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                        [-N LOGGER_NAME] -i INPUT [INPUT ...]
                        [--col_content COL] [--col_id COL]
+                       [--col_meta [COL [COL ...]]]
 
 Reads text from Parquet database files to use for pretraining.
 
@@ -26,4 +27,7 @@ optional arguments:
                         (default: None)
   --col_id COL          The name of the column with the row IDs (gets stored
                         under 'id' in meta-data) (default: None)
+  --col_meta [COL [COL ...]]
+                        The name of the columns to store in the meta-data
+                        (default: None)
 ```

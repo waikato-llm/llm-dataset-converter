@@ -17,7 +17,8 @@ class ParquetPairsReader(PairReader):
 
     def __init__(self, source: Union[str, List[str]] = None,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, col_meta: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
@@ -30,6 +31,8 @@ class ParquetPairsReader(PairReader):
         :type col_output: str
         :param col_id: the (optional) column containing row IDs
         :type col_id: str
+        :param col_meta: the columns to store in the meta-data, can be None
+        :type col_meta: list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -41,6 +44,7 @@ class ParquetPairsReader(PairReader):
         self.col_input = col_input
         self.col_output = col_output
         self.col_id = col_id
+        self.col_meta = col_meta
         self._inputs = None
         self._current_input = None
         self._current_table = None
@@ -76,6 +80,7 @@ class ParquetPairsReader(PairReader):
         parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column with the inputs", required=False)
         parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column with the outputs", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
+        parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name of the columns to store in the meta-data", required=False, nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -91,6 +96,7 @@ class ParquetPairsReader(PairReader):
         self.col_input = ns.col_input
         self.col_output = ns.col_output
         self.col_id = ns.col_id
+        self.col_meta = ns.col_meta
 
     def initialize(self):
         """
@@ -131,8 +137,18 @@ class ParquetPairsReader(PairReader):
                 id_ = row[self.col_id]
 
             meta = None
+
+            # ID?
             if id_ is not None:
                 meta = {"id": id_}
+
+            # additional meta-data columns
+            if self.col_meta is not None:
+                if meta is None:
+                    meta = {}
+                for c in self.col_meta:
+                    if (c in row) and (row[c] is not None):
+                        meta[c] = row[c]
 
             yield PairData(
                 instruction=val_instruction,
