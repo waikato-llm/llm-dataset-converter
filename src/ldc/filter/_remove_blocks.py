@@ -136,8 +136,7 @@ class RemoveBlocks(Filter):
 
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
-        self.kept = 0
-        self.discarded = 0
+        self.removed = 0
 
     def _remove_blocks(self, s: str) -> Tuple[str, int]:
         """
