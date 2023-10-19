@@ -5,6 +5,7 @@ from ._keyword import Keyword
 from ._max_records import MaxRecords
 from ._metadata import MetaData
 from ._pairs_to_pretrain import PairsToPretrain
+from ._remove_blocks import RemoveBlocks
 from ._reset_ids import ResetIDs
 from ._skip_duplicate_ids import SkipDuplicateIDs
 from ._skip_duplicate_text import SkipDuplicateText

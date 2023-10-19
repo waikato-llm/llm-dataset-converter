@@ -215,6 +215,7 @@ Filters:
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [pretrain-max-length](plugins/pretrain-max-length.md)
 * [pretrain-sentences](plugins/pretrain-sentences.md)
+* [remove-blocks](plugins/remove-blocks.md)
 * [require-languages](plugins/require-languages.md)
 * [reset-ids](plugins/reset-ids.md)
 * [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
