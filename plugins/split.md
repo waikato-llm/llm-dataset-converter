@@ -4,7 +4,7 @@
 * accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
 * generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
 
-Splits the incoming records into the specified split ratios by setting the split meta-data value. Also stores the split names in the current session.
+Splits the incoming records into the specified split ratios by setting the 'split' meta-data value. Also stores the split names in the current session.
 
 ```
 usage: split [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
@@ -12,7 +12,7 @@ usage: split [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
              [-n SPLIT_NAMES [SPLIT_NAMES ...]]
 
 Splits the incoming records into the specified split ratios by setting the
-split meta-data value. Also stores the split names in the current session.
+'split' meta-data value. Also stores the split names in the current session.
 
 optional arguments:
   -h, --help            show this help message and exit

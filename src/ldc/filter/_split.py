@@ -16,7 +16,7 @@ META_SPLIT = "split"
 
 class Split(Filter):
     """
-    Suppresses records with IDs that have already passed through.
+    Splits the incoming records into the specified split ratios by setting the 'split' meta-data value. Also stores the split names in the current session.
     """
 
     def __init__(self, split_ratios: List[int] = None, split_names: List[str] = None,
@@ -56,7 +56,7 @@ class Split(Filter):
         :return: the description
         :rtype: str
         """
-        return "Splits the incoming records into the specified split ratios by setting the %s meta-data value. Also stores the split names in the current session." % META_SPLIT
+        return "Splits the incoming records into the specified split ratios by setting the '%s' meta-data value. Also stores the split names in the current session." % META_SPLIT
 
     def domains(self) -> List[str]:
         """
