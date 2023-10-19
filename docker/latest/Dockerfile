@@ -22,7 +22,12 @@ RUN apt-get update && \
        libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 --no-cache-dir install git+https://github.com/waikato-datamining/llm-dataset-converter.git
+RUN pip3 --no-cache-dir install \
+        git+https://github.com/waikato-llm/llm-dataset-converter.git \
+        git+https://github.com/waikato-llm/ldc-google.git \
+        git+https://github.com/waikato-llm/ldc-opeai.git \
+        git+https://github.com/waikato-llm/ldc-pdf.git \
+        git+https://github.com/waikato-llm/ldc-tint.git
 
 COPY bash.bashrc /etc/bash.bashrc
 
