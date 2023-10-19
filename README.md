@@ -395,3 +395,11 @@ execute(
         .set_compression(COMPRESSION_ZSTD),
 )
 ```
+
+
+## Additional libraries
+
+* [Google integration](https://github.com/waikato-llm/ldc-google)
+* [OpenAI integration](https://github.com/waikato-llm/ldc-openai)
+* [PDF handling](https://github.com/waikato-llm/ldc-pdf)
+* [TinT](https://github.com/waikato-llm/ldc-tint)
