@@ -5,7 +5,7 @@ from typing import List
 
 from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
 from ldc.core import init_logging
-from ldc.download import Downloader
+from ldc.downloader import Downloader
 from ldc.help import generate_plugin_usage
 from ldc.registry import available_downloaders
 

@@ -51,7 +51,7 @@ setup(
             "llm-paste=ldc.paste:sys_main",
         ],
         "ldc.downloaders": [
-            "ldc_downloaders1=ldc.download:ldc.download.Downloader"
+            "ldc_downloaders1=ldc.downloader:ldc.downloader.Downloader"
         ],
         "ldc.readers": [
             "lcd_readers1=ldc.pretrain:ldc.io.Reader",

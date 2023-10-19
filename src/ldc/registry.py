@@ -1,7 +1,7 @@
 import logging
 from typing import Dict, List
 
-from ldc.download import Downloader
+from ldc.downloader import Downloader
 from ldc.filter import Filter
 from ldc.io import Reader, Writer
 from seppl import Registry, Plugin, MODE_DYNAMIC
@@ -18,7 +18,7 @@ ENV_LDC_MODULES = "LDC_MODULES"
 # the default modules to inspect (for development)
 # can be overridden with LDC_MODULES environment variable
 DEFAULT_LDC_MODULES = ",".join([
-    "ldc.download",
+    "ldc.downloader",
     "ldc.filter",
     "ldc.pretrain",
     "ldc.supervised.pairs",
