@@ -25,7 +25,7 @@ RUN apt-get update && \
 RUN pip3 --no-cache-dir install \
         git+https://github.com/waikato-llm/llm-dataset-converter.git \
         git+https://github.com/waikato-llm/ldc-google.git \
-        git+https://github.com/waikato-llm/ldc-opeai.git \
+        git+https://github.com/waikato-llm/ldc-openai.git \
         git+https://github.com/waikato-llm/ldc-pdf.git \
         git+https://github.com/waikato-llm/ldc-tint.git
 
