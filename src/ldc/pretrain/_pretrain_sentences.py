@@ -1,7 +1,8 @@
 import argparse
 
 from ldc.core import LOGGING_WARN, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
-from ._core import PretrainData, PretrainFilter, assemble_preformatted, split_into_sentences, combine_sentences
+from ._core import PretrainData, PretrainFilter
+from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
 
 
 class PretrainSentences(PretrainFilter):

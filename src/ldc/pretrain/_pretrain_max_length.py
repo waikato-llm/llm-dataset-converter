@@ -1,7 +1,8 @@
 import argparse
 
 from ldc.core import LOGGING_WARN
-from ._core import PretrainData, PretrainFilter, apply_max_length
+from ._core import PretrainData, PretrainFilter
+from ldc.text_utils import apply_max_length
 
 
 class PretrainMaxLength(PretrainFilter):
