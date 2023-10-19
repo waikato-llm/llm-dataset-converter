@@ -6,6 +6,7 @@ from ._max_records import MaxRecords
 from ._metadata import MetaData
 from ._pairs_to_pretrain import PairsToPretrain
 from ._remove_blocks import RemoveBlocks
+from ._remove_empty import RemoveEmpty
 from ._reset_ids import ResetIDs
 from ._skip_duplicate_ids import SkipDuplicateIDs
 from ._skip_duplicate_text import SkipDuplicateText
