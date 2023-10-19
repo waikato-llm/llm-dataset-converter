@@ -158,15 +158,12 @@ class AssembleSentences(Filter):
         self.logger().info("assembling sentences, #lines: %d -> %d" % (pre, post))
         return "\n".join(result)
 
-    def _process(self, data) -> int:
+    def _process(self, data):
         """
         Removes the blocks.
 
         :param data: the record to process
-        :return: the number of lines that were removed
-        :rtype: int
         """
-        removed = 0
         if isinstance(data, PairData):
             if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
                 data.instruction = self._assemble_sentences(data.instruction)
@@ -188,8 +185,6 @@ class AssembleSentences(Filter):
         else:
             raise Exception("Unhandled data type: %s" % str(type(data)))
 
-        return removed
-
     def process(self, data):
         """
         Processes the data record.
@@ -198,8 +193,6 @@ class AssembleSentences(Filter):
         :return: the potentially updated record or None if to drop
         """
         result = copy.deepcopy(data)
-        removed = self._process(result)
-
-        self.logger().info("removed # lines: %d" % removed)
+        self._process(result)
 
         return result
