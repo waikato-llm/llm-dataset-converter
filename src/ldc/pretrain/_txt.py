@@ -1,13 +1,13 @@
 import argparse
 import os
-import re
 import traceback
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.io import locate_files, open_file, generate_output, is_compressed
 from ._core import PretrainData, PretrainReader, StreamPretrainWriter
-from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
+from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences, remove_empty, \
+    remove_patterns, remove_blocks
 
 METADATA_LINE = "line"
 
@@ -92,7 +92,7 @@ class TxtPretrainReader(PretrainReader):
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported", required=True, nargs="+")
         parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text file on new lines and forwards them as separate records; the index of the line gets stored in the meta-data under '" + METADATA_LINE + "'.")
-        parser.add_argument("-r", "--expr_remove", type=str, default=None, help="Regular expressions for removing sub-strings from the text (gets applied before skipping empty lines).", nargs="*")
+        parser.add_argument("-r", "--expr_remove", type=str, default=None, help="Regular expressions for removing sub-strings from the text (gets applied before skipping empty lines); uses re.sub(...).", nargs="*")
         parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
         parser.add_argument("--sentences", action="store_true", help="For keeping sentences together, e.g., when reading preformatted text.")
         parser.add_argument("-c", "--end_chars", type=str, help="The characters signifying the end of a sentence.", default=DEFAULT_END_CHARS, required=False)
@@ -151,23 +151,7 @@ class TxtPretrainReader(PretrainReader):
         :rtype: list
         """
         pre = len(lines)
-        result = []
-        in_block = False
-
-        for line in lines:
-            if in_block:
-                for end in self.block_removal_end:
-                    if end in line:
-                        in_block = False
-                        continue
-            else:
-                for start in self.block_removal_start:
-                    if start in line:
-                        in_block = True
-                        break
-                if not in_block:
-                    result.append(line)
-
+        result = remove_blocks(lines, self.block_removal_start, self.block_removal_end)
         post = len(result)
         self.logger().info("block removal, #lines: %d -> %d" % (pre, post))
         return result
@@ -189,21 +173,18 @@ class TxtPretrainReader(PretrainReader):
         self.logger().info("assembling sentences, #lines: %d -> %d" % (pre, post))
         return result
 
-    def _remove_patterns(self, lines: List[str]):
+    def _remove_patterns(self, lines: List[str]) -> List[str]:
         """
         Removes all lines that match the patterns (inline).
 
         :param lines: the lines to process
         :type lines: list
+        :return: the processed lines
+        :rtype: list
         """
-        affected = 0
-        for i in range(len(lines)):
-            for expr in self.expr_remove:
-                new_line = re.sub(expr, "", lines[i])
-                if len(lines[i]) != len(new_line):
-                    lines[i] = new_line
-                    affected += 1
+        result, affected = remove_patterns(lines, self.expr_remove)
         self.logger().info("remove patterns, affected #lines: %d" % affected)
+        return result
 
     def _remove_empty(self, lines: List[str]) -> List[str]:
         """
@@ -215,10 +196,7 @@ class TxtPretrainReader(PretrainReader):
         :rtype: list
         """
         pre = len(lines)
-        result = []
-        for line in lines:
-            if len(line.strip()) > 0:
-                result.append(line)
+        result = remove_empty(lines)
         post = len(lines)
         self.logger().info("removing empty, #lines: %d -> %d" % (pre, post))
         return result
@@ -250,7 +228,7 @@ class TxtPretrainReader(PretrainReader):
                 lines = self._assemble_sentences(lines)
             # remove patterns?
             if self.expr_remove is not None:
-                self._remove_patterns(lines)
+                lines = self._remove_patterns(lines)
             # skip empty?
             if self.skip_empty:
                 lines = self._remove_empty(lines)

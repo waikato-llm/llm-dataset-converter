@@ -1,5 +1,6 @@
+import re
 import string
-from typing import List
+from typing import List, Tuple
 
 from ldc.core import DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 
@@ -184,4 +185,77 @@ def apply_max_length(lines: List[str], max_length: int) -> List[str]:
             else:
                 result.append(line)
                 line = ""
+    return result
+
+
+def remove_patterns(lines: List[str], expr_remove: List[str]) -> Tuple[List[str], int]:
+    """
+    Removes all lines that match the patterns (inline).
+
+    :param lines: the lines to process
+    :type lines: list
+    :param expr_remove: the list of regular expression for removing substrings (uses re.sub(expr, "", line))
+    :type expr_remove: list
+    :return: the tuple of processed lines and counter of how many lines were affected
+    :rtype: tuple
+    """
+    result = []
+    affected = 0
+    for i in range(len(lines)):
+        for expr in expr_remove:
+            new_line = re.sub(expr, "", lines[i])
+            if len(lines[i]) != len(new_line):
+                result[i] = new_line
+                affected += 1
+            else:
+                result = lines[i]
+    return result, affected
+
+
+def remove_empty(lines: List[str]) -> List[str]:
+    """
+    Removes empty lines from the list and returns an updated list.
+
+    :param lines: the lines to process
+    :type lines: list
+    :return: the updated list
+    :rtype: list
+    """
+    result = []
+    for line in lines:
+        if len(line.strip()) > 0:
+            result.append(line)
+    return result
+
+
+def remove_blocks(lines: List[str], block_removal_start: List[str], block_removal_end: List[str]) -> List[str]:
+    """
+    Removes blocks of text between the defined start/end strings (incl these strings).
+
+    :param lines: the lines to process
+    :type lines: list
+    :param block_removal_start: the strings signifying the start of a block
+    :type block_removal_start: list
+    :param block_removal_end: the strings signifying the end of a block
+    :type block_removal_end: list
+    :return: the updated lines
+    :rtype: list
+    """
+    result = []
+    in_block = False
+
+    for line in lines:
+        if in_block:
+            for end in block_removal_end:
+                if end in line:
+                    in_block = False
+                    continue
+        else:
+            for start in block_removal_start:
+                if start in line:
+                    in_block = True
+                    break
+            if not in_block:
+                result.append(line)
+
     return result
