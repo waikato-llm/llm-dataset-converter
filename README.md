@@ -205,6 +205,7 @@ Downloaders:
 * [huggingface](plugins/huggingface.md)
 
 Filters:  
+* [assemble-sentences](plugins/assemble-sentences.md)
 * [change-case](plugins/change-case.md)
 * [find-substr](plugins/find-substr.md)
 * [keyword](plugins/keyword.md)
