@@ -101,7 +101,7 @@ class TranslationToPretrain(Filter):
         if self.lang is None:
             raise Exception("No language ID specified!")
 
-    def process(self, data: TranslationData):
+    def _do_process(self, data: TranslationData):
         """
         Processes the data record.
 

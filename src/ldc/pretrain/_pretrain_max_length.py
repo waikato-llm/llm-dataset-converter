@@ -63,7 +63,7 @@ class PretrainMaxLength(PretrainFilter):
         super()._apply_args(ns)
         self.max_length = ns.max_length
 
-    def process(self, data: PretrainData):
+    def _do_process(self, data: PretrainData):
         """
         Processes the data record.
 

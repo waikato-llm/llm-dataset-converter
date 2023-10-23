@@ -152,7 +152,7 @@ class Tee(Filter):
         if self._writer is not None:
             self._writer.session = self.session
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

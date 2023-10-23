@@ -172,7 +172,7 @@ class TextLength(Filter):
 
         return lengths
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

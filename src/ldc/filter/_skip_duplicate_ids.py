@@ -79,7 +79,7 @@ class SkipDuplicateIDs(Filter):
         self._ids = set()
         self._num_ids_skipped = 0
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

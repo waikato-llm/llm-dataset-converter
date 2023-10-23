@@ -101,7 +101,7 @@ class MaxRecords(Filter):
         super().initialize()
         self._counter = 0
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

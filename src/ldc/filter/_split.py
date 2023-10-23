@@ -137,7 +137,7 @@ class Split(Filter):
         for split in self._stats:
             self.logger().info("%s: %d" % (split, self._stats[split]))
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

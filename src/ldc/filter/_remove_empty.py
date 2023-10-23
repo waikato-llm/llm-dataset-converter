@@ -173,7 +173,7 @@ class RemoveEmpty(Filter):
 
         return removed
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

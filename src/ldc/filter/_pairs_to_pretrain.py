@@ -107,7 +107,7 @@ class PairsToPretrain(Filter):
         if (self.data_fields is None) or (len(self.data_fields) == 0):
             raise Exception("No data fields provided!")
 
-    def process(self, data: PairData):
+    def _do_process(self, data: PairData):
         """
         Processes the data record.
 

@@ -114,7 +114,7 @@ class TranslationToPairs(Filter):
         if self.lang_output is None:
             raise Exception("No language ID specified for outputs!")
 
-    def process(self, data: TranslationData):
+    def _do_process(self, data: TranslationData):
         """
         Processes the data record.
 

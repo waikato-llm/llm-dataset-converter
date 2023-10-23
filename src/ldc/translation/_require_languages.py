@@ -77,7 +77,7 @@ class RequireLanguages(TranslationFilter):
         self.kept = 0
         self.discarded = 0
 
-    def process(self, data: TranslationData):
+    def _do_process(self, data: TranslationData):
         """
         Processes the data record.
 

@@ -185,7 +185,7 @@ class AssembleSentences(Filter):
         else:
             raise Exception("Unhandled data type: %s" % str(type(data)))
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

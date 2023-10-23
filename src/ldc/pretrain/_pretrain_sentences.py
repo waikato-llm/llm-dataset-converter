@@ -86,7 +86,7 @@ class PretrainSentences(PretrainFilter):
         if self.max_sentences < 1:
             raise Exception("At least one sentence per line is required, currently set: %d" % self.max_sentences)
 
-    def process(self, data: PretrainData):
+    def _do_process(self, data: PretrainData):
         """
         Processes the data record.
 

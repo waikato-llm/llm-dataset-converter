@@ -1,6 +1,7 @@
 import abc
 import argparse
 import csv
+import sys
 import traceback
 from typing import Iterable, List, Union
 
@@ -327,7 +328,11 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
                     else:
                         row.append(None)
                 row.append(line)
-                self._output_writer.writerow(row)
+                try:
+                    self._output_writer.writerow(row)
+                except:
+                    print("Failed to write row: %s" % str(row), file=sys.stderr)
+                    traceback.print_exc()
 
     def finalize(self):
         """

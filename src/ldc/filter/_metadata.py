@@ -152,7 +152,7 @@ class MetaData(Filter):
             v2 = str(v2).lower() == 'true'
         return v1, v2
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

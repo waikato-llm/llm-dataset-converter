@@ -150,7 +150,7 @@ class SkipDuplicateText(Filter):
 
         return words
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

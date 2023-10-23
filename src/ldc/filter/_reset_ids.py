@@ -101,7 +101,7 @@ class ResetIDs(Filter):
         super().initialize()
         self._counter = self.offset
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 

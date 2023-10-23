@@ -1,5 +1,5 @@
 import abc
-from typing import List
+from typing import List, Union
 
 from ldc.core import CommandlineHandler, DomainHandler, SessionHandler, Session, DOMAIN_ANY, LOGGING_WARN
 from ldc.core import initialize_handler
@@ -75,14 +75,51 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, DomainHandler, S
         """
         self._last_input = current_input
 
+    def _requires_list_input(self) -> bool:
+        """
+        Returns whether lists are expected as input for the _process method.
+
+        :return: True if list inputs are expected by the filter
+        :rtype: bool
+        """
+        return False
+
+    def _do_process(self, data):
+        """
+        Processes the data record(s).
+
+        :param data: the record(s) to process
+        :return: the potentially updated record(s)
+        """
+        raise NotImplementedError()
+
     def process(self, data):
         """
         Processes the data record.
 
-        :param data: the record to process
+        :param data: the record(s) to process
         :return: the potentially updated record or None if to drop
         """
-        raise NotImplementedError()
+        if isinstance(data, list):
+            if self._requires_list_input():
+                result = self._do_process(data)
+            else:
+                result = []
+                for d in data:
+                    r = self._do_process(d)
+                    if r is not None:
+                        if isinstance(r, list):
+                            result.extend(r)
+                        else:
+                            result.append(r)
+                if len(result) == 1:
+                    result = result[0]
+        else:
+            if self._requires_list_input():
+                result = self._do_process([data])
+            else:
+                result = self._do_process(data)
+        return result
 
 
 class MultiFilter(Filter):
@@ -164,7 +201,16 @@ class MultiFilter(Filter):
             f.session = self.session
             initialize_handler(f, "filter", raise_again=True)
 
-    def process(self, data):
+    def _requires_list_input(self) -> bool:
+        """
+        Returns whether lists are supported as input.
+
+        :return: True if list inputs are natively handled by the filter
+        :rtype: bool
+        """
+        return True
+
+    def _do_process(self, data):
         """
         Processes the data record.
 

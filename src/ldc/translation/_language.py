@@ -90,7 +90,7 @@ class Language(TranslationFilter):
         self.languages = [x.lower() for x in self.languages]
         self.discarded = 0
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 
