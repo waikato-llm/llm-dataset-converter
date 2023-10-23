@@ -56,12 +56,12 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                 data = []
                 for item in reader.read():
                     session.count += 1
-                    if filter_ is None:
-                        data.append(item)
-                    else:
+                    if (filter_ is not None) and (item is not None):
                         item = filter_.process(item)
-                        if item is not None:
-                            data.append(item)
+                    if item is not None:
+                        if not isinstance(item, item):
+                            item = [item]
+                        data.extend(item)
                     if session.count % 1000 == 0:
                         session.logger.info("%d records processed..." % session.count)
                 writer.write_batch(data)
@@ -69,14 +69,14 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
             elif isinstance(writer, StreamWriter) or (writer is None):
                 for item in reader.read():
                     session.count += 1
-                    if filter_ is None:
-                        if writer is not None:
-                            writer.write_stream(item)
-                    else:
+                    if (filter_ is not None) and (item is not None):
                         item = filter_.process(item)
-                        if item is not None:
-                            if writer is not None:
-                                writer.write_stream(item)
+                    if item is not None:
+                        if writer is not None:
+                            if not isinstance(item, list):
+                                item = [item]
+                            for i in item:
+                                writer.write_stream(i)
                     if session.count % 1000 == 0:
                         session.logger.info("%d records processed..." % session.count)
                 session.logger.info("%d records processed in total." % session.count)
