@@ -15,9 +15,9 @@ _logger = logging.getLogger(APPEND)
 
 def combine(input_files: List[str], output_file: str = None):
     """
-    Combines the input (text) files side by side.
+    Combines the input (text) files by appending them.
 
-    :param input_files: the files to place side by side
+    :param input_files: the files to append
     :type input_files: str
     :param output_file: the file to store the result in, prints to stdout if None
     :type output_file: str
