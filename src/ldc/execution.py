@@ -59,7 +59,7 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                     if (filter_ is not None) and (item is not None):
                         item = filter_.process(item)
                     if item is not None:
-                        if not isinstance(item, item):
+                        if not isinstance(item, list):
                             item = [item]
                         data.extend(item)
                     if session.count % 1000 == 0:
