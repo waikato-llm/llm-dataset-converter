@@ -1,6 +1,7 @@
 import abc
 import argparse
 import csv
+import sys
 import traceback
 from typing import Iterable, List, Union
 
@@ -323,7 +324,11 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC):
                     row.append(item.translations[lang])
                 else:
                     row.append(None)
-            self._output_writer.writerow(row)
+            try:
+                self._output_writer.writerow(row)
+            except:
+                print("Failed to write row: %s" % str(row), file=sys.stderr)
+                traceback.print_exc()
 
     def finalize(self):
         """

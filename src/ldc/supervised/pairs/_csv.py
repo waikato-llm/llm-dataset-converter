@@ -1,6 +1,7 @@
 import abc
 import argparse
 import csv
+import sys
 import traceback
 from typing import Iterable, List, Union
 
@@ -367,7 +368,11 @@ class AbstractCsvLikePairsWriter(BatchPairWriter, abc.ABC):
                     row.append(item.input)
                 if self.col_output is not None:
                     row.append(item.output)
-            self._output_writer.writerow(row)
+            try:
+                self._output_writer.writerow(row)
+            except:
+                print("Failed to write row: %s" % str(row), file=sys.stderr)
+                traceback.print_exc()
 
     def finalize(self):
         """
