@@ -8,7 +8,7 @@ Splits pretrain text into segments of at most the specified length (uses word bo
 
 ```
 usage: pretrain-max-length [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                           [-N LOGGER_NAME] [-m MAX_LENGTH]
+                           [-N LOGGER_NAME] [-m MAX_LENGTH] [-s]
 
 Splits pretrain text into segments of at most the specified length (uses word
 boundary).
@@ -23,4 +23,8 @@ optional arguments:
   -m MAX_LENGTH, --max_length MAX_LENGTH
                         The maximum text length, use <=0 for unbounded.
                         (default: -1)
+  -s, --split_records   Splits the lines into separate records (one line per
+                        record) after reassambling the lines instead of
+                        combining them back into single document. (default:
+                        False)
 ```

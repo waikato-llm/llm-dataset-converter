@@ -9,7 +9,7 @@ Splits pretrain text data into sentences and puts them on separate lines (using 
 ```
 usage: pretrain-sentences [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                           [-N LOGGER_NAME] [-c END_CHARS] [-q QUOTE_CHARS]
-                          [-m MAX_SENTENCES]
+                          [-m MAX_SENTENCES] [-s]
 
 Splits pretrain text data into sentences and puts them on separate lines
 (using new-lines).
@@ -28,4 +28,8 @@ optional arguments:
                         The characters that represent quotes. (default: "'”’)
   -m MAX_SENTENCES, --max_sentences MAX_SENTENCES
                         The maximum number of sentences per line. (default: 1)
+  -s, --split_records   Splits the lines into separate records (one line per
+                        record) after reassambling the lines instead of
+                        combining them back into single document. (default:
+                        False)
 ```

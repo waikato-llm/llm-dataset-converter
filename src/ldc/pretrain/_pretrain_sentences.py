@@ -1,4 +1,5 @@
 import argparse
+import copy
 
 from ldc.core import LOGGING_WARN, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ._core import PretrainData, PretrainFilter
@@ -11,7 +12,8 @@ class PretrainSentences(PretrainFilter):
     """
 
     def __init__(self, end_chars: str = DEFAULT_END_CHARS, quote_chars: str = DEFAULT_QUOTE_CHARS,
-                 max_sentences: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 max_sentences: int = 1, split_records: bool = False,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
@@ -21,6 +23,8 @@ class PretrainSentences(PretrainFilter):
         :type quote_chars: str
         :param max_sentences: the maximum number of sentences per line
         :type max_sentences: int
+        :param split_records: whether to split the records
+        :type split_records: bool
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -30,6 +34,7 @@ class PretrainSentences(PretrainFilter):
         self.end_chars = end_chars
         self.quote_chars = quote_chars
         self.max_sentences = max_sentences
+        self.split_records = split_records
 
     def name(self) -> str:
         """
@@ -60,6 +65,7 @@ class PretrainSentences(PretrainFilter):
         parser.add_argument("-c", "--end_chars", type=str, help="The characters signifying the end of a sentence.", default=DEFAULT_END_CHARS, required=False)
         parser.add_argument("-q", "--quote_chars", type=str, help="The characters that represent quotes.", default=DEFAULT_QUOTE_CHARS, required=False)
         parser.add_argument("-m", "--max_sentences", type=int, help="The maximum number of sentences per line.", default=1, required=False)
+        parser.add_argument("-s", "--split_records", action="store_true", help="Splits the lines into separate records (one line per record) after reassambling the lines instead of combining them back into single document.", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -73,6 +79,7 @@ class PretrainSentences(PretrainFilter):
         self.end_chars = ns.end_chars
         self.quote_chars = ns.quote_chars
         self.max_sentences = ns.max_sentences
+        self.split_records = ns.split_records
 
     def initialize(self):
         """
@@ -105,7 +112,17 @@ class PretrainSentences(PretrainFilter):
             return result
         self.logger().info("splitting into sentences, #lines: %d -> %d" % (pre, post))
 
-        return PretrainData(
-            content="\n".join(lines),
-            meta=data.meta
-        )
+        if self.split_records:
+            result = []
+            for line in lines:
+                result.append(PretrainData(
+                    content=line,
+                    meta=copy.deepcopy(data.meta)
+                ))
+        else:
+            result = PretrainData(
+                content="\n".join(lines),
+                meta=data.meta
+            )
+
+        return result
