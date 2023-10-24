@@ -7,6 +7,7 @@ import traceback
 from typing import List
 
 from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
+from ldc.io import locate_files
 
 APPEND = "llm-append"
 
@@ -22,7 +23,11 @@ def combine(input_files: List[str], output_file: str = None):
     :param output_file: the file to store the result in, prints to stdout if None
     :type output_file: str
     """
-    _logger.info("Input files: %s" % ", ".join(input_files))
+    if len(input_files) >= 10:
+        input_files_info = "%d files" % len(input_files)
+    else:
+        input_files_info = ", ".join(input_files)
+    _logger.info("Input files: %s" % input_files_info)
     if output_file is not None:
         _logger.info("Output file: %s" % output_file)
 
@@ -64,12 +69,14 @@ def main(args=None):
         description="Tool for combining multiple text files by appending them.",
         prog=APPEND,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-i", "--input_file", metavar="FILE", help="The files to append.", type=str, required=True, nargs="+")
-    parser.add_argument("-o", "--output_file", metavar="FILE", help="The path of the file to store the combined data in; outputs it to stdout if omitted or a directory", default=None, type=str, required=False)
+    parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to append; glob syntax is supported", required=False, nargs="*")
+    parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to append", required=False, nargs="*")
+    parser.add_argument("-o", "--output", metavar="FILE", help="The path of the file to store the combined data in; outputs it to stdout if omitted or a directory", default=None, type=str, required=False)
     parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
     parsed = parser.parse_args(args=args)
     set_logging_level(_logger, parsed.logging_level)
-    combine(input_files=parsed.input_file, output_file=parsed.output_file)
+    input_files = locate_files(parsed.input, input_lists=parsed.input_list, fail_if_empty=True)
+    combine(input_files=input_files, output_file=parsed.output)
 
 
 def sys_main() -> int:

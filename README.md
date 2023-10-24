@@ -129,16 +129,21 @@ optional arguments:
 ### Combining multiple files (one-after-the-other)
 
 ```
-usage: llm-append [-h] -i FILE [FILE ...] [-o FILE]
+usage: llm-append [-h] [-i [INPUT [INPUT ...]]]
+                  [-I [INPUT_LIST [INPUT_LIST ...]]] [-o FILE]
                   [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool for combining multiple text files by appending them.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i FILE [FILE ...], --input_file FILE [FILE ...]
-                        The files to append. (default: None)
-  -o FILE, --output_file FILE
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
+                        Path to the text file(s) to append; glob syntax is
+                        supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to
+                        append (default: None)
+  -o FILE, --output FILE
                         The path of the file to store the combined data in;
                         outputs it to stdout if omitted or a directory
                         (default: None)
@@ -149,16 +154,21 @@ optional arguments:
 ### Combining multiple files (side-by-side)
 
 ```
-usage: llm-paste [-h] -i FILE [FILE ...] [-o FILE] [-s [SEP [SEP ...]]]
-                 [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: llm-paste [-h] [-i [INPUT [INPUT ...]]]
+                 [-I [INPUT_LIST [INPUT_LIST ...]]] [-o FILE]
+                 [-s [SEP [SEP ...]]] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool for combining multiple text files by placing them side-by-side.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i FILE [FILE ...], --input_file FILE [FILE ...]
-                        The files to combine side-by-side. (default: None)
-  -o FILE, --output_file FILE
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
+                        Path to the text file(s) to combine; glob syntax is
+                        supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to
+                        combine (default: None)
+  -o FILE, --output FILE
                         The path of the file to store the combined data in;
                         outputs it to stdout if omitted or a directory
                         (default: None)
