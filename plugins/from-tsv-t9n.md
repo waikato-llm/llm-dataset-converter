@@ -7,7 +7,8 @@ Reads translation data in TSV format.
 
 ```
 usage: from-tsv-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                    [-N LOGGER_NAME] -i INPUT [INPUT ...] -c COL [COL ...] -g
+                    [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
+                    [-I [INPUT_LIST [INPUT_LIST ...]]] -c COL [COL ...] -g
                     LANG [LANG ...] [-n] [--col_id COL]
                     [--col_meta [COL [COL ...]]]
 
@@ -20,9 +21,12 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
                         Path to the TSV file(s) to read; glob syntax is
                         supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to use
+                        (default: None)
   -c COL [COL ...], --columns COL [COL ...]
                         The 1-based column indices with the language data
                         (default: None)

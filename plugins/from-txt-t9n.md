@@ -7,7 +7,8 @@ Reads translation data from plain text files, with each line representing a reco
 
 ```
 usage: from-txt-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                    [-N LOGGER_NAME] -i INPUT [INPUT ...] [--col_id COL]
+                    [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
+                    [-I [INPUT_LIST [INPUT_LIST ...]]] [--col_id COL]
                     [--col_lang COL] --col_content COL [--col_sep COL_SEP]
                     [--lang_in_id] [--expr_lang EXPR_LANG] [--expr_id EXPR_ID]
 
@@ -21,9 +22,12 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
                         Path to the text file(s) to read; glob syntax is
                         supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to use
+                        (default: None)
   --col_id COL          The 1-based index of the column with the row IDs (gets
                         stored under 'id' in meta-data) (default: None)
   --col_lang COL        The 1-based of the column with the language ID

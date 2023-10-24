@@ -12,12 +12,13 @@ class AlpacaReader(PairReader):
     Reader for the Alpaca JSON format.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -25,6 +26,7 @@ class AlpacaReader(PairReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self._inputs = None
         self._current_input = None
 
@@ -54,7 +56,8 @@ class AlpacaReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -66,13 +69,14 @@ class AlpacaReader(PairReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
 
     def initialize(self):
         """
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
 
     def read(self) -> Iterable[PairData]:
         """

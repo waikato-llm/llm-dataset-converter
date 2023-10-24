@@ -16,12 +16,13 @@ class JsonLinesTranslationReader(TranslationReader):
     Reader for the JsonLines JSON format.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param att_meta: the attributes to store in the meta-data, can be None
         :type att_meta: list
         :param logger_name: the name to use for the logger
@@ -31,6 +32,7 @@ class JsonLinesTranslationReader(TranslationReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.att_meta = att_meta
         self._inputs = None
         self._current_input = None
@@ -62,7 +64,8 @@ class JsonLinesTranslationReader(TranslationReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
         parser.add_argument("--att_meta", metavar="ATT", type=str, default=None, help="The attributes to store in the meta-data", required=False, nargs="*")
         return parser
 
@@ -75,6 +78,7 @@ class JsonLinesTranslationReader(TranslationReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.att_meta = ns.att_meta
 
     def initialize(self):
@@ -82,7 +86,7 @@ class JsonLinesTranslationReader(TranslationReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
 
     def read(self) -> Iterable[TranslationData]:
         """

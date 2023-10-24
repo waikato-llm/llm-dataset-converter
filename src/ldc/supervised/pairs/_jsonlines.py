@@ -13,13 +13,14 @@ class JsonLinesPairReader(PairReader):
     Reader for the JsonLines JSON format.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  att_instruction: str = None, att_input: str = None, att_output: str = None, att_id: str = None,
                  att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param att_instruction: the attribute with the instruction data
         :type att_instruction: str
         :param att_input: the attribute with the input data
@@ -37,6 +38,7 @@ class JsonLinesPairReader(PairReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.att_instruction = att_instruction
         self.att_input = att_input
         self.att_output = att_output
@@ -72,7 +74,8 @@ class JsonLinesPairReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
         parser.add_argument("--att_instruction", metavar="ATT", type=str, default=None, help="The attribute with the instructions", required=False)
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute with the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute with the outputs", required=False)
@@ -89,6 +92,7 @@ class JsonLinesPairReader(PairReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.att_instruction = ns.att_instruction
         self.att_input = ns.att_input
         self.att_output = ns.att_output
@@ -100,7 +104,7 @@ class JsonLinesPairReader(PairReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
         if (self.att_instruction is None) and (self.att_input is None) and (self.att_output is None):
             raise Exception("No attributes specified!")
 

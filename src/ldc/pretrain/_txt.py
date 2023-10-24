@@ -17,7 +17,8 @@ class TxtPretrainReader(PretrainReader):
     Reader for plain text files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, split_lines: bool = False, skip_empty: bool = False,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
+                 split_lines: bool = False, skip_empty: bool = False,
                  expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
                  quote_chars: str = DEFAULT_QUOTE_CHARS,
                  block_removal_start: List[str] = None, block_removal_end: List[str] = None,
@@ -26,6 +27,7 @@ class TxtPretrainReader(PretrainReader):
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param split_lines: whether to split the lines of the text into separate records
         :type split_lines: bool
         :param skip_empty: skips empty lines
@@ -51,6 +53,7 @@ class TxtPretrainReader(PretrainReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.split_lines = split_lines
         self.skip_empty = skip_empty
         self.expr_remove = expr_remove
@@ -90,7 +93,8 @@ class TxtPretrainReader(PretrainReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
         parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text file on new lines and forwards them as separate records; the index of the line gets stored in the meta-data under '" + METADATA_LINE + "'.")
         parser.add_argument("-r", "--expr_remove", type=str, default=None, help="Regular expressions for removing sub-strings from the text (gets applied before skipping empty lines); uses re.sub(...).", nargs="*")
         parser.add_argument("-e", "--skip_empty", action="store_true", help="Removes empty lines from the data.")
@@ -111,6 +115,7 @@ class TxtPretrainReader(PretrainReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.split_lines = ns.split_lines
         self.skip_empty = ns.skip_empty
         self.expr_remove = ns.expr_remove
@@ -126,7 +131,7 @@ class TxtPretrainReader(PretrainReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
         if self.end_chars is None:
             self.end_chars = ""
         if self.quote_chars is None:

@@ -16,12 +16,14 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
     Ancestor for readers of CSV-like files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, no_header: bool = False,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
+                 col_content: str = None, no_header: bool = False,
                  col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param col_content: the column with the content
         :type col_content: str
         :param no_header: whether the data files have no header
@@ -37,6 +39,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.col_content = col_content
         self.idx_content = -1
         self.no_header = no_header
@@ -57,6 +60,15 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         """
         raise NotImplementedError()
 
+    def _get_input_list_description(self) -> str:
+        """
+        Returns the description to use for the input_list file in the argparser.
+
+        :return: the description
+        :rtype: str
+        """
+        return "Path to the text file(s) listing the data files to use"
+
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
         Creates an argument parser. Derived classes need to fill in the options.
@@ -65,7 +77,8 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help=self._get_input_description(), required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help=self._get_input_description(), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help=self._get_input_list_description(), required=False, nargs="*")
         parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the text content", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name (or 1-based index) of the columns to store in the meta-data", required=False, nargs="*")
@@ -81,6 +94,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.col_content = ns.col_content
         self.col_id = ns.col_id
         self.col_meta = ns.col_meta
@@ -105,7 +119,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
             for c in self.col_meta:
                 self.idx_meta.append(str_to_column_index(c))
 
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
 
     def _init_reader(self, current_input) -> Union[csv.reader, csv.DictReader]:
         """
@@ -350,12 +364,14 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
     Reader for CSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
+                 no_header: bool = False, col_content: str = None,
                  col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param col_content: the column with the content
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
@@ -367,7 +383,8 @@ class CsvPretrainReader(AbstractCsvLikePretrainReader):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(source=source, no_header=no_header, col_content=col_content,
+        super().__init__(source=source, source_list=source_list,
+                         no_header=no_header, col_content=col_content,
                          col_id=col_id, col_meta=col_meta,
                          logger_name=logger_name, logging_level=logging_level)
 
@@ -490,12 +507,14 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
     Reader for TSV files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, no_header: bool = False, col_content: str = None,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
+                 no_header: bool = False, col_content: str = None,
                  col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param col_content: the column with the content
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
@@ -507,7 +526,8 @@ class TsvPretrainReader(AbstractCsvLikePretrainReader):
         :param logging_level: the logging level to use
         :type logging_level: str
         """
-        super().__init__(source=source, no_header=no_header, col_content=col_content,
+        super().__init__(source=source, source_list=source_list,
+                         no_header=no_header, col_content=col_content,
                          col_id=col_id, col_meta=col_meta,
                          logger_name=logger_name, logging_level=logging_level)
 

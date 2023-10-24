@@ -16,7 +16,7 @@ class ParquetPairsReader(PairReader):
     Reader for Parquet database files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  col_instruction: str = None, col_input: str = None, col_output: str = None,
                  col_id: str = None, col_meta: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
@@ -24,6 +24,7 @@ class ParquetPairsReader(PairReader):
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param col_instruction: the column with the instruction data
         :type col_instruction: str
         :param col_input: the column with the input data
@@ -41,6 +42,7 @@ class ParquetPairsReader(PairReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.col_instruction = col_instruction
         self.col_input = col_input
         self.col_output = col_output
@@ -76,7 +78,8 @@ class ParquetPairsReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
         parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column with the instructions", required=False)
         parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column with the inputs", required=False)
         parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column with the outputs", required=False)
@@ -93,6 +96,7 @@ class ParquetPairsReader(PairReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.col_instruction = ns.col_instruction
         self.col_input = ns.col_input
         self.col_output = ns.col_output
@@ -104,7 +108,7 @@ class ParquetPairsReader(PairReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
         if (self.col_instruction is None) and (self.col_input is None) and (self.col_output is None):
             raise Exception("No columns specified!")
 

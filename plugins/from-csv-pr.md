@@ -7,8 +7,9 @@ Reads prompt/output pairs in CSV format.
 
 ```
 usage: from-csv-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                   -i INPUT [INPUT ...] [--col_instruction COL]
-                   [--col_input COL] [--col_output COL] [--col_id COL]
+                   [-i [INPUT [INPUT ...]]] [-I [INPUT_LIST [INPUT_LIST ...]]]
+                   [--col_instruction COL] [--col_input COL]
+                   [--col_output COL] [--col_id COL]
                    [--col_meta [COL [COL ...]]] [-n]
 
 Reads prompt/output pairs in CSV format.
@@ -20,9 +21,12 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
                         Path to the CSV file(s) to read; glob syntax is
                         supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to use
+                        (default: None)
   --col_instruction COL
                         The name of the column (or 1-based index if no header
                         row) with the instructions (default: None)

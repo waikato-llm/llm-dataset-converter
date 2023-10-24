@@ -19,12 +19,14 @@ class ParquetTranslationReader(TranslationReader):
     Reader for Parquet database files.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, col_content: str = None, col_id: str = None,
-                 col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
+                 col_content: str = None, col_id: str = None, col_meta: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param col_content: the column with the content
         :type col_content: str
         :param col_id: the (optional) column containing row IDs
@@ -38,6 +40,7 @@ class ParquetTranslationReader(TranslationReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.col_content = col_content
         self.col_id = col_id
         self.col_meta = col_meta
@@ -71,7 +74,8 @@ class ParquetTranslationReader(TranslationReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
         parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The name of the column with the translation data to retrieve", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name of the columns to store in the meta-data", required=False, nargs="*")
@@ -86,6 +90,7 @@ class ParquetTranslationReader(TranslationReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.col_content = ns.col_content
         self.col_id = ns.col_id
         self.col_meta = ns.col_meta
@@ -95,7 +100,7 @@ class ParquetTranslationReader(TranslationReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
         if self.col_content is None:
             raise Exception("No content column specified!")
 

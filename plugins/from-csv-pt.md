@@ -7,8 +7,8 @@ Reads pretrain data in CSV format.
 
 ```
 usage: from-csv-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                   -i INPUT [INPUT ...] [-c COL] [--col_id COL]
-                   [--col_meta [COL [COL ...]]] [-n]
+                   [-i [INPUT [INPUT ...]]] [-I [INPUT_LIST [INPUT_LIST ...]]]
+                   [-c COL] [--col_id COL] [--col_meta [COL [COL ...]]] [-n]
 
 Reads pretrain data in CSV format.
 
@@ -19,9 +19,12 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
                         Path to the CSV file(s) to read; glob syntax is
                         supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to use
+                        (default: None)
   -c COL, --col_content COL
                         The name (or 1-based index if no header row) of the
                         column with the text content (default: None)

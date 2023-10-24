@@ -7,7 +7,8 @@ Reads prompt/output pairs in JsonLines-like JSON format.
 
 ```
 usage: from-jsonlines-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                         [-N LOGGER_NAME] -i INPUT [INPUT ...]
+                         [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
+                         [-I [INPUT_LIST [INPUT_LIST ...]]]
                          [--att_instruction ATT] [--att_input ATT]
                          [--att_output ATT] [--att_id ATT]
                          [--att_meta [ATT [ATT ...]]]
@@ -21,9 +22,12 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
                         Path to the JsonLines file(s) to read; glob syntax is
                         supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to use
+                        (default: None)
   --att_instruction ATT
                         The attribute with the instructions (default: None)
   --att_input ATT       The attribute with the inputs (default: None)

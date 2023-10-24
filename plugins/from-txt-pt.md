@@ -8,9 +8,9 @@ Text files can be split into lines and forwarded as separate records as well.
 
 ```
 usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                   -i INPUT [INPUT ...] [-s]
-                   [-r [EXPR_REMOVE [EXPR_REMOVE ...]]] [-e] [--sentences]
-                   [-c END_CHARS] [-q QUOTE_CHARS]
+                   [-i [INPUT [INPUT ...]]] [-I [INPUT_LIST [INPUT_LIST ...]]]
+                   [-s] [-r [EXPR_REMOVE [EXPR_REMOVE ...]]] [-e]
+                   [--sentences] [-c END_CHARS] [-q QUOTE_CHARS]
                    [--block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]]
                    [--block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]]
                    [-m MAX_SENTENCES]
@@ -26,9 +26,12 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
                         Path to the text file(s) to read; glob syntax is
                         supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the data files to use
+                        (default: None)
   -s, --split_lines     Splits the text file on new lines and forwards them as
                         separate records; the index of the line gets stored in
                         the meta-data under 'line'. (default: False)

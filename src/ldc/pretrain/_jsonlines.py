@@ -13,12 +13,14 @@ class JsonLinesPretrainReader(PretrainReader):
     Reader for the JsonLines JSON format.
     """
 
-    def __init__(self, source: Union[str, List[str]] = None, att_content: str = None, att_id: str = None,
-                 att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
+                 att_content: str = None, att_id: str = None, att_meta: List[str] = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the reader.
 
         :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param att_content: the attribute with the content
         :type att_content: str
         :param att_id: the (optional) attribute the ID
@@ -32,6 +34,7 @@ class JsonLinesPretrainReader(PretrainReader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.att_content = att_content
         self.att_id = att_id
         self.att_meta = att_meta
@@ -65,7 +68,8 @@ class JsonLinesPretrainReader(PretrainReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=True, nargs="+")
+        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
         parser.add_argument("--att_content", metavar="ATT", type=str, default=None, help="The attribute with the text content", required=False)
         parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The attribute the record ID (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("--att_meta", metavar="ATT", type=str, default=None, help="The attributes to store in the meta-data", required=False, nargs="*")
@@ -80,6 +84,7 @@ class JsonLinesPretrainReader(PretrainReader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.att_content = ns.att_content
         self.att_id = ns.att_id
         self.att_meta = ns.att_meta
@@ -89,7 +94,7 @@ class JsonLinesPretrainReader(PretrainReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
         if self.att_content is None:
             raise Exception("No content attribute specified!")
 
