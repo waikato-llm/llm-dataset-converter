@@ -221,6 +221,8 @@ class TxtPretrainReader(PretrainReader):
             try:
                 with open_file(self.session.current_input, mode="rt") as fp:
                     lines = fp.readlines()
+            except KeyboardInterrupt as e:
+                raise e
             except:
                 self.logger().warning("Failed to read: %s\n%s" % (self.session.current_input, traceback.format_exc(1)))
                 continue
