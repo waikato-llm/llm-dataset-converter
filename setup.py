@@ -44,11 +44,11 @@ setup(
     author_email='fracpete@waikato.ac.nz',
     entry_points={
         "console_scripts": [
-            "llm-append=ldc.append:sys_main",
-            "llm-convert=ldc.convert:sys_main",
-            "llm-download=ldc.download:sys_main",
-            "llm-help=ldc.help:sys_main",
-            "llm-paste=ldc.paste:sys_main",
+            "llm-append=ldc.tool.append:sys_main",
+            "llm-convert=ldc.tool.convert:sys_main",
+            "llm-download=ldc.tool.download:sys_main",
+            "llm-help=ldc.tool.help:sys_main",
+            "llm-paste=ldc.tool.paste:sys_main",
         ],
         "ldc.downloaders": [
             "ldc_downloaders1=ldc.downloader:ldc.downloader.Downloader"
