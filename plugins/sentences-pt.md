@@ -1,4 +1,4 @@
-# pretrain-sentences
+# sentences-pt
 
 * domain(s): pretrain
 * accepts: ldc.pretrain.PretrainData
@@ -7,9 +7,9 @@
 Splits pretrain text data into sentences and puts them on separate lines (using new-lines).
 
 ```
-usage: pretrain-sentences [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                          [-N LOGGER_NAME] [-c END_CHARS] [-q QUOTE_CHARS]
-                          [-m MAX_SENTENCES] [-s]
+usage: sentences-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                    [-N LOGGER_NAME] [-c END_CHARS] [-q QUOTE_CHARS]
+                    [-m MAX_SENTENCES] [-s]
 
 Splits pretrain text data into sentences and puts them on separate lines
 (using new-lines).

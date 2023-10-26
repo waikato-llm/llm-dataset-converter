@@ -1,7 +1,7 @@
 import argparse
 import copy
 
-from ldc.core import LOGGING_WARN, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
+from ldc.core import LOGGING_WARN, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS, domain_suffix
 from ._core import PretrainData, PretrainFilter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
 
@@ -43,7 +43,7 @@ class PretrainSentences(PretrainFilter):
         :return: the name
         :rtype: str
         """
-        return "pretrain-sentences"
+        return "sentences-" + domain_suffix(self)
 
     def description(self) -> str:
         """

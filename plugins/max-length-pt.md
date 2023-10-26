@@ -1,4 +1,4 @@
-# pretrain-max-length
+# max-length-pt
 
 * domain(s): pretrain
 * accepts: ldc.pretrain.PretrainData
@@ -7,8 +7,8 @@
 Splits pretrain text into segments of at most the specified length (uses word boundary).
 
 ```
-usage: pretrain-max-length [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                           [-N LOGGER_NAME] [-m MAX_LENGTH] [-s]
+usage: max-length-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                     [-N LOGGER_NAME] [-m MAX_LENGTH] [-s]
 
 Splits pretrain text into segments of at most the specified length (uses word
 boundary).

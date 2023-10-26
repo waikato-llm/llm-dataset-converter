@@ -1,7 +1,7 @@
 import argparse
 import copy
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ._core import PretrainData, PretrainFilter
 from ldc.text_utils import apply_max_length
 
@@ -35,7 +35,7 @@ class PretrainMaxLength(PretrainFilter):
         :return: the name
         :rtype: str
         """
-        return "pretrain-max-length"
+        return "max-length-" + domain_suffix(self)
 
     def description(self) -> str:
         """

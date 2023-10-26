@@ -1,6 +1,6 @@
 import copy
 
-from ldc.core import LOGGING_WARN
+from ldc.core import LOGGING_WARN, domain_suffix
 from ._core import PretrainData, PretrainFilter
 
 
@@ -27,7 +27,7 @@ class PretrainSplit(PretrainFilter):
         :return: the name
         :rtype: str
         """
-        return "pretrain-split"
+        return "split-" + domain_suffix(self)
 
     def description(self) -> str:
         """

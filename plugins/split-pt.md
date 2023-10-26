@@ -1,4 +1,4 @@
-# pretrain-split
+# split-pt
 
 * domain(s): pretrain
 * accepts: ldc.pretrain.PretrainData
@@ -7,8 +7,7 @@
 Splits pretrain text data into separate records on new lines. Automatically skips empty lines.
 
 ```
-usage: pretrain-split [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                      [-N LOGGER_NAME]
+usage: split-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
 
 Splits pretrain text data into separate records on new lines. Automatically
 skips empty lines.
