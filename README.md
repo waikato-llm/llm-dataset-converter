@@ -180,6 +180,51 @@ optional arguments:
                         The logging level to use (default: WARN)
 ```
 
+### Locating files
+
+Readers tend to support input via file lists. The `llm-find` tool can generate
+these.
+
+```
+usage: llm-find [-h] -i DIR [DIR ...] [-r] -o FILE [-m [REGEXP [REGEXP ...]]]
+                [-n [REGEXP [REGEXP ...]]]
+                [--split_ratios [SPLIT_RATIOS [SPLIT_RATIOS ...]]]
+                [--split_names [SPLIT_NAMES [SPLIT_NAMES ...]]]
+                [--split_name_separator SPLIT_NAME_SEPARATOR]
+                [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+
+Tool for locating files in directories that match certain patterns and store
+them in files.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i DIR [DIR ...], --input DIR [DIR ...]
+                        The dir(s) to scan for files. (default: None)
+  -r, --recursive       Whether to search the directories recursively
+                        (default: False)
+  -o FILE, --output FILE
+                        The file to store the located file names in (default:
+                        None)
+  -m [REGEXP [REGEXP ...]], --match [REGEXP [REGEXP ...]]
+                        The regular expression that the (full) file names must
+                        match to be included (default: None)
+  -n [REGEXP [REGEXP ...]], --not-match [REGEXP [REGEXP ...]]
+                        The regular expression that the (full) file names must
+                        match to be excluded (default: None)
+  --split_ratios [SPLIT_RATIOS [SPLIT_RATIOS ...]]
+                        The split ratios to use for generating the splits
+                        (int; must sum up to 100) (default: None)
+  --split_names [SPLIT_NAMES [SPLIT_NAMES ...]]
+                        The split names to use as filename suffixes for the
+                        generated splits (before .ext) (default: None)
+  --split_name_separator SPLIT_NAME_SEPARATOR
+                        The separator to use between file name and split name
+                        (default: -)
+  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                        The logging level to use (default: WARN)
+```
+
+
 ### Generating help screens for plugins
 
 ```
@@ -360,6 +405,40 @@ llm-download \
 
 **NB:** Hugging Face will cache files locally in your home directory before
 copying it to the location that you specified.
+
+
+### Locate files
+
+The following command scans the `/some/dir` directory recursively for `.txt`
+files that do not have `raw` in the file path:
+
+```
+llm-find \
+    -l INFO \
+    -i /some/dir/
+    -r \
+    -m ".*\.txt" \
+    -n ".*\/raw\/.*" \
+    -o ./files.txt
+```
+
+The same command, but splitting the files into training, validation and test 
+lists, using a ratio of 70/15/15:
+
+```
+llm-find \
+    -l INFO \
+    -i /some/dir/
+    -r \
+    -m ".*\.txt" \
+    -n ".*\/raw\/.*" \
+    --split_ratios 70 15 15 \
+    --split_names train val test \
+    -o ./files.txt
+```
+
+This results in the following three files: `files-train.txt`, `files-val.txt` 
+and `files-test.txt`.
 
 
 ## Code example
