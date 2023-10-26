@@ -6,7 +6,7 @@ from ._core import PretrainData, PretrainFilter
 from ldc.text_utils import apply_max_length
 
 
-class PretrainMaxLength(PretrainFilter):
+class MaxLength(PretrainFilter):
     """
     Splits pretrain text into segments of at most the specified length (uses word boundary).
     """

@@ -6,7 +6,7 @@ from ._core import PretrainData, PretrainFilter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
 
 
-class PretrainSentences(PretrainFilter):
+class Sentences(PretrainFilter):
     """
     Splits pretrain text data into sentences and puts them on separate lines (using new-lines).
     """

@@ -4,7 +4,7 @@ from ldc.core import LOGGING_WARN, domain_suffix
 from ._core import PretrainData, PretrainFilter
 
 
-class PretrainSplit(PretrainFilter):
+class Split(PretrainFilter):
     """
     Splits pretrain text data into separate records on new lines. Automatically skips empty lines.
     """
