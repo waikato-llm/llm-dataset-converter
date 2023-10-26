@@ -113,7 +113,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         super().initialize()
         self.indices = []
         for col in self.columns:
-            self.indices.append(str_to_column_index(col, fail_on_nondigit=True))
+            self.indices.append(str_to_column_index(col, fail_on_non_digit=True))
         if len(self.columns) != len(self.languages):
             raise Exception("Number of columns and languages differ: %d != %d" % (len(self.columns), len(self.languages)))
 
