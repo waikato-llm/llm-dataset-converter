@@ -87,11 +87,11 @@ readers:
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n
 filters:
    assemble-sentences, change-case, find-substr, keyword, language, 
-   max-records, metadata, multi-filter, pairs-to-pretrain, 
-   pretrain-max-length, pretrain-sentences, pretrain-split, 
-   remove-blocks, remove-empty, require-languages, reset-ids, 
-   skip-duplicate-ids, skip-duplicate-text, split, tee, text-length, 
-   translation-to-pairs, translation-to-pretrain
+   max-length-pt, max-records, metadata, multi-filter, 
+   pairs-to-pretrain, remove-blocks, remove-empty, require-languages, 
+   reset-ids, sentences-pt, skip-duplicate-ids, skip-duplicate-text, 
+   split, split-pt, tee, text-length, translation-to-pairs, 
+   translation-to-pretrain
 writers:
    to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
    to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
