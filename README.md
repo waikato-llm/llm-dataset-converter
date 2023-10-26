@@ -4,6 +4,14 @@ For converting large language model (LLM) datasets from one format into another.
 
 ## Installation
 
+Via PyPI:
+
+```bash
+pip install llm-dataset-converter
+```
+
+The latest code straight from the repository:
+
 ```bash
 pip install git+https://github.com/waikato-llm/llm-dataset-converter.git
 ```
