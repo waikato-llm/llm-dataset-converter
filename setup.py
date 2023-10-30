@@ -38,6 +38,7 @@ setup(
         "pyzstd",
         "huggingface-hub",
         "seppl>=0.0.6",
+        "pyyaml",
     ],
     version="0.0.1",
     author='Peter Reutemann',
