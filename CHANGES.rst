@@ -11,6 +11,8 @@ Changelog
 - `text_utils.remove_patterns` no longer multiplies the generated lines when using
   more than one pattern
 - added `remove_patterns` filter
+- pretrain and translation text writers now buffer records by default (`-b`, `--buffer_size`)
+  in order to improve throughput
 
 
 0.0.1 (2023-10-26)
