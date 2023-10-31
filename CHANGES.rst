@@ -7,8 +7,9 @@ Changelog
 - added `text-stats` filter
 - stream writers accept iterable of data records now as well to improve throughput
 - `text_utils.apply_max_length` now uses simple whitespace splitting instead of
-  searching for nearest word boundary to break a line
-- `text_utils.remove_patterns` no longer multiplies the generated lines when using
+  searching for nearest word boundary to break a line, which results in a massive
+  speed improvement
+- fix: `text_utils.remove_patterns` no longer multiplies the generated lines when using
   more than one pattern
 - added `remove_patterns` filter
 - pretrain and translation text writers now buffer records by default (`-b`, `--buffer_size`)
