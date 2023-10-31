@@ -352,30 +352,35 @@ class TxtPretrainWriter(StreamPretrainWriter):
             if is_compressed(self.target):
                 raise Exception("Cannot use compression when concatenating due to streaming!")
 
-    def write_stream(self, data: PretrainData):
+    def write_stream(self, data: Union[PretrainData, Iterable[PretrainData]]):
         """
         Saves the data one by one.
 
         :param data: the data to write
         :type data: PretrainData
         """
+        if isinstance(data, PretrainData):
+            data = [data]
+
         if self._concatenate:
             mode = "w" if self._first_item else "a"
             if self._first_item:
                 self.logger().info("Writing to: %s" % self.target)
             self._first_item = False
             with open(self.target, mode) as fp:
-                fp.write(data.content)
-                fp.write("\n")
+                for d in data:
+                    fp.write(d.content)
+                    fp.write("\n")
         else:
-            if (data.meta is not None) and ("id" in data.meta):
-                try:
-                    fname = self._fname_format % int(data.meta["id"])
-                except:
-                    fname = str(data.meta["id"]) + ".txt"
-            else:
-                fname = self._fname_format % self.session.count
-            output = generate_output(fname, self.target, ".txt", self.session.options.compression)
-            self.logger().info("Writing to: %s" % output)
-            with open(output, "w") as fp:
-                fp.write(data.content)
+            for d in data:
+                if (d.meta is not None) and ("id" in d.meta):
+                    try:
+                        fname = self._fname_format % int(d.meta["id"])
+                    except:
+                        fname = str(d.meta["id"]) + ".txt"
+                else:
+                    fname = self._fname_format % self.session.count
+                output = generate_output(fname, self.target, ".txt", self.session.options.compression)
+                self.logger().info("Writing to: %s" % output)
+                with open(output, "w") as fp:
+                    fp.write(d.content)

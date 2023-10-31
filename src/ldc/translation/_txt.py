@@ -328,17 +328,28 @@ class TxtTranslationWriter(StreamTranslationWriter):
             fp.write(line)
             fp.write("\n")
 
-    def write_stream(self, data: TranslationData):
+    def _get_id(self, data: TranslationData) -> Union[str, int]:
+        """
+        Returns the ID for the record.
+
+        :param data: the record to get the ID from
+        :type data: TranslationData
+        :return: the ID
+        """
+        if "id" in data.meta:
+            return data.meta["id"]
+        else:
+            return self.session.count
+
+    def write_stream(self, data: Union[TranslationData, Iterable[TranslationData]]):
         """
         Saves the data one by one.
 
         :param data: the data to write
         :type data: TranslationData
         """
-        if "id" in data.meta:
-            id_ = data.meta["id"]
-        else:
-            id_ = self.session.count
+        if isinstance(data, TranslationData):
+            data = [data]
 
         if self._concatenate:
             mode = "w" if self._first_item else "a"
@@ -346,13 +357,17 @@ class TxtTranslationWriter(StreamTranslationWriter):
                 self.logger().info("Writing to: %s" % self.target)
             self._first_item = False
             with open(self.target, mode) as fp:
-                self._write_data(fp, id_, data)
+                for d in data:
+                    id_ = self._get_id(d)
+                    self._write_data(fp, id_, d)
         else:
-            try:
-                fname = self._fname_format % int(id_)
-            except:
-                fname = str(id_) + ".txt"
-            output = generate_output(fname, self.target, ".txt", self.session.options.compression)
-            self.logger().info("Writing to: %s" % output)
-            with open(output, "w") as fp:
-                self._write_data(fp, id_, data)
+            for d in data:
+                id_ = self._get_id(d)
+                try:
+                    fname = self._fname_format % int(id_)
+                except:
+                    fname = str(id_) + ".txt"
+                output = generate_output(fname, self.target, ".txt", self.session.options.compression)
+                self.logger().info("Writing to: %s" % output)
+                with open(output, "w") as fp:
+                    self._write_data(fp, id_, d)

@@ -1,6 +1,6 @@
 import abc
 from dataclasses import dataclass
-from typing import Iterable, List, Dict, Optional
+from typing import Iterable, List, Dict, Optional, Union
 
 from ldc.core import DOMAIN_PRETRAIN, MetaDataHandler
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
@@ -129,12 +129,11 @@ class StreamPretrainWriter(PretrainWriter, StreamWriter, abc.ABC):
     Stream writer for pretrain data.
     """
 
-    def write_stream(self, data: PretrainData):
+    def write_stream(self, data: Union[PretrainData, Iterable[PretrainData]]):
         """
         Saves the data one by one.
 
-        :param data: the data to write
-        :type data: PretrainData
+        :param data: the data to write (single record or iterable of records)
         """
         raise NotImplementedError()
 
@@ -148,8 +147,7 @@ class BatchPretrainWriter(PretrainWriter, BatchWriter, abc.ABC):
         """
         Saves the data in one go.
 
-        :param data: the data to write as list of PretrainData
-        :type data: list
+        :param data: the data to write as iterable of PretrainData
         """
         raise NotImplementedError()
 

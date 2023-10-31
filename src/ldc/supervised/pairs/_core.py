@@ -1,6 +1,6 @@
 import abc
 from dataclasses import dataclass
-from typing import Iterable, List, Dict, Optional
+from typing import Iterable, List, Dict, Optional, Union
 
 from ldc.core import DOMAIN_PAIRS, MetaDataHandler
 from ldc.io import Reader, Writer, StreamWriter, BatchWriter
@@ -144,12 +144,11 @@ class StreamPairWriter(PairWriter, StreamWriter, abc.ABC):
     Stream writer for pair data.
     """
 
-    def write_stream(self, data: PairData):
+    def write_stream(self, data: Union[PairData, Iterable[PairData]]):
         """
         Saves the data one by one.
 
-        :param data: the data to write
-        :type data: PairData
+        :param data: the data to write (single record or iterable of records)
         """
         raise NotImplementedError()
 
@@ -163,8 +162,7 @@ class BatchPairWriter(PairWriter, BatchWriter, abc.ABC):
         """
         Saves the data in one go.
 
-        :param data: the data to write as list of PairData
-        :type data: list
+        :param data: the data to write as iterable of PairData
         """
         raise NotImplementedError()
 

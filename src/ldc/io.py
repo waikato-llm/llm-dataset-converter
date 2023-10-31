@@ -365,7 +365,7 @@ class StreamWriter(Writer, abc.ABC):
         """
         Saves the data one by one.
 
-        :param data: the data to write
+        :param data: the data to write (single record or iterable of records)
         """
         raise NotImplementedError()
 

@@ -73,10 +73,7 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                         item = filter_.process(item)
                     if item is not None:
                         if writer is not None:
-                            if not isinstance(item, list):
-                                item = [item]
-                            for i in item:
-                                writer.write_stream(i)
+                            writer.write_stream(item)
                     if session.count % 1000 == 0:
                         session.logger.info("%d records processed..." % session.count)
                 session.logger.info("%d records processed in total." % session.count)
