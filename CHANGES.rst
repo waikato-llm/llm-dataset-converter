@@ -4,6 +4,7 @@ Changelog
 0.0.3 (????-??-??)
 ------------------
 
+- added the `record-window` filter
 - ...
 
 

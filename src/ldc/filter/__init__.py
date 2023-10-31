@@ -6,6 +6,7 @@ from ._keyword import Keyword
 from ._max_records import MaxRecords
 from ._metadata import MetaData
 from ._pairs_to_pretrain import PairsToPretrain
+from ._record_window import RecordWindow
 from ._remove_blocks import RemoveBlocks
 from ._remove_empty import RemoveEmpty
 from ._remove_patterns import RemovePatterns
