@@ -27,6 +27,8 @@ class MaxLength(PretrainFilter):
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.max_length = max_length
         self.split_records = split_records
+        self._total_pre = 0
+        self._total_post = 0
 
     def name(self) -> str:
         """
@@ -69,6 +71,14 @@ class MaxLength(PretrainFilter):
         self.max_length = ns.max_length
         self.split_records = ns.split_records
 
+    def initialize(self):
+        """
+        Initializes the processing, e.g., for opening files or databases.
+        """
+        super().initialize()
+        self._total_pre = 0
+        self._total_post = 0
+
     def _do_process(self, data: PretrainData):
         """
         Processes the data record.
@@ -84,9 +94,11 @@ class MaxLength(PretrainFilter):
         pre = len(lines)
         lines = apply_max_length(lines, self.max_length)
         post = len(lines)
+        self._total_pre += pre
+        self._total_post += post
         if post == pre:
             return result
-        self.logger().info("enforcing max length %d, #lines: %d -> %d" % (self.max_length, pre, post))
+        self.logger().debug("enforcing max length %d, #lines: %d -> %d" % (self.max_length, pre, post))
 
         if self.split_records:
             result = []
@@ -102,3 +114,10 @@ class MaxLength(PretrainFilter):
             )
 
         return result
+
+    def finalize(self):
+        """
+        Finishes the processing, e.g., for closing files or databases.
+        """
+        super().finalize()
+        self.logger().info("total of enforcing max length %d, #lines: %d -> %d" % (self.max_length, self._total_pre, self._total_post))
