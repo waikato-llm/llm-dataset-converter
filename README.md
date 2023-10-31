@@ -96,10 +96,10 @@ readers:
 filters:
    assemble-sentences, change-case, find-substr, keyword, language, 
    max-length-pt, max-records, metadata, multi-filter, 
-   pairs-to-pretrain, remove-blocks, remove-empty, require-languages, 
-   reset-ids, sentences-pt, skip-duplicate-ids, skip-duplicate-text, 
-   split, split-pt, tee, text-length, translation-to-pairs, 
-   translation-to-pretrain
+   pairs-to-pretrain, remove-blocks, remove-empty, remove-patterns, 
+   require-languages, reset-ids, sentences-pt, skip-duplicate-ids, 
+   skip-duplicate-text, split, split-pt, tee, text-length, text-stats, 
+   translation-to-pairs, translation-to-pretrain
 writers:
    to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
    to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
@@ -281,6 +281,7 @@ Filters:
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [remove-blocks](plugins/remove-blocks.md)
 * [remove-empty](plugins/remove-empty.md)
+* [remove-patterns](plugins/remove-patterns.md)
 * [require-languages](plugins/require-languages.md)
 * [reset-ids](plugins/reset-ids.md)
 * [sentences-pt](plugins/sentences-pt.md)
