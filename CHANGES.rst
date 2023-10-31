@@ -13,6 +13,7 @@ Changelog
 - added `remove_patterns` filter
 - pretrain and translation text writers now buffer records by default (`-b`, `--buffer_size`)
   in order to improve throughput
+- jsonlines writers for pair, pretrain and translation data are now stream writers
 
 
 0.0.1 (2023-10-26)

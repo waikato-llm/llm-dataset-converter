@@ -7,7 +7,7 @@ Writes prompt/output pairs in JsonLines-like JSON format. Example: { "translatio
 
 ```
 usage: to-jsonlines-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                        [-N LOGGER_NAME] -o OUTPUT
+                        [-N LOGGER_NAME] -o OUTPUT [-d NUM] [-b SIZE]
 
 Writes prompt/output pairs in JsonLines-like JSON format. Example: {
 "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții
@@ -23,4 +23,10 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         Path of the JsonLines file to write (directory when
                         processing multiple files) (default: None)
+  -d NUM, --num_digits NUM
+                        The number of digits to use for the filenames
+                        (default: 6)
+  -b SIZE, --buffer_size SIZE
+                        The size of the record buffer when concatenating (to
+                        improve I/O throughput) (default: 1000)
 ```

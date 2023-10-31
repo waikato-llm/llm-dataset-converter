@@ -1,10 +1,11 @@
 import argparse
 import jsonlines
+import os
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
-from ldc.io import locate_files, open_file, generate_output
-from ._core import PairData, PairReader, BatchPairWriter
+from ldc.io import locate_files, open_file, generate_output, is_compressed
+from ._core import PairData, PairReader, StreamPairWriter
 from ldc.utils import add_meta_data
 
 
@@ -178,13 +179,14 @@ class JsonLinesPairReader(PairReader):
             self._current_input = None
 
 
-class JsonLinesPairWriter(BatchPairWriter):
+class JsonLinesPairWriter(StreamPairWriter):
     """
     Writer for the JsonLines JSON format.
     """
 
     def __init__(self, target: str = None,
                  att_instruction: str = None, att_input: str = None, att_output: str = None, att_id: str = None,
+                 num_digits: int = 6, buffer_size: int = 1000,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
@@ -199,6 +201,10 @@ class JsonLinesPairWriter(BatchPairWriter):
         :type att_output: str
         :param att_id: the (optional) attribute with the ID
         :type att_id: str
+        :param num_digits: the number of digits to use for the output file names
+        :type num_digits: int
+        :param buffer_size: the size of the record buffer (< 1 for unlimited)
+        :type buffer_size: int
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -210,9 +216,12 @@ class JsonLinesPairWriter(BatchPairWriter):
         self.att_input = att_input
         self.att_output = att_output
         self.att_id = att_id
-        self._current_output = None
-        self._output = None
-        self._writer = None
+        self.num_digits = num_digits
+        self.buffer_size = buffer_size
+        self._concatenate = False
+        self._first_item = True
+        self._fname_format = None
+        self._buffer = []
 
     def name(self) -> str:
         """
@@ -245,6 +254,8 @@ class JsonLinesPairWriter(BatchPairWriter):
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute for the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute for the outputs", required=False)
         parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The name of the attribute for the row IDs (uses 'id' from meta-data)", required=False)
+        parser.add_argument("-d", "--num_digits", metavar="NUM", type=int, default=6, help="The number of digits to use for the filenames", required=False)
+        parser.add_argument("-b", "--buffer_size", metavar="SIZE", type=int, default=1000, help="The size of the record buffer when concatenating (to improve I/O throughput)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -260,6 +271,8 @@ class JsonLinesPairWriter(BatchPairWriter):
         self.att_input = ns.att_input
         self.att_output = ns.att_output
         self.add_id = ns.att_id
+        self.num_digits = ns.num_digits
+        self.buffer_size = ns.buffer_size
 
     def initialize(self):
         """
@@ -268,41 +281,91 @@ class JsonLinesPairWriter(BatchPairWriter):
         super().initialize()
         if (self.att_instruction is None) and (self.att_input is None) and (self.att_output is None):
             raise Exception("No attributes specified!")
+        self._first_item = True
+        self._fname_format = "%0" + str(self.num_digits) + "d.txt"
+        if os.path.exists(self.target) and os.path.isdir(self.target):
+            self._concatenate = False
+        else:
+            self._concatenate = True
+            if is_compressed(self.target):
+                raise Exception("Cannot use compression when concatenating due to streaming!")
+        self._buffer.clear()
 
-    def write_batch(self, data: Iterable[PairData]):
+    def _write(self, data: List[PairData], output: str, mode: str):
         """
-        Saves the data in one go.
+        Writes the data to disk.
 
-        :param data: the data to write as iterable of PairData
-        :type data: Iterable
+        :param data: the records to write
+        :type data: list
+        :param output: the file to write to
+        :type output: str
+        :param mode: the file mode to use
+        :type mode: str
         """
-        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, ".jsonl"):
-            self.finalize()
-            self._current_output = generate_output(self.session.current_input, self.target, ".jsonl", self.session.options.compression)
-            self.logger().info("Writing to: " + self._current_output)
-            self._output = open_file(self._current_output, mode="wt")
-            self._writer = jsonlines.Writer(self._output)
+        with open(output, mode) as fp:
+            writer = jsonlines.Writer(fp)
+            for item in data:
+                d = dict()
+                if self.att_instruction is not None:
+                    d[self.att_instruction] = item.instruction
+                if self.att_input is not None:
+                    d[self.att_input] = item.input
+                if self.att_output is not None:
+                    d[self.att_output] = item.output
+                if self.att_id is not None:
+                    if (item.meta is not None) and ("id" in item.meta):
+                        d[self.att_id] = item.meta["id"]
+                try:
+                    writer.write(d)
+                except KeyboardInterrupt as e:
+                    raise e
+                except:
+                    self.logger().exception("Failed to write record: %s" % str(d))
+            writer.close()
 
-        for item in data:
-            d = dict()
-            if self.att_instruction is not None:
-                d[self.att_instruction] = item.instruction
-            if self.att_input is not None:
-                d[self.att_input] = item.input
-            if self.att_output is not None:
-                d[self.att_output] = item.output
-            if self.att_id is not None:
+    def _flush_buffer(self):
+        """
+        Writes the buffer content to disk.
+        """
+        self.logger().debug("flushing buffer: %d" % len(self._buffer))
+        mode = "w" if self._first_item else "a"
+        if self._first_item:
+            self.logger().info("Writing to: %s" % self.target)
+        self._first_item = False
+        self._write(self._buffer, self.target, mode)
+        self._buffer.clear()
+
+    def write_stream(self, data: Union[PairData, Iterable[PairData]]):
+        """
+        Saves the data one by one.
+
+        :param data: the data to write
+        :type data: PretrainData
+        """
+        if isinstance(data, PairData):
+            data = [data]
+
+        if self._concatenate:
+            self._buffer.extend(data)
+            if len(self._buffer) >= self.buffer_size:
+                self._flush_buffer()
+        else:
+            for item in data:
                 if (item.meta is not None) and ("id" in item.meta):
-                    d[self.att_id] = item.meta["id"]
-            self._writer.write(d)
+                    try:
+                        fname = self._fname_format % int(item.meta["id"])
+                    except:
+                        fname = str(item.meta["id"]) + ".jsonl"
+                else:
+                    fname = self._fname_format % self.session.count
+                output = generate_output(fname, self.target, ".jsonl", self.session.options.compression)
+                self.logger().info("Writing to: %s" % output)
+                self._write([item], output, "w")
 
     def finalize(self):
         """
-        Finishes the writing, e.g., for closing files or databases.
+        Finishes the processing, e.g., for closing files or databases.
         """
-        if self._output is not None:
-            super().finalize()
-            self._writer.close()
-            self._writer = None
-            self._output.close()
-            self._output = None
+        super().finalize()
+        if len(self._buffer) > 0:
+            self._flush_buffer()

@@ -9,6 +9,7 @@ Writes prompt/output pairs in JsonLines-like JSON format.
 usage: to-jsonlines-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                        [-N LOGGER_NAME] -o OUTPUT [--att_instruction ATT]
                        [--att_input ATT] [--att_output ATT] [--att_id ATT]
+                       [-d NUM] [-b SIZE]
 
 Writes prompt/output pairs in JsonLines-like JSON format.
 
@@ -28,4 +29,10 @@ optional arguments:
   --att_output ATT      The attribute for the outputs (default: None)
   --att_id ATT          The name of the attribute for the row IDs (uses 'id'
                         from meta-data) (default: None)
+  -d NUM, --num_digits NUM
+                        The number of digits to use for the filenames
+                        (default: 6)
+  -b SIZE, --buffer_size SIZE
+                        The size of the record buffer when concatenating (to
+                        improve I/O throughput) (default: 1000)
 ```

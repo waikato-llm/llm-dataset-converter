@@ -8,7 +8,7 @@ Writes pretrain data in JsonLines-like JSON format.
 ```
 usage: to-jsonlines-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                        [-N LOGGER_NAME] -o OUTPUT [--att_content ATT]
-                       [--att_id ATT]
+                       [--att_id ATT] [-d NUM] [-b SIZE]
 
 Writes pretrain data in JsonLines-like JSON format.
 
@@ -25,4 +25,10 @@ optional arguments:
   --att_content ATT     The attribute for the text content (default: None)
   --att_id ATT          The name of the attribute for the row IDs (uses 'id'
                         from meta-data) (default: None)
+  -d NUM, --num_digits NUM
+                        The number of digits to use for the filenames
+                        (default: 6)
+  -b SIZE, --buffer_size SIZE
+                        The size of the record buffer when concatenating (to
+                        improve I/O throughput) (default: 1000)
 ```
