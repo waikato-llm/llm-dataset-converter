@@ -210,13 +210,14 @@ def remove_patterns(lines: List[str], expr_remove: List[str]) -> Tuple[List[str]
     result = []
     affected = 0
     for i in range(len(lines)):
+        new_line = lines[i]
         for expr in expr_remove:
-            new_line = re.sub(expr, "", lines[i])
-            if len(lines[i]) != len(new_line):
-                result.append(new_line)
-                affected += 1
-            else:
-                result.append(lines[i])
+            new_line = re.sub(expr, "", new_line)
+        if len(lines[i]) != len(new_line):
+            result.append(new_line)
+            affected += 1
+        else:
+            result.append(lines[i])
     return result, affected
 
 
