@@ -11,7 +11,7 @@ Changelog
   speed improvement
 - fix: `text_utils.remove_patterns` no longer multiplies the generated lines when using
   more than one pattern
-- added `remove_patterns` filter
+- added `remove-patterns` filter
 - pretrain and translation text writers now buffer records by default (`-b`, `--buffer_size`)
   in order to improve throughput
 - jsonlines writers for pair, pretrain and translation data are now stream writers
