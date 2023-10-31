@@ -1,5 +1,6 @@
 # llm-dataset-converter
 For converting large language model (LLM) datasets from one format into another.
+Filters can be supplied as well, e.g., for cleaning up the data.
 
 
 ## Installation
