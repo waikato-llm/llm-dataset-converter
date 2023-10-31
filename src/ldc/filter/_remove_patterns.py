@@ -186,7 +186,7 @@ class RemovePatterns(Filter):
         affected = self._process(result)
         self.affected += affected
 
-        self.logger().info("affected # lines: %d" % affected)
+        self.logger().debug("affected # lines: %d" % affected)
 
         return result
 

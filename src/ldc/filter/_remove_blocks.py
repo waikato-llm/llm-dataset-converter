@@ -202,7 +202,7 @@ class RemoveBlocks(Filter):
         removed = self._process(result)
         self.removed += removed
 
-        self.logger().info("removed # lines: %d" % removed)
+        self.logger().debug("removed # lines: %d" % removed)
 
         return result
 
