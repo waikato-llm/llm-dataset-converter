@@ -1,6 +1,8 @@
 import argparse
 import os
 import re
+import sys
+import traceback
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
@@ -359,8 +361,13 @@ class TxtTranslationWriter(StreamTranslationWriter):
         self._first_item = False
         with open(self.target, mode) as fp:
             for d in self._buffer:
-                id_ = self._get_id(d)
-                self._write_data(fp, id_, d)
+                try:
+                    id_ = self._get_id(d)
+                    self._write_data(fp, id_, d)
+                except KeyboardInterrupt as e:
+                    raise e
+                except:
+                    self.logger().exception("Failed to write record: %s" % str(d))
         self._buffer.clear()
 
     def write_stream(self, data: Union[TranslationData, Iterable[TranslationData]]):

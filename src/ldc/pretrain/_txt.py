@@ -370,8 +370,13 @@ class TxtPretrainWriter(StreamPretrainWriter):
         self._first_item = False
         with open(self.target, mode) as fp:
             for d in self._buffer:
-                fp.write(d.content)
-                fp.write("\n")
+                try:
+                    fp.write(d.content)
+                    fp.write("\n")
+                except KeyboardInterrupt as e:
+                    raise e
+                except:
+                    self.logger().exception("Failed to write record: %s" % str(d))
         self._buffer.clear()
 
     def write_stream(self, data: Union[PretrainData, Iterable[PretrainData]]):
