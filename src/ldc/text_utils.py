@@ -179,9 +179,17 @@ def apply_max_length(lines: List[str], max_length: int) -> List[str]:
         line = line.strip()
         while len(line) > 0:
             if len(line) > max_length:
-                pos = find_word_boundary(line, max_length, True)
-                result.append(line[:pos])
-                line = line[pos:].strip()
+                parts = line.split()
+                line = ""
+                for part in parts:
+                    if len(line) + len(part) + 1 <= max_length:
+                        line += " " + part
+                    else:
+                        result.append(line.strip())
+                        line = ""
+                if len(line) > 0:
+                    result.append(line)
+                    line = ""
             else:
                 result.append(line)
                 line = ""
