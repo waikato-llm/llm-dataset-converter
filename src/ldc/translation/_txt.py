@@ -224,7 +224,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
     """
 
     def __init__(self, target: str = None, num_digits: int = 6, line_format: str = "%s-%s: %s" % (PH_LANG, PH_ID, PH_CONTENT),
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 buffer_size: int = 1000, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
 
@@ -234,6 +234,8 @@ class TxtTranslationWriter(StreamTranslationWriter):
         :type num_digits: int
         :param line_format: the format for the line, available placeholders: {LANG}, {ID}, {CONTENT}
         :type line_format: str
+        :param buffer_size: the size of the record buffer (< 1 for unlimited)
+        :type buffer_size: int
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -243,12 +245,14 @@ class TxtTranslationWriter(StreamTranslationWriter):
         self.target = target
         self.num_digits = num_digits
         self.line_format = line_format
+        self.buffer_size = buffer_size
         self._current_output = None
         self._output = None
         self._writer = None
         self._concatenate = False
         self._first_item = True
         self._fname_format = None
+        self._buffer = []
 
     def name(self) -> str:
         """
@@ -283,6 +287,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
         parser.add_argument("-o", "--output", type=str, help="Path to the directory or file to write to", required=True)
         parser.add_argument("-d", "--num_digits", metavar="NUM", type=int, default=6, help="The number of digits to use for the filenames", required=False)
         parser.add_argument("-f", "--line_format", metavar="FORMAT", type=str, default="%s-%s: %s" % (PH_LANG, PH_ID, PH_CONTENT), help="The format for the lines in the text file", required=False)
+        parser.add_argument("-b", "--buffer_size", metavar="SIZE", type=int, default=1000, help="The size of the record buffer when concatenating (to improve I/O throughput)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -296,6 +301,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
         self.target = ns.output
         self.num_digits = ns.num_digits
         self.line_format = ns.line_format
+        self.buffer_size = ns.buffer_size
 
     def initialize(self):
         """
@@ -310,6 +316,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
             self._concatenate = True
             if is_compressed(self.target):
                 raise Exception("Cannot use compression when concatenating due to streaming!")
+        self._buffer.clear()
 
     def _write_data(self, fp, id, data: TranslationData):
         """
@@ -341,6 +348,21 @@ class TxtTranslationWriter(StreamTranslationWriter):
         else:
             return self.session.count
 
+    def _flush_buffer(self):
+        """
+        Writes the buffer content to disk.
+        """
+        self.logger().debug("flushing buffer: %d" % len(self._buffer))
+        mode = "w" if self._first_item else "a"
+        if self._first_item:
+            self.logger().info("Writing to: %s" % self.target)
+        self._first_item = False
+        with open(self.target, mode) as fp:
+            for d in self._buffer:
+                id_ = self._get_id(d)
+                self._write_data(fp, id_, d)
+        self._buffer.clear()
+
     def write_stream(self, data: Union[TranslationData, Iterable[TranslationData]]):
         """
         Saves the data one by one.
@@ -352,14 +374,9 @@ class TxtTranslationWriter(StreamTranslationWriter):
             data = [data]
 
         if self._concatenate:
-            mode = "w" if self._first_item else "a"
-            if self._first_item:
-                self.logger().info("Writing to: %s" % self.target)
-            self._first_item = False
-            with open(self.target, mode) as fp:
-                for d in data:
-                    id_ = self._get_id(d)
-                    self._write_data(fp, id_, d)
+            self._buffer.extend(data)
+            if len(self._buffer) >= self.buffer_size:
+                self._flush_buffer()
         else:
             for d in data:
                 id_ = self._get_id(d)
@@ -371,3 +388,11 @@ class TxtTranslationWriter(StreamTranslationWriter):
                 self.logger().info("Writing to: %s" % output)
                 with open(output, "w") as fp:
                     self._write_data(fp, id_, d)
+
+    def finalize(self):
+        """
+        Finishes the processing, e.g., for closing files or databases.
+        """
+        super().finalize()
+        if len(self._buffer) > 0:
+            self._flush_buffer()

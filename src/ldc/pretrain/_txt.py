@@ -267,7 +267,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
     Writer for the plain text files.
     """
 
-    def __init__(self, target: str = None, num_digits: int = 6,
+    def __init__(self, target: str = None, num_digits: int = 6, buffer_size: int = 1000,
                  logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the writer.
@@ -276,6 +276,8 @@ class TxtPretrainWriter(StreamPretrainWriter):
         :type target: str
         :param num_digits: the number of digits to use for the output file names
         :type num_digits: int
+        :param buffer_size: the size of the record buffer (< 1 for unlimited)
+        :type buffer_size: int
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logger_name: the name to use for the logger
@@ -286,12 +288,14 @@ class TxtPretrainWriter(StreamPretrainWriter):
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.num_digits = num_digits
+        self.buffer_size = buffer_size
         self._current_output = None
         self._output = None
         self._writer = None
         self._concatenate = False
         self._first_item = True
         self._fname_format = None
+        self._buffer = []
 
     def name(self) -> str:
         """
@@ -325,6 +329,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help="Path to the directory or file to write to", required=True)
         parser.add_argument("-d", "--num_digits", metavar="NUM", type=int, default=6, help="The number of digits to use for the filenames", required=False)
+        parser.add_argument("-b", "--buffer_size", metavar="SIZE", type=int, default=1000, help="The size of the record buffer when concatenating (to improve I/O throughput)", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -337,6 +342,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
         super()._apply_args(ns)
         self.target = ns.output
         self.num_digits = ns.num_digits
+        self.buffer_size = ns.buffer_size
 
     def initialize(self):
         """
@@ -351,6 +357,22 @@ class TxtPretrainWriter(StreamPretrainWriter):
             self._concatenate = True
             if is_compressed(self.target):
                 raise Exception("Cannot use compression when concatenating due to streaming!")
+        self._buffer.clear()
+
+    def _flush_buffer(self):
+        """
+        Writes the buffer content to disk.
+        """
+        self.logger().debug("flushing buffer: %d" % len(self._buffer))
+        mode = "w" if self._first_item else "a"
+        if self._first_item:
+            self.logger().info("Writing to: %s" % self.target)
+        self._first_item = False
+        with open(self.target, mode) as fp:
+            for d in self._buffer:
+                fp.write(d.content)
+                fp.write("\n")
+        self._buffer.clear()
 
     def write_stream(self, data: Union[PretrainData, Iterable[PretrainData]]):
         """
@@ -363,14 +385,9 @@ class TxtPretrainWriter(StreamPretrainWriter):
             data = [data]
 
         if self._concatenate:
-            mode = "w" if self._first_item else "a"
-            if self._first_item:
-                self.logger().info("Writing to: %s" % self.target)
-            self._first_item = False
-            with open(self.target, mode) as fp:
-                for d in data:
-                    fp.write(d.content)
-                    fp.write("\n")
+            self._buffer.extend(data)
+            if len(self._buffer) >= self.buffer_size:
+                self._flush_buffer()
         else:
             for d in data:
                 if (d.meta is not None) and ("id" in d.meta):
@@ -384,3 +401,11 @@ class TxtPretrainWriter(StreamPretrainWriter):
                 self.logger().info("Writing to: %s" % output)
                 with open(output, "w") as fp:
                     fp.write(d.content)
+
+    def finalize(self):
+        """
+        Finishes the processing, e.g., for closing files or databases.
+        """
+        super().finalize()
+        if len(self._buffer) > 0:
+            self._flush_buffer()

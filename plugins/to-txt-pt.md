@@ -9,7 +9,7 @@ When providing an output file, all incoming content will be concatenated in this
 
 ```
 usage: to-txt-pt [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                 -o OUTPUT [-d NUM]
+                 -o OUTPUT [-d NUM] [-b SIZE]
 
 Writes pretrain data to plain text files. When providing an output directory,
 either uses the current session counter as the filename or, if present, the
@@ -30,4 +30,7 @@ optional arguments:
   -d NUM, --num_digits NUM
                         The number of digits to use for the filenames
                         (default: 6)
+  -b SIZE, --buffer_size SIZE
+                        The size of the record buffer when concatenating (to
+                        improve I/O throughput) (default: 1000)
 ```
