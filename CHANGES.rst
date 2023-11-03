@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - added the `record-window` filter
+- added the `llm-registry` tool for querying the registry from the command-line
 - ...
 
 

@@ -265,6 +265,25 @@ optional arguments:
 ```
 
 
+### Plugin registry
+
+```
+usage: llm-registry [-h] [-m CUSTOM_MODULES]
+                    [-l {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}]
+
+For inspecting/querying the registry.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m CUSTOM_MODULES, --custom_modules CUSTOM_MODULES
+                        The comma-separated list of custom modules to use.
+                        (default: None)
+  -l {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}, --list {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}
+                        For outputting various lists on stdout. (default:
+                        None)
+```
+
+
 ## Other plugins
 
 Downloaders:

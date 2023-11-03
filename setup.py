@@ -51,6 +51,7 @@ setup(
             "llm-find=ldc.tool.find:sys_main",
             "llm-help=ldc.tool.help:sys_main",
             "llm-paste=ldc.tool.paste:sys_main",
+            "llm-registry=ldc.registry:sys_main",
         ],
         "ldc.downloaders": [
             "ldc_downloaders1=ldc.downloader:ldc.downloader.Downloader"
