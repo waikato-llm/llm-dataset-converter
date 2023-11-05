@@ -3,7 +3,7 @@ import logging
 import os
 import traceback
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from ldc.downloader import Downloader
 from ldc.filter import Filter
@@ -133,14 +133,14 @@ def register_plugins(modules: List[str] = None):
     available_plugins()
 
 
-def _list(list_type: str):
+def _list(list_type: str, custom_modules: Optional[List[str]] = None):
     """
     Lists various things on stdout.
 
     :param list_type: the type of list to generate
     :type list_type: str
     """
-    register_plugins()
+    register_plugins(modules=custom_modules)
 
     if list_type in [LIST_PLUGINS, LIST_DOWNLOADERS, LIST_READERS, LIST_FILTERS, LIST_WRITERS]:
         if list_type == LIST_PLUGINS:
@@ -194,10 +194,13 @@ def main(args=None):
     parser.add_argument("-m", "--custom_modules", type=str, default=None, help="The comma-separated list of custom modules to use.", required=False)
     parser.add_argument("-l", "--list", choices=LIST_TYPES, default=None, help="For outputting various lists on stdout.", required=False)
     parsed = parser.parse_args(args=args)
+
+    custom_modules = None
     if parsed.custom_modules is not None:
-        REGISTRY.custom_modules = parsed.custom_modules.split(",")
+        custom_modules = parsed.custom_modules.split(",")
+
     if parsed.list is not None:
-        _list(parsed.list)
+        _list(parsed.list, custom_modules=custom_modules)
 
 
 def sys_main() -> int:
