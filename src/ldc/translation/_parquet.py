@@ -7,7 +7,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from ldc.core import LOGGING_WARN, domain_suffix
-from ldc.io import locate_files, generate_output
+from ldc.base_io import locate_files, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
 from ldc.utils import add_meta_data
 

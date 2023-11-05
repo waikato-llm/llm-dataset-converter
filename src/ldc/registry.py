@@ -7,7 +7,7 @@ from typing import Dict, List
 
 from ldc.downloader import Downloader
 from ldc.filter import Filter
-from ldc.io import Reader, Writer
+from ldc.base_io import Reader, Writer
 from seppl import Registry, Plugin, MODE_DYNAMIC, get_class_name
 
 # the entry points defined in setup.py

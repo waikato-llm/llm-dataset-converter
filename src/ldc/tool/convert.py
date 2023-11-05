@@ -8,7 +8,7 @@ from typing import List, Tuple, Optional, Dict
 from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
 from ldc.core import init_logging, LOGGING_LEVELS, LOGGING_WARN, check_compatibility, CommandlineHandler, Session, set_logging_level
 from ldc.help import generate_plugin_usage
-from ldc.io import COMPRESSION_FORMATS, Reader, Writer
+from ldc.base_io import COMPRESSION_FORMATS, Reader, Writer
 from ldc.execution import execute
 from ldc.filter import Filter, MultiFilter
 from ldc.registry import available_readers, available_filters, available_writers

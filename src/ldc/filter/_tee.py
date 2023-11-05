@@ -2,7 +2,7 @@ import argparse
 from typing import List
 
 from ldc.core import LOGGING_WARN, CommandlineHandler, DOMAIN_ANY
-from ldc.io import Writer, BatchWriter, StreamWriter
+from ldc.base_io import Writer, BatchWriter, StreamWriter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData

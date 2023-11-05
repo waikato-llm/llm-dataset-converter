@@ -3,7 +3,7 @@ import json
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN
-from ldc.io import locate_files, open_file, generate_output
+from ldc.base_io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
 

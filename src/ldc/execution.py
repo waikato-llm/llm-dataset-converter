@@ -3,7 +3,7 @@ from typing import Union, List, Optional
 
 from ldc.filter import Filter, MultiFilter
 from ldc.core import initialize_handler
-from ldc.io import Reader, Writer, StreamWriter, BatchWriter, Session
+from ldc.base_io import Reader, Writer, StreamWriter, BatchWriter, Session
 
 
 def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writer: Writer,

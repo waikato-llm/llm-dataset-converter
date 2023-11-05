@@ -4,7 +4,7 @@ import os
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
-from ldc.io import locate_files, open_file, generate_output, is_compressed
+from ldc.base_io import locate_files, open_file, generate_output, is_compressed
 from ._core import PairData, PairReader, StreamPairWriter
 from ldc.utils import add_meta_data
 

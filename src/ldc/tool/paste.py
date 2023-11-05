@@ -7,7 +7,7 @@ import traceback
 from typing import List
 
 from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
-from ldc.io import locate_files
+from ldc.base_io import locate_files
 
 PASTE = "llm-paste"
 

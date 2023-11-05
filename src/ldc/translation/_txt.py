@@ -6,7 +6,7 @@ import traceback
 from typing import Iterable, List, Union
 
 from ldc.core import LOGGING_WARN, domain_suffix
-from ldc.io import locate_files, open_file, generate_output, is_compressed
+from ldc.base_io import locate_files, open_file, generate_output, is_compressed
 from ._core import TranslationData, TranslationReader, StreamTranslationWriter
 from ldc.utils import str_to_column_index
 

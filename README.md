@@ -493,7 +493,7 @@ and then outputs it in zstandard-compressed jsonlines format:
 
 ```python
 from ldc.core import Session, LOGGING_INFO, init_logging
-from ldc.io import COMPRESSION_ZSTD
+from ldc.base_io import COMPRESSION_ZSTD
 from ldc.registry import register_plugins
 from ldc.supervised.pairs import AlpacaReader, PAIRDATA_FIELDS
 from ldc.pretrain import JsonLinesPretrainWriter
