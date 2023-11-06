@@ -129,8 +129,8 @@ class RemovePatterns(Filter):
         """
         Removes all lines that match the patterns (inline).
 
-        :param lines: the lines to process
-        :type lines: list
+        :param line: the line to process
+        :type line: str
         :return: the processed lines
         :rtype: list
         """
