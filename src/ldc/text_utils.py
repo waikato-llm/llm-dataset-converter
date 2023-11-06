@@ -268,3 +268,33 @@ def remove_blocks(lines: List[str], block_removal_start: List[str], block_remova
                 result.append(line)
 
     return result
+
+
+def replace_patterns(lines: List[str], find: List[str], replace: List[str]) -> Tuple[List[str], int]:
+    """
+    Replaces the regexp patterns with the replacement strings.
+
+    :param lines: the lines to process
+    :type lines: list
+    :param find: the list of regular expression for finding substrings to replace (uses re.sub(find, replace, line))
+    :type find: list
+    :param replace: the list of replacement strings
+    :type replace: list
+    :return: the tuple of processed lines and counter of how many lines were affected
+    :rtype: tuple
+    """
+    if len(find) != len(replace):
+        raise Exception("Number of regexp to find strings and replacement strings differ: %d != %d" % (len(find), len(replace)))
+
+    result = []
+    affected = 0
+    for i in range(len(lines)):
+        new_line = lines[i]
+        for n, f in enumerate(find):
+            new_line = re.sub(f, replace[n], new_line)
+        if len(lines[i]) != len(new_line):
+            result.append(new_line)
+            affected += 1
+        else:
+            result.append(lines[i])
+    return result, affected
