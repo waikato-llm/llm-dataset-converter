@@ -292,7 +292,7 @@ def replace_patterns(lines: List[str], find: List[str], replace: List[str]) -> T
         new_line = lines[i]
         for n, f in enumerate(find):
             new_line = re.sub(f, replace[n], new_line)
-        if len(lines[i]) != len(new_line):
+        if lines[i] != new_line:
             result.append(new_line)
             affected += 1
         else:
