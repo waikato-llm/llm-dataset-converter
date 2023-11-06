@@ -7,7 +7,7 @@ Changelog
 - added the `record-window` filter
 - added the `llm-registry` tool for querying the registry from the command-line
 - added the `replace_patterns` method to `ldc.text_utils` module
-- ...
+- added the `replace-patterns` filter
 
 
 0.0.2 (2023-10-31)

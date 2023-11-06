@@ -304,6 +304,7 @@ Filters:
 * [remove-blocks](plugins/remove-blocks.md)
 * [remove-empty](plugins/remove-empty.md)
 * [remove-patterns](plugins/remove-patterns.md)
+* [replace-patterns](plugins/replace-patterns.md)
 * [require-languages](plugins/require-languages.md)
 * [reset-ids](plugins/reset-ids.md)
 * [sentences-pt](plugins/sentences-pt.md)
