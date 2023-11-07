@@ -20,5 +20,6 @@ from ._split import Split
 from ._tee import Tee
 from ._text_length import TextLength
 from ._text_stats import TextStatistics
+from ._to_llama2_format import ToLlama2Format
 from ._translation_to_pairs import TranslationToPairs
 from ._translation_to_pretrain import TranslationToPretrain

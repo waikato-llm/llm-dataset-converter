@@ -96,12 +96,12 @@ readers:
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n
 filters:
    assemble-sentences, change-case, find-substr, keyword, language, 
-   max-length-pt, max-records, metadata, multi-filter, 
-   pairs-to-pretrain, record-window, remove-blocks, remove-empty, 
-   remove-patterns, require-languages, reset-ids, sentences-pt, 
-   skip-duplicate-ids, skip-duplicate-text, split, split-pt, tee, 
-   text-length, text-stats, translation-to-pairs, 
-   translation-to-pretrain
+   llama2-to-pairs, max-length-pt, max-records, metadata, multi-filter, 
+   pairs-to-llama2, pairs-to-pretrain, record-window, remove-blocks, 
+   remove-empty, remove-patterns, replace-patterns, require-languages, 
+   reset-ids, sentences-pt, skip-duplicate-ids, skip-duplicate-text, 
+   split, split-pt, tee, text-length, text-stats, to-llama2-format, 
+   translation-to-pairs, translation-to-pretrain
 writers:
    to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
    to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
@@ -295,6 +295,7 @@ Filters:
 * [find-substr](plugins/find-substr.md)
 * [keyword](plugins/keyword.md)
 * [language](plugins/language.md)
+* [llama2-to-pairs](plugins/llama2-to-pairs.md)
 * [max-length-pt](plugins/max-length-pt.md)
 * [max-records](plugins/max-records.md)
 * [metadata](plugins/metadata.md)
@@ -316,6 +317,7 @@ Filters:
 * [tee](plugins/tee.md)
 * [text-length](plugins/text-length.md)
 * [translation-to-pairs](plugins/translation-to-pairs.md)
+* [to-llama2-format](plugins/to-llama2-format.md)
 * [translation-to-pretrain](plugins/translation-to-pretrain.md)
 
 
