@@ -3,8 +3,10 @@ from ._assemble_sentences import AssembleSentences
 from ._change_case import ChangeCase, CASES, CASE_UNCHANGED, CASE_LOWER, CASE_UPPER, CASE_TITLE
 from ._find_substr import FindSubstring
 from ._keyword import Keyword
+from ._llama2_to_pairs import Llama2ToPairs
 from ._max_records import MaxRecords
 from ._metadata import MetaData
+from ._pairs_to_llama2 import PairsToLlama2
 from ._pairs_to_pretrain import PairsToPretrain
 from ._record_window import RecordWindow
 from ._remove_blocks import RemoveBlocks

@@ -299,6 +299,7 @@ Filters:
 * [max-records](plugins/max-records.md)
 * [metadata](plugins/metadata.md)
 * [multi-filter](plugins/multi-filter.md)
+* [pairs-to-llama2](plugins/pairs-to-llama2.md)
 * [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
 * [record-window](plugins/record-window.md)
 * [remove-blocks](plugins/remove-blocks.md)

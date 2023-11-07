@@ -9,6 +9,8 @@ Changelog
 - added the `replace_patterns` method to `ldc.text_utils` module
 - added the `replace-patterns` filter
 - added `-p/--pretty-print` flag to `to-alpaca` writer
+- added `pairs-to-llama2` and `llama2-to-pairs` filter
+  (since llama2 has instruction as part of the string, it is treated as pretrain data)
 
 
 0.0.2 (2023-10-31)
