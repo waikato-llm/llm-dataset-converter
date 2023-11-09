@@ -55,4 +55,6 @@ class Split(PretrainFilter):
                 meta=copy.deepcopy(data.meta)
             ))
 
+        self.logger().info("# lines -> # records: %d -> %d" % (len(lines), len(result)))
+
         return result
