@@ -5,6 +5,25 @@ from typing import List, Tuple
 from ldc.core import DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 
 
+def prune_lines(lines: List[str], min_len: int = 1) -> List[str]:
+    """
+    Removes lines that only consist of too few characters.
+
+    :param lines: the lines to prune
+    :type lines: list
+    :param min_len: the minimum length the line must have (after .strip() call)
+    :type min_len: int
+    :return: the pruned list
+    :rtype: list
+    """
+    result = []
+    for sentence in lines:
+        if len(sentence.strip()) > min_len:
+            result.append(sentence)
+
+    return result
+
+
 def assemble_preformatted(lines: List[str], end_chars: str = DEFAULT_END_CHARS,
                           quote_chars: str = DEFAULT_QUOTE_CHARS) -> List[str]:
     """
@@ -60,6 +79,8 @@ def assemble_preformatted(lines: List[str], end_chars: str = DEFAULT_END_CHARS,
     if buffer is not None:
         result.append(buffer)
 
+    prune_lines(result)
+
     return result
 
 
@@ -92,6 +113,8 @@ def split_into_sentences(lines: List[str], end_chars: str = DEFAULT_END_CHARS) -
             else:
                 result.append(line.strip())
                 line = ""
+
+    result = prune_lines(result)
 
     return result
 
@@ -126,6 +149,8 @@ def combine_sentences(sentences: List[str], max_sentences: int) -> List[str]:
 
     if len(current) > 0:
         result.append(" ".join(current))
+
+    result = prune_lines(result)
 
     return result
 
