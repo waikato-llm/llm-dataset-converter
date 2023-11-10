@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.0.3 (????-??-??)
+0.0.3 (2023-11-10)
 ------------------
 
 - added the `record-window` filter
