@@ -1,3 +1,4 @@
+import argparse
 from typing import List
 
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
@@ -12,16 +13,19 @@ class PairsToLlama2(Filter):
     Converts records of prompt/output pairs to llama2 pretrain ones.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, prefix: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
         """
         Initializes the filter.
 
+        :param prefix: the prompt prefix to use, ignored if None or empty
+        :type prefix: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
+        self.prefix = prefix
 
     def name(self) -> str:
         """
@@ -70,6 +74,38 @@ class PairsToLlama2(Filter):
         """
         return [PretrainData]
 
+    def _create_argparser(self) -> argparse.ArgumentParser:
+        """
+        Creates an argument parser. Derived classes need to fill in the options.
+
+        :return: the parser
+        :rtype: argparse.ArgumentParser
+        """
+        parser = super()._create_argparser()
+        parser.add_argument("--prefix", type=str, default=None, help="The prefix to use for the instruction.")
+        return parser
+
+    def _apply_args(self, ns: argparse.Namespace):
+        """
+        Initializes the object with the arguments of the parsed namespace.
+
+        :param ns: the parsed arguments
+        :type ns: argparse.Namespace
+        """
+        super()._apply_args(ns)
+        self.prefix = ns.prefix
+
+    def initialize(self):
+        """
+        Initializes the processing, e.g., for opening files or databases.
+        """
+        super().initialize()
+        if self.prefix is None:
+            self.prefix = ""
+        if len(self.prefix) > 0:
+            if self.prefix[-1] != " ":
+                self.prefix += " "
+
     def _do_process(self, data: PairData):
         """
         Processes the data record.
@@ -78,5 +114,5 @@ class PairsToLlama2(Filter):
         :type data: PairData
         :return: the potentially updated record(s)
         """
-        content = "<s> [INST] %s [/INST] %s </s>" % (data.instruction, data.output)
+        content = "<s> [INST] %s%s [/INST] %s </s>" % (self.prefix, data.instruction, data.output)
         return PretrainData(content=content)

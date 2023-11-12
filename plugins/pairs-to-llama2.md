@@ -8,7 +8,7 @@ Converts records of prompt/output pairs to llama2 pretrain ones. The 'instructio
 
 ```
 usage: pairs-to-llama2 [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
-                       [-N LOGGER_NAME]
+                       [-N LOGGER_NAME] [--prefix PREFIX]
 
 Converts records of prompt/output pairs to llama2 pretrain ones. The
 'instruction' (ie prompt) gets wrapped in [INST]...[/INST] and the 'output'
@@ -21,4 +21,5 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --prefix PREFIX       The prefix to use for the instruction. (default: None)
 ```

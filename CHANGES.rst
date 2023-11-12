@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.0.4 (????-??-??)
+------------------
+
+- `pairs-to-llama2` filter now has an optional `--prefix` parameter to use with the instruction
+
+
 0.0.3 (2023-11-10)
 ------------------
 
