@@ -82,7 +82,7 @@ class PairsToLlama2(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("--prefix", type=str, default=None, help="The prefix to use for the instruction.")
+        parser.add_argument("-p", "--prefix", type=str, default=None, help="The prefix to use for the instruction.")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
