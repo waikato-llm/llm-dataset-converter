@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - `pairs-to-llama2` filter now has an optional `--prefix` parameter to use with the instruction
+- added the `pretrain-sentences-to-pairs` filter for generating artificial prompt/response datasets from pretrain data
 
 
 0.0.3 (2023-11-10)
