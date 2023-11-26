@@ -239,8 +239,9 @@ optional arguments:
 ### Generating help screens for plugins
 
 ```
-usage: llm-help [-h] [-m [PACKAGE [PACKAGE ...]]] [-p NAME] [-f FORMAT]
-                [-L INT] [-o PATH] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: llm-help [-h] [-m [PACKAGE [PACKAGE ...]]] [-e EXCLUDED_MODULES]
+                [-p NAME] [-f FORMAT] [-L INT] [-o PATH]
+                [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
 
 Tool for outputting help for plugins in various formats.
 
@@ -249,6 +250,9 @@ optional arguments:
   -m [PACKAGE [PACKAGE ...]], --modules [PACKAGE [PACKAGE ...]]
                         The names of the module packages, uses the default
                         ones if not provided. (default: None)
+  -e EXCLUDED_MODULES, --excluded_modules EXCLUDED_MODULES
+                        The comma-separated list of modules to excluded.
+                        (default: None)
   -p NAME, --plugin_name NAME
                         The name of the plugin to generate the help for,
                         generates it for all if not specified (default: None)
@@ -269,7 +273,7 @@ optional arguments:
 ### Plugin registry
 
 ```
-usage: llm-registry [-h] [-m CUSTOM_MODULES]
+usage: llm-registry [-h] [-m CUSTOM_MODULES] [-e EXCLUDED_MODULES]
                     [-l {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}]
 
 For inspecting/querying the registry.
@@ -278,6 +282,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -m CUSTOM_MODULES, --custom_modules CUSTOM_MODULES
                         The comma-separated list of custom modules to use.
+                        (default: None)
+  -e EXCLUDED_MODULES, --excluded_modules EXCLUDED_MODULES
+                        The comma-separated list of modules to excluded.
                         (default: None)
   -l {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}, --list {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}
                         For outputting various lists on stdout. (default:

@@ -19,6 +19,9 @@ ENTRY_POINT_WRITERS = "ldc.writers"
 # environment variable with comma-separated list of modules to inspect for readers, filters, writers
 ENV_LDC_MODULES = "LDC_MODULES"
 
+# environment variable with comma-separated list of modules to exclude from inspection of readers, filters, writers
+ENV_LDC_MODULES_EXCL = "LDC_MODULES_EXCL"
+
 # the default modules to inspect (for development)
 # can be overridden with LDC_MODULES environment variable
 DEFAULT_LDC_MODULES = ",".join([
@@ -29,7 +32,9 @@ DEFAULT_LDC_MODULES = ",".join([
     "ldc.translation",
 ])
 
-REGISTRY = Registry(mode=MODE_DYNAMIC, default_modules=DEFAULT_LDC_MODULES, env_modules=ENV_LDC_MODULES, enforce_uniqueness=True)
+REGISTRY = Registry(mode=MODE_DYNAMIC, default_modules=DEFAULT_LDC_MODULES,
+                    env_modules=ENV_LDC_MODULES, excluded_env_modules=ENV_LDC_MODULES_EXCL,
+                    enforce_uniqueness=True)
 
 LLM_REGISTRY = "llm-registry"
 
@@ -122,25 +127,28 @@ def available_plugins() -> Dict[str, Plugin]:
     return result
 
 
-def register_plugins(modules: List[str] = None):
+def register_plugins(modules: List[str] = None, excluded_modules: List[str] = None):
     """
     Registers all plugins.
 
     :param modules: the list of modules to use instead of env variable or default modules
     :type modules: list
+    :param excluded_modules: the list of modules to exclude
+    :type excluded_modules: list
     """
     REGISTRY.custom_modules = modules
+    REGISTRY.excluded_modules = excluded_modules
     available_plugins()
 
 
-def _list(list_type: str, custom_modules: Optional[List[str]] = None):
+def _list(list_type: str, custom_modules: Optional[List[str]] = None, excluded_modules: Optional[List[str]] = None):
     """
     Lists various things on stdout.
 
     :param list_type: the type of list to generate
     :type list_type: str
     """
-    register_plugins(modules=custom_modules)
+    register_plugins(modules=custom_modules, excluded_modules=excluded_modules)
 
     if list_type in [LIST_PLUGINS, LIST_DOWNLOADERS, LIST_READERS, LIST_FILTERS, LIST_WRITERS]:
         if list_type == LIST_PLUGINS:
@@ -192,6 +200,7 @@ def main(args=None):
         prog=LLM_REGISTRY,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-m", "--custom_modules", type=str, default=None, help="The comma-separated list of custom modules to use.", required=False)
+    parser.add_argument("-e", "--excluded_modules", type=str, default=None, help="The comma-separated list of modules to excluded.", required=False)
     parser.add_argument("-l", "--list", choices=LIST_TYPES, default=None, help="For outputting various lists on stdout.", required=False)
     parsed = parser.parse_args(args=args)
 

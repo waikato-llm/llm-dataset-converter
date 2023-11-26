@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 import traceback
-from typing import List
+from typing import List, Optional
 
 from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
 from ldc.help import generate_plugin_usage, HELP_FORMATS, HELP_FORMAT_TEXT
@@ -14,12 +14,15 @@ HELP = "llm-help"
 _logger = logging.getLogger(HELP)
 
 
-def output_help(modules: List[str] = None, plugin_name: str = None, help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1, output: str = None):
+def output_help(modules: List[str] = None, excluded_modules: Optional[List[str]] = None, plugin_name: str = None,
+                help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1, output: str = None):
     """
     Generates and outputs the help screen for the plugin.
 
     :param modules: the modules to generate the entry points for
     :type modules: list
+    :param excluded_modules: the list of modules to exclude
+    :type excluded_modules: list
     :param plugin_name: the plugin to generate the help for, None if for all
     :type plugin_name: str
     :param help_format: the format to output
@@ -29,7 +32,7 @@ def output_help(modules: List[str] = None, plugin_name: str = None, help_format:
     :param output: the dir/file to save the output to, uses stdout if None
     :type output: str
     """
-    register_plugins(modules)
+    register_plugins(modules=modules, excluded_modules=excluded_modules)
     if help_format not in HELP_FORMATS:
         raise Exception("Unknown help format: %s" % help_format)
     if (plugin_name is None) and ((output is None) or (not os.path.isdir(output))):
@@ -56,6 +59,7 @@ def main(args=None):
         prog=HELP,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-m", "--modules", metavar="PACKAGE", help="The names of the module packages, uses the default ones if not provided.", default=None, type=str, required=False, nargs="*")
+    parser.add_argument("-e", "--excluded_modules", type=str, default=None, help="The comma-separated list of modules to excluded.", required=False)
     parser.add_argument("-p", "--plugin_name", metavar="NAME", help="The name of the plugin to generate the help for, generates it for all if not specified", default=None, type=str, required=False)
     parser.add_argument("-f", "--help_format", metavar="FORMAT", help="The output format to generate", choices=HELP_FORMATS, default=HELP_FORMAT_TEXT, required=False)
     parser.add_argument("-L", "--heading_level", metavar="INT", help="The level to use for the heading", default=1, type=int, required=False)
@@ -63,7 +67,8 @@ def main(args=None):
     parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
     parsed = parser.parse_args(args=args)
     set_logging_level(_logger, parsed.logging_level)
-    output_help(modules=parsed.modules, plugin_name=parsed.plugin_name, help_format=parsed.help_format,
+    output_help(modules=parsed.modules, excluded_modules=parsed.excluded_modules,
+                plugin_name=parsed.plugin_name, help_format=parsed.help_format,
                 heading_level=parsed.heading_level, output=parsed.output)
 
 

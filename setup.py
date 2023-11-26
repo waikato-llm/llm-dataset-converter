@@ -37,7 +37,7 @@ setup(
         "pyarrow",
         "pyzstd",
         "huggingface-hub",
-        "seppl>=0.0.10",
+        "seppl>=0.0.11",
         "pyyaml",
     ],
     version="0.0.3",

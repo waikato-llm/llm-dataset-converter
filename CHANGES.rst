@@ -6,7 +6,11 @@ Changelog
 
 - `pairs-to-llama2` filter now has an optional `--prefix` parameter to use with the instruction
 - added the `pretrain-sentences-to-pairs` filter for generating artificial prompt/response datasets from pretrain data
-- requires seppl>=0.0.9 now
+- requires seppl>=0.0.11 now
+- the `LDC_MODULES_EXCL` environment variable is now used for specifying modules to be excluded from the registration
+  process (e.g., used when generating help screens for derived libraries that shouldn't output the
+  base plugins as well)
+- `llm-registry` and `llm-help` now allow specifying exlcuded modules via `-e/--excluded_modules` option
 
 
 0.0.3 (2023-11-10)
