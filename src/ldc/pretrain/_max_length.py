@@ -1,7 +1,8 @@
 import argparse
 import copy
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix
 from ._core import PretrainData, PretrainFilter
 from ldc.text_utils import apply_max_length
 
@@ -11,7 +12,7 @@ class MaxLength(PretrainFilter):
     Splits pretrain text into segments of at most the specified length (uses word boundary).
     """
 
-    def __init__(self, max_length: int = -1, split_records: bool = False, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, max_length: int = -1, split_records: bool = False, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

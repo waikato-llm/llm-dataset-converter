@@ -7,8 +7,8 @@
 Keeps or discards data records based on keyword(s). Search is performed in lower-case.
 
 ```
-usage: keyword [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME] -k
-               KEYWORD [KEYWORD ...]
+usage: keyword [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
+               -k KEYWORD [KEYWORD ...]
                [-L {any,instruction,input,output,content}]
                [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
@@ -17,8 +17,8 @@ lower-case.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

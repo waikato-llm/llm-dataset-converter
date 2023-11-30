@@ -5,7 +5,8 @@ import sys
 import traceback
 from typing import List, Optional
 
-from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
+from wai.logging import init_logging, set_logging_level, add_logging_level
+from ldc.core import ENV_LLM_LOGLEVEL
 from ldc.help import generate_plugin_usage, HELP_FORMATS, HELP_FORMAT_TEXT
 from ldc.registry import register_plugins, available_plugins
 
@@ -53,7 +54,7 @@ def main(args=None):
     :param args: the commandline arguments, uses sys.argv if not supplied
     :type args: list
     """
-    init_logging()
+    init_logging(env_var=ENV_LLM_LOGLEVEL)
     parser = argparse.ArgumentParser(
         description="Tool for outputting help for plugins in various formats.",
         prog=HELP,
@@ -64,7 +65,7 @@ def main(args=None):
     parser.add_argument("-f", "--help_format", metavar="FORMAT", help="The output format to generate", choices=HELP_FORMATS, default=HELP_FORMAT_TEXT, required=False)
     parser.add_argument("-L", "--heading_level", metavar="INT", help="The level to use for the heading", default=1, type=int, required=False)
     parser.add_argument("-o", "--output", metavar="PATH", help="The directory or file to store the help in; outputs it to stdout if not supplied; if pointing to a directory, automatically generates file name from plugin name and help format", type=str, default=None, required=False)
-    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
+    add_logging_level(parser)
     parsed = parser.parse_args(args=args)
     set_logging_level(_logger, parsed.logging_level)
     output_help(modules=parsed.modules, excluded_modules=parsed.excluded_modules,

@@ -6,7 +6,7 @@
 Reads translation data from plain text files, with each line representing a record for one specific language.
 
 ```
-usage: from-txt-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: from-txt-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                     [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
                     [-I [INPUT_LIST [INPUT_LIST ...]]] [--col_id COL]
                     [--col_lang COL] --col_content COL [--col_sep COL_SEP]
@@ -17,8 +17,8 @@ record for one specific language.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

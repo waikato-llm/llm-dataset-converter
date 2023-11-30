@@ -1,8 +1,8 @@
 import argparse
 from typing import List
 
+from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_TRANSLATION, DOMAIN_PAIRS
-from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
@@ -14,7 +14,7 @@ class TranslationToPairs(Filter):
     """
 
     def __init__(self, lang_instruction: str = None, lang_input: str = None, lang_output: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

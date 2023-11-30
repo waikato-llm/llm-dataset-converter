@@ -6,7 +6,8 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix
 from ldc.base_io import locate_files, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
 from ldc.utils import add_meta_data
@@ -21,7 +22,7 @@ class ParquetTranslationReader(TranslationReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  col_content: str = None, col_id: str = None, col_meta: List[str] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -170,7 +171,7 @@ class ParquetTranslationWriter(BatchTranslationWriter):
     """
 
     def __init__(self, target: str = None, col_content: str = None, col_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 

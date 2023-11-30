@@ -6,7 +6,8 @@ import sys
 import traceback
 from typing import List
 
-from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
+from wai.logging import init_logging, set_logging_level, add_logging_level
+from ldc.core import ENV_LLM_LOGLEVEL
 from ldc.utils import Splitter
 
 FIND = "llm-find"
@@ -129,7 +130,7 @@ def main(args=None):
     :param args: the commandline arguments, uses sys.argv if not supplied
     :type args: list
     """
-    init_logging()
+    init_logging(env_var=ENV_LLM_LOGLEVEL)
     parser = argparse.ArgumentParser(
         description="Tool for locating files in directories that match certain patterns and store them in files.",
         prog=FIND,
@@ -142,7 +143,7 @@ def main(args=None):
     parser.add_argument("--split_ratios", type=int, default=None, help="The split ratios to use for generating the splits (int; must sum up to 100)", nargs="*")
     parser.add_argument("--split_names", type=str, default=None, help="The split names to use as filename suffixes for the generated splits (before .ext)", nargs="*")
     parser.add_argument("--split_name_separator", type=str, default="-", help="The separator to use between file name and split name", required=False)
-    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
+    add_logging_level(parser)
     parsed = parser.parse_args(args=args)
     set_logging_level(_logger, parsed.logging_level)
     find_files(parsed.input, parsed.output, recursive=parsed.recursive,

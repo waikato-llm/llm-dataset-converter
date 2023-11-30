@@ -1,7 +1,6 @@
 import abc
 import argparse
 import logging
-import os
 import sys
 import traceback
 
@@ -10,6 +9,7 @@ from typing import List, Union, Dict, Optional
 
 from seppl import Plugin
 from seppl import check_compatibility as seppl_check_compatibility
+from wai.logging import add_logging_level, add_logger_name, set_logging_level, LOGGING_WARNING
 
 
 ENV_LLM_LOGLEVEL = "LLM_LOGLEVEL"
@@ -26,19 +26,6 @@ DOMAIN_SUFFIX_LOOKUP = {
     DOMAIN_TRANSLATION: "t9n",
 }
 
-
-LOGGING_DEBUG = "DEBUG"
-LOGGING_INFO = "INFO"
-LOGGING_WARN = "WARN"
-LOGGING_ERROR = "ERROR"
-LOGGING_CRITICAL = "CRITICAL"
-LOGGING_LEVELS = [
-    LOGGING_DEBUG,
-    LOGGING_INFO,
-    LOGGING_WARN,
-    LOGGING_ERROR,
-    LOGGING_CRITICAL,
-]
 
 COMPARISON_LESSTHAN = "lt"
 COMPARISON_LESSOREQUAL = "le"
@@ -87,53 +74,6 @@ DEFAULT_END_CHARS = ".!?;:)"
 
 DEFAULT_QUOTE_CHARS = "\"'”’"
 """ the default quote characters. """
-
-
-def str_to_logging_level(level: str) -> int:
-    """
-    Turns a logging level string into the corresponding integer constant.
-
-    :param level: the level to convert
-    :type level: str
-    :return: the int level
-    :rtype: int
-    """
-    if level not in LOGGING_LEVELS:
-        raise Exception("Invalid logging level (%s): %s" % ("|".join(LOGGING_LEVELS), level))
-    if level == LOGGING_CRITICAL:
-        return logging.CRITICAL
-    elif level == LOGGING_ERROR:
-        return logging.ERROR
-    elif level == LOGGING_WARN:
-        return logging.WARN
-    elif level == LOGGING_INFO:
-        return logging.INFO
-    elif level == LOGGING_DEBUG:
-        return logging.DEBUG
-    else:
-        raise Exception("Unhandled logging level: %s" % level)
-
-
-def init_logging():
-    """
-    Initializes the logging.
-    """
-    level = logging.WARNING
-    if os.getenv(ENV_LLM_LOGLEVEL) is not None:
-        level = str_to_logging_level(os.getenv(ENV_LLM_LOGLEVEL))
-    logging.basicConfig(level=level)
-
-
-def set_logging_level(logger: logging.Logger, level: str):
-    """
-    Sets the logging level of the logger.
-
-    :param logger: the logger to update
-    :type logger: logging.Logger
-    :param level: the level string, see LOGGING_LEVELS
-    :type level: str
-    """
-    logger.setLevel(str_to_logging_level(level))
 
 
 @dataclass
@@ -237,7 +177,7 @@ class CommandlineHandler(Plugin, abc.ABC):
     Base class for objects handle arguments.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the handler.
 
@@ -275,8 +215,8 @@ class CommandlineHandler(Plugin, abc.ABC):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
-        parser.add_argument("-N", "--logger_name", type=str, default=None, help="The custom name to use for the logger, uses the plugin name by default", required=False)
+        add_logging_level(parser)
+        add_logger_name(parser, help_str="The custom name to use for the logger, uses the plugin name by default")
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):

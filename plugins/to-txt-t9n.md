@@ -8,8 +8,8 @@ When providing an output directory, either uses the current session counter as t
 When providing an output file, all incoming content will be concatenated in this one file. Compression is not available in this case due to the streaming context.
 
 ```
-usage: to-txt-t9n [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                  -o OUTPUT [-d NUM] [-f FORMAT] [-b SIZE]
+usage: to-txt-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+                  [-N LOGGER_NAME] -o OUTPUT [-d NUM] [-f FORMAT] [-b SIZE]
 
 Writes translation data to plain text files. When providing an output
 directory, either uses the current session counter as the filename or, if
@@ -19,8 +19,8 @@ available in this case due to the streaming context.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

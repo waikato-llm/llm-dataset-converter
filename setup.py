@@ -39,6 +39,7 @@ setup(
         "huggingface-hub",
         "seppl>=0.0.11",
         "pyyaml",
+        "wai.logging",
     ],
     version="0.0.3",
     author='Peter Reutemann',

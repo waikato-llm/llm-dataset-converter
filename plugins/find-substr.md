@@ -7,8 +7,8 @@
 Keeps or discards data records based on sub-string(s) text matching. Search is performed in lower-case. Optionally, the sub-strings can represent regular expressions used for searching the strings.
 
 ```
-usage: find-substr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                   -s SUB_STRING [SUB_STRING ...] [-r]
+usage: find-substr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+                   [-N LOGGER_NAME] -s SUB_STRING [SUB_STRING ...] [-r]
                    [-L {any,instruction,input,output,content}]
                    [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
@@ -18,8 +18,8 @@ expressions used for searching the strings.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

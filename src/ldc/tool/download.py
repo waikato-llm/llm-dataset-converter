@@ -4,7 +4,8 @@ import traceback
 from typing import List
 
 from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
-from ldc.core import init_logging
+from wai.logging import init_logging
+from ldc.core import ENV_LLM_LOGLEVEL
 from ldc.downloader import Downloader
 from ldc.help import generate_plugin_usage
 from ldc.registry import available_downloaders
@@ -75,7 +76,7 @@ def main(args=None):
     :param args: the commandline arguments, uses sys.argv if not supplied
     :type args: list
     """
-    init_logging()
+    init_logging(env_var=ENV_LLM_LOGLEVEL)
     _args = sys.argv[1:] if (args is None) else args
     try:
         downloader = _parse_args(_args)

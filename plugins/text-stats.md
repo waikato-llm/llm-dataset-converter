@@ -7,16 +7,17 @@
 Computes basic statics from the textual data passing through.
 
 ```
-usage: text-stats [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                  [-o OUTPUT] [-d] [-L {any,instruction,input,output,content}]
+usage: text-stats [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+                  [-N LOGGER_NAME] [-o OUTPUT] [-d]
+                  [-L {any,instruction,input,output,content}]
                   [-g [LANGUAGE [LANGUAGE ...]]]
 
 Computes basic statics from the textual data passing through.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

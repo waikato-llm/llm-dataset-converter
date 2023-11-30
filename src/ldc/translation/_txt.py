@@ -1,11 +1,10 @@
 import argparse
 import os
 import re
-import sys
-import traceback
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output, is_compressed
 from ._core import TranslationData, TranslationReader, StreamTranslationWriter
 from ldc.utils import str_to_column_index
@@ -32,7 +31,7 @@ class TxtTranslationReader(TranslationReader):
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  col_id: str = None, col_lang: str = None, col_content: str = None, col_sep: str = ":",
                  lang_in_id: bool = False, expr_lang: str = None, expr_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -226,7 +225,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
     """
 
     def __init__(self, target: str = None, num_digits: int = 6, line_format: str = "%s-%s: %s" % (PH_LANG, PH_ID, PH_CONTENT),
-                 buffer_size: int = 1000, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 buffer_size: int = 1000, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 

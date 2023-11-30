@@ -1,7 +1,7 @@
 import argparse
 from typing import List
 
-from ldc.core import LOGGING_WARN
+from wai.logging import LOGGING_WARNING
 from ._core import TranslationFilter
 from ldc.translation import TranslationData
 
@@ -16,7 +16,7 @@ class Language(TranslationFilter):
     """
 
     def __init__(self, languages: List[str] = None, action: str = KEYWORD_ACTION_KEEP,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

@@ -1,8 +1,8 @@
 import argparse
 from typing import List
 
+from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_TRANSLATION, DOMAIN_PRETRAIN
-from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.translation import TranslationData
@@ -13,7 +13,7 @@ class TranslationToPretrain(Filter):
     Converts records of translation records to pretrain ones.
     """
 
-    def __init__(self, lang: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, lang: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

@@ -1,7 +1,7 @@
 import argparse
 from typing import List, Union
 
-from ldc.core import LOGGING_WARN
+from wai.logging import LOGGING_WARNING
 from ._core import Downloader
 
 from huggingface_hub import hf_hub_download, snapshot_download
@@ -15,7 +15,7 @@ class Huggingface(Downloader):
 
     def __init__(self, repo_id: str = None, repo_type: str = None, filename: Union[str, List[str]] = None,
                  revision: str = None, output_dir: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the downloader.
 

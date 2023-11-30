@@ -10,7 +10,7 @@ import pyzstd
 from typing import Union, Iterable, List, Optional
 
 from ldc.core import CommandlineHandler, DomainHandler, Session, SessionHandler
-from ldc.core import LOGGING_WARN
+from wai.logging import LOGGING_WARNING
 from seppl import OutputProducer, InputConsumer
 
 
@@ -219,7 +219,7 @@ class Reader(CommandlineHandler, OutputProducer, DomainHandler, SessionHandler, 
     Ancestor of classes that read data.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the handler.
 
@@ -275,7 +275,7 @@ class Writer(CommandlineHandler, InputConsumer, DomainHandler, SessionHandler, a
     Ancestor of classes that write data.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the handler.
 

@@ -3,7 +3,8 @@ import os
 import traceback
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN, domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.base_io import locate_files, open_file, generate_output, is_compressed
 from ._core import PretrainData, PretrainReader, StreamPretrainWriter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences, remove_empty, \
@@ -22,7 +23,7 @@ class TxtPretrainReader(PretrainReader):
                  expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
                  quote_chars: str = DEFAULT_QUOTE_CHARS,
                  block_removal_start: List[str] = None, block_removal_end: List[str] = None,
-                 max_sentences: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 max_sentences: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -268,7 +269,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
     """
 
     def __init__(self, target: str = None, num_digits: int = 6, buffer_size: int = 1000,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 

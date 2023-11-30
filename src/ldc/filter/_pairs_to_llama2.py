@@ -1,8 +1,8 @@
 import argparse
 from typing import List
 
+from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
-from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -13,7 +13,7 @@ class PairsToLlama2(Filter):
     Converts records of prompt/output pairs to llama2 pretrain ones.
     """
 
-    def __init__(self, prefix: str = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, prefix: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

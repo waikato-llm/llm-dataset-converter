@@ -1,7 +1,8 @@
 import argparse
 import copy
 
-from ldc.core import LOGGING_WARN, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS, domain_suffix
 from ._core import PretrainData, PretrainFilter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
 
@@ -13,7 +14,7 @@ class Sentences(PretrainFilter):
 
     def __init__(self, end_chars: str = DEFAULT_END_CHARS, quote_chars: str = DEFAULT_QUOTE_CHARS,
                  max_sentences: int = 1, split_records: bool = False,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

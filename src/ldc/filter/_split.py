@@ -1,7 +1,8 @@
 import argparse
 from typing import List
 
-from ldc.core import DOMAIN_ANY, LOGGING_WARN, get_metadata, MetaDataHandler
+from wai.logging import LOGGING_WARNING
+from ldc.core import DOMAIN_ANY, get_metadata, MetaDataHandler
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -18,7 +19,7 @@ class Split(Filter):
     """
 
     def __init__(self, split_ratios: List[int] = None, split_names: List[str] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

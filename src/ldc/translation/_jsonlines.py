@@ -3,7 +3,8 @@ import jsonlines
 import os
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output, is_compressed
 from ._core import TranslationData, TranslationReader, StreamTranslationWriter
 from ldc.utils import add_meta_data
@@ -18,7 +19,7 @@ class JsonLinesTranslationReader(TranslationReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
-                 att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -149,7 +150,7 @@ class JsonLinesTranslationWriter(StreamTranslationWriter):
 
     def __init__(self, target: str = None,
                  num_digits: int = 6, buffer_size: int = 1000,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 

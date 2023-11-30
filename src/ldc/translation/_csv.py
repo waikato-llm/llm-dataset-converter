@@ -5,7 +5,8 @@ import sys
 import traceback
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
 from ldc.utils import str_to_column_index, add_meta_data
@@ -19,7 +20,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_id: str = None, col_meta: List[str] = None,
                  columns: List[str] = None, languages: List[str] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -217,7 +218,7 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC):
     """
 
     def __init__(self, target: str = None, no_header: bool = False, no_col_id: bool = False,
-                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 
@@ -363,7 +364,7 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_id: str = None, col_meta: List[str] = None,
                  columns: List[str] = None, languages: List[str] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -435,7 +436,7 @@ class CsvTranslationWriter(AbstractCsvLikeTranslationWriter):
     """
 
     def __init__(self, target: str = None, no_header: bool = False,
-                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 
@@ -508,7 +509,7 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_id: str = None, col_meta: List[str] = None,
                  columns: List[str] = None, languages: List[str] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -580,7 +581,7 @@ class TsvTranslationWriter(AbstractCsvLikeTranslationWriter):
     """
 
     def __init__(self, target: str = None, no_header: bool = False,
-                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 

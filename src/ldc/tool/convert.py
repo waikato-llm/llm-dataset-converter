@@ -6,7 +6,8 @@ import traceback
 from typing import List, Tuple, Optional, Dict
 
 from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
-from ldc.core import init_logging, LOGGING_LEVELS, LOGGING_WARN, check_compatibility, CommandlineHandler, Session, set_logging_level
+from wai.logging import init_logging, set_logging_level, add_logging_level, LOGGING_LEVELS
+from ldc.core import check_compatibility, CommandlineHandler, Session, ENV_LLM_LOGLEVEL
 from ldc.help import generate_plugin_usage
 from ldc.base_io import COMPRESSION_FORMATS, Reader, Writer
 from ldc.execution import execute
@@ -141,7 +142,7 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
     # global options?
     # see print_usage() method above
     parser = argparse.ArgumentParser()
-    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN)
+    add_logging_level(parser)
     parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
     session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
     session.logger = logging.getLogger(CONVERT)
@@ -157,7 +158,7 @@ def main(args=None):
     :param args: the commandline arguments, uses sys.argv if not supplied
     :type args: list
     """
-    init_logging()
+    init_logging(env_var=ENV_LLM_LOGLEVEL)
     _args = sys.argv[1:] if (args is None) else args
     try:
         reader, filter_, writer, session = _parse_args(_args, require_writer=False)

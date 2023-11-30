@@ -6,7 +6,8 @@ import traceback
 
 from typing import List
 
-from ldc.core import init_logging, set_logging_level, LOGGING_WARN, LOGGING_LEVELS
+from wai.logging import init_logging, set_logging_level, add_logging_level
+from ldc.core import ENV_LLM_LOGLEVEL
 from ldc.base_io import locate_files
 
 PASTE = "llm-paste"
@@ -125,7 +126,7 @@ def main(args=None):
     :param args: the commandline arguments, uses sys.argv if not supplied
     :type args: list
     """
-    init_logging()
+    init_logging(env_var=ENV_LLM_LOGLEVEL)
     parser = argparse.ArgumentParser(
         description="Tool for combining multiple text files by placing them side-by-side.",
         prog=PASTE,
@@ -134,7 +135,7 @@ def main(args=None):
     parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to combine", required=False, nargs="*")
     parser.add_argument("-o", "--output", metavar="FILE", help="The path of the file to store the combined data in; outputs it to stdout if omitted or a directory", default=None, type=str, required=False)
     parser.add_argument("-s", "--separator", metavar="SEP", help="The separators to use between the files; uses TAB if not supplied; use '" + PH_TAB + "' as placeholder for tab", default=None, type=str, required=False, nargs="*")
-    parser.add_argument("-l", "--logging_level", choices=LOGGING_LEVELS, default=LOGGING_WARN, help="The logging level to use")
+    add_logging_level(parser)
     parsed = parser.parse_args(args=args)
     set_logging_level(_logger, parsed.logging_level)
     input_files = locate_files(parsed.input, input_lists=parsed.input_list, fail_if_empty=True)

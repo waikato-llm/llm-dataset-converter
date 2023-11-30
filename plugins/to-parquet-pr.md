@@ -6,7 +6,7 @@
 Writes prompt/output pairs in Parquet database format.
 
 ```
-usage: to-parquet-pr [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: to-parquet-pr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                      [-N LOGGER_NAME] -o OUTPUT [--col_instruction COL]
                      [--col_input COL] [--col_output COL] [--col_id COL]
 
@@ -14,8 +14,8 @@ Writes prompt/output pairs in Parquet database format.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

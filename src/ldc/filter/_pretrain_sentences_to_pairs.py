@@ -1,8 +1,8 @@
 import argparse
 from typing import List
 
+from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DEFAULT_END_CHARS
-from ldc.core import LOGGING_WARN
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -17,7 +17,7 @@ class PretrainSentencesToPairs(Filter):
     """
 
     def __init__(self, end_chars: str = DEFAULT_END_CHARS, prompt_step: int = 1, num_sentences_response: int = 5,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

@@ -7,7 +7,7 @@
 Removes text blocks, using strings identifying start/end of blocks.
 
 ```
-usage: remove-blocks [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: remove-blocks [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                      [-N LOGGER_NAME]
                      [--block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]]
                      [--block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]]
@@ -18,8 +18,8 @@ Removes text blocks, using strings identifying start/end of blocks.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

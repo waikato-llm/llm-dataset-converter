@@ -1,7 +1,8 @@
 import argparse
 from typing import List
 
-from ldc.core import LOGGING_WARN, CommandlineHandler, DOMAIN_ANY
+from wai.logging import LOGGING_WARNING
+from ldc.core import CommandlineHandler, DOMAIN_ANY
 from ldc.base_io import Writer, BatchWriter, StreamWriter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -16,7 +17,7 @@ class Tee(Filter):
     """
 
     def __init__(self, sub_flow: List[CommandlineHandler] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

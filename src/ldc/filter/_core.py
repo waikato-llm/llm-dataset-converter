@@ -1,7 +1,8 @@
 import abc
-from typing import List, Union
+from typing import List
 
-from ldc.core import CommandlineHandler, DomainHandler, SessionHandler, Session, DOMAIN_ANY, LOGGING_WARN
+from wai.logging import LOGGING_WARNING
+from ldc.core import CommandlineHandler, DomainHandler, SessionHandler, Session, DOMAIN_ANY
 from ldc.core import initialize_handler
 from seppl import InputConsumer, OutputProducer
 
@@ -15,7 +16,7 @@ class Filter(CommandlineHandler, InputConsumer, OutputProducer, DomainHandler, S
     Base class for filters.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the handler.
 
@@ -127,7 +128,7 @@ class MultiFilter(Filter):
     Combines multiple filters.
     """
 
-    def __init__(self, filters: List[Filter] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, filters: List[Filter] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initialize with the specified filters.
 

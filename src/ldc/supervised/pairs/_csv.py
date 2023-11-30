@@ -5,7 +5,8 @@ import sys
 import traceback
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 from ldc.utils import str_to_column_index, add_meta_data
@@ -19,7 +20,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_instruction: str = None, col_input: str = None, col_output: str = None,
                  col_id: str = None, col_meta: List[str] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -241,7 +242,7 @@ class AbstractCsvLikePairsWriter(BatchPairWriter, abc.ABC):
 
     def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 
@@ -405,7 +406,7 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -481,7 +482,7 @@ class CsvPairsWriter(AbstractCsvLikePairsWriter):
 
     def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 
@@ -559,7 +560,7 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -633,7 +634,7 @@ class TsvPairsWriter(AbstractCsvLikePairsWriter):
 
     def __init__(self, target: str = None, no_header: bool = False,
                  col_instruction: str = None, col_input: str = None, col_output: str = None, col_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 

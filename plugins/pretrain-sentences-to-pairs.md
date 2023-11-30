@@ -7,7 +7,8 @@
 Converts sentences from pretrain records to prompt/response pairs by using one sentence as the prompt and the following X sentences as response. Can be used to generate artificial prompt/response datasets from just pretrain data.
 
 ```
-usage: pretrain-sentences-to-pairs [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: pretrain-sentences-to-pairs [-h]
+                                   [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                                    [-N LOGGER_NAME] [-c END_CHARS]
                                    [-p PROMPT_STEP]
                                    [-r NUM_SENTENCES_RESPONSE]
@@ -18,8 +19,8 @@ to generate artificial prompt/response datasets from just pretrain data.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

@@ -1,6 +1,7 @@
 import copy
 
-from ldc.core import LOGGING_WARN, domain_suffix
+from wai.logging import LOGGING_WARNING
+from ldc.core import domain_suffix
 from ._core import PretrainData, PretrainFilter
 
 
@@ -9,7 +10,7 @@ class Split(PretrainFilter):
     Splits pretrain text data into separate records on new lines. Automatically skips empty lines.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

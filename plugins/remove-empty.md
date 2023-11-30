@@ -7,7 +7,7 @@
 Removes empty lines.
 
 ```
-usage: remove-empty [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+usage: remove-empty [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                     [-N LOGGER_NAME]
                     [-L {any,instruction,input,output,content}]
                     [-g [LANGUAGE [LANGUAGE ...]]]
@@ -16,8 +16,8 @@ Removes empty lines.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)

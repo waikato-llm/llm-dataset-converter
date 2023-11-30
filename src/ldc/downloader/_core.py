@@ -1,6 +1,7 @@
 import abc
 
-from ldc.core import CommandlineHandler, LOGGING_WARN
+from wai.logging import LOGGING_WARNING
+from ldc.core import CommandlineHandler
 
 
 class Downloader(CommandlineHandler, abc.ABC):
@@ -8,7 +9,7 @@ class Downloader(CommandlineHandler, abc.ABC):
     Base class for downloader classes.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the handler.
 

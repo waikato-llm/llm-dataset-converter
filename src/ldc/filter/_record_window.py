@@ -1,7 +1,8 @@
 import argparse
 from typing import List
 
-from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, get_metadata, MetaDataHandler
+from wai.logging import LOGGING_WARNING
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, get_metadata, MetaDataHandler
 from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -13,7 +14,7 @@ class RecordWindow(Filter):
     Only lets records pass that match the defined window and step size.
     """
 
-    def __init__(self, from_index: int = None, to_index: int = None, step: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, from_index: int = None, to_index: int = None, step: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 

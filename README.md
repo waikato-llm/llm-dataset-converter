@@ -505,7 +505,8 @@ keyword `function` anywhere in the record, converts it to *pretrain* data
 and then outputs it in zstandard-compressed jsonlines format:
 
 ```python
-from ldc.core import Session, LOGGING_INFO, init_logging
+from wai.logging import LOGGING_INFO
+from ldc.core import Session, init_logging
 from ldc.base_io import COMPRESSION_ZSTD
 from ldc.registry import register_plugins
 from ldc.supervised.pairs import AlpacaReader, PAIRDATA_FIELDS

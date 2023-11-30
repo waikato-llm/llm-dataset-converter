@@ -2,7 +2,7 @@ import argparse
 import json
 from typing import Iterable, List, Union
 
-from ldc.core import LOGGING_WARN
+from wai.logging import LOGGING_WARNING
 from ldc.base_io import locate_files, open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
@@ -13,7 +13,7 @@ class AlpacaReader(PairReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -120,7 +120,7 @@ class AlpacaWriter(BatchPairWriter):
     Writer for the Alpaca JSON format.
     """
 
-    def __init__(self, target: str = None, pretty_print: bool = False, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, target: str = None, pretty_print: bool = False, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 

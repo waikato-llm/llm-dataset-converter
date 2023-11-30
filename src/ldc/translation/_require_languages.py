@@ -2,7 +2,7 @@ import argparse
 
 from typing import List
 
-from ldc.core import LOGGING_WARN
+from wai.logging import LOGGING_WARNING
 from ._core import TranslationData, TranslationFilter
 
 
@@ -11,7 +11,7 @@ class RequireLanguages(TranslationFilter):
     Discards records if the required languages aren't present.
     """
 
-    def __init__(self, languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARN):
+    def __init__(self, languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
 
