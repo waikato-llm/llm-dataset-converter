@@ -120,7 +120,7 @@ class AlpacaWriter(BatchPairWriter):
     Writer for the Alpaca JSON format.
     """
 
-    def __init__(self, target: str = None, pretty_print: bool = False, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+    def __init__(self, target: str = None, pretty_print: bool = False, ensure_ascii: bool = True, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 
@@ -128,6 +128,8 @@ class AlpacaWriter(BatchPairWriter):
         :type target: str
         :param pretty_print: whether to output the JSON in more human-readable format
         :type pretty_print: bool
+        :param ensure_ascii: whether to ensure ASCII compatible output
+        :type ensure_ascii: bool
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -136,6 +138,7 @@ class AlpacaWriter(BatchPairWriter):
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.target = target
         self.pretty_print = pretty_print
+        self.ensure_ascii = ensure_ascii
         self._current_output = None
         self._output = None
 
@@ -167,6 +170,7 @@ class AlpacaWriter(BatchPairWriter):
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help="Path of the Alpaca file to write (directory when processing multiple files)", required=True)
         parser.add_argument("-p", "--pretty_print", action="store_true", help="Whether to output the JSON in more human-readable format.", required=False)
+        parser.add_argument("-a", "--ensure_ascii", action="store_true", help="Whether to ensure that the output is ASCII compatible.", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -179,6 +183,7 @@ class AlpacaWriter(BatchPairWriter):
         super()._apply_args(ns)
         self.target = ns.output
         self.pretty_print = ns.pretty_print
+        self.ensure_ascii = ns.ensure_ascii
 
     def write_batch(self, data: Iterable[PairData]):
         """
@@ -195,10 +200,7 @@ class AlpacaWriter(BatchPairWriter):
 
         dicts = [x.to_dict() for x in data]
         indent = 2 if self.pretty_print else None
-        try:
-            json.dump(dicts, self._output, ensure_ascii=False, indent=indent)
-        except:
-            json.dump(dicts, self._output, ensure_ascii=True, indent=indent)
+        json.dump(dicts, self._output, ensure_ascii=self.ensure_ascii, indent=indent)
 
     def finalize(self):
         """

@@ -7,7 +7,7 @@ Writes prompt/output pairs in Alpaca-like JSON format.
 
 ```
 usage: to-alpaca [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                 [-N LOGGER_NAME] -o OUTPUT [-p]
+                 [-N LOGGER_NAME] -o OUTPUT [-p] [-a]
 
 Writes prompt/output pairs in Alpaca-like JSON format.
 
@@ -23,4 +23,6 @@ optional arguments:
                         processing multiple files) (default: None)
   -p, --pretty_print    Whether to output the JSON in more human-readable
                         format. (default: False)
+  -a, --ensure_ascii    Whether to ensure that the output is ASCII compatible.
+                        (default: False)
 ```
