@@ -74,7 +74,7 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                     if item is not None:
                         if writer is not None:
                             writer.write_stream(item)
-                    if session.count % 1000 == 0:
+                    if session.count % session.options.update_interval == 0:
                         session.logger.info("%d records processed..." % session.count)
                 session.logger.info("%d records processed in total." % session.count)
             else:

@@ -80,9 +80,9 @@ are automatically supported for loading/saving files:
 ### Dataset conversion
 
 ```
-usage: llm-convert [-h|--help|--help-all|-help-plugin NAME]
+usage: llm-convert [-h|--help|--help-all|-help-plugin NAME] [-u INTERVAL]
                    [-c {None,bz2,gz,xz,zstd}]
-                   [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                   [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    reader
                    [filter [filter [...]]]
                    writer
@@ -113,7 +113,9 @@ optional arguments:
   -h, --help            show basic help message and exit
   --help-all            show basic help message plus help on all plugins and exit
   --help-plugin NAME    show help message for plugin NAME and exit
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
+  -u INTERVAL, --update_interval INTERVAL
+                        outputs the progress every INTERVAL records (default: 1000)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         the logging level to use (default: WARN)
   -c {None,bz2,gz,xz,zstd}, --compression {None,bz2,gz,xz,zstd}
                         the type of compression to use when only providing an output
@@ -505,8 +507,8 @@ keyword `function` anywhere in the record, converts it to *pretrain* data
 and then outputs it in zstandard-compressed jsonlines format:
 
 ```python
-from wai.logging import LOGGING_INFO
-from ldc.core import Session, init_logging
+from wai.logging import LOGGING_INFO, init_logging
+from ldc.core import Session, ENV_LLM_LOGLEVEL
 from ldc.base_io import COMPRESSION_ZSTD
 from ldc.registry import register_plugins
 from ldc.supervised.pairs import AlpacaReader, PAIRDATA_FIELDS
@@ -514,7 +516,7 @@ from ldc.pretrain import JsonLinesPretrainWriter
 from ldc.filter import PairsToPretrain, Keyword
 from ldc.execution import execute
 
-init_logging()
+init_logging(env_var=ENV_LLM_LOGLEVEL)
 register_plugins()
 
 execute(

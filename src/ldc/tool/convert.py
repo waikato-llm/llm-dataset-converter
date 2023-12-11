@@ -18,6 +18,9 @@ from ldc.registry import available_readers, available_filters, available_writers
 CONVERT = "llm-convert"
 
 
+DEFAULT_UPDATE_INTERVAL = 1000
+
+
 def _available_plugins() -> Dict[str, CommandlineHandler]:
     """
     Returns the available reader/filter/writer plugins.
@@ -44,7 +47,7 @@ def _print_usage(plugin_details: bool = False):
     prefix = " " * (len(cmd) + 1)
     compression_formats = "None," + ",".join(COMPRESSION_FORMATS)
     logging_levels = ",".join(LOGGING_LEVELS)
-    print(cmd + " [-h|--help|--help-all|-help-plugin NAME]")
+    print(cmd + " [-h|--help|--help-all|-help-plugin NAME] [-u INTERVAL]")
     print(prefix + "[-c {%s}]" % compression_formats)
     print(prefix + "[-l {%s}]" % logging_levels)
     print(prefix + "reader")
@@ -61,6 +64,8 @@ def _print_usage(plugin_details: bool = False):
     print("  -h, --help            show basic help message and exit")
     print("  --help-all            show basic help message plus help on all plugins and exit")
     print("  --help-plugin NAME    show help message for plugin NAME and exit")
+    print("  -u INTERVAL, --update_interval INTERVAL")
+    print("                        outputs the progress every INTERVAL records (default: %d)" % DEFAULT_UPDATE_INTERVAL)
     print("  -l {%s}, --logging_level {%s}" % (logging_levels, logging_levels))
     print("                        the logging level to use (default: WARN)")
     print("  -c {%s}, --compression {%s}" % (compression_formats, compression_formats))
@@ -144,6 +149,7 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
     parser = argparse.ArgumentParser()
     add_logging_level(parser)
     parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
+    parser.add_argument("-u", "--update_interval", type=int, default=DEFAULT_UPDATE_INTERVAL)
     session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
     session.logger = logging.getLogger(CONVERT)
     set_logging_level(session.logger, session.options.logging_level)
