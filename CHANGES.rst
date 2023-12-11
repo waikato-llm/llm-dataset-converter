@@ -10,7 +10,7 @@ Changelog
 - the `LDC_MODULES_EXCL` environment variable is now used for specifying modules to be excluded from the registration
   process (e.g., used when generating help screens for derived libraries that shouldn't output the
   base plugins as well)
-- `llm-registry` and `llm-help` now allow specifying exlcuded modules via `-e/--excluded_modules` option
+- `llm-registry` and `llm-help` now allow specifying excluded modules via `-e/--excluded_modules` option
 - `to-alpaca` writer now has the `-a/--ensure_ascii` flag to enforce ASCII compatibility in the output
 - added global option `-u/--update_interval` to `convert` tool to customize how often progress of # records
   processed is being output in the console (default: 1000)
