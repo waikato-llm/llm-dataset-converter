@@ -62,7 +62,7 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                         if not isinstance(item, list):
                             item = [item]
                         data.extend(item)
-                    if session.count % 1000 == 0:
+                    if session.count % session.options.update_interval == 0:
                         session.logger.info("%d records processed..." % session.count)
                 writer.write_batch(data)
                 session.logger.info("%d records processed in total." % session.count)
