@@ -10,7 +10,7 @@ For keeping sentences together, e.g., when reading preformatted text.
 usage: assemble-sentences [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                           [-N LOGGER_NAME] [-c END_CHARS] [-q QUOTE_CHARS]
                           [-m MAX_SENTENCES]
-                          [-L {any,instruction,input,output,content}]
+                          [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                           [-g [LANGUAGE [LANGUAGE ...]]]
 
 For keeping sentences together, e.g., when reading preformatted text.
@@ -29,7 +29,7 @@ optional arguments:
                         The characters that represent quotes. (default: "'”’)
   -m MAX_SENTENCES, --max_sentences MAX_SENTENCES
                         The maximum number of sentences per line. (default: 1)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the keywords; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

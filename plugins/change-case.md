@@ -9,7 +9,7 @@ Changes the case of text, e.g., to all lower case.
 ```
 usage: change-case [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] [-c {unchanged,lower,upper,title}]
-                   [-L {any,instruction,input,output,content}]
+                   [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                    [-g [LANGUAGE [LANGUAGE ...]]]
 
 Changes the case of text, e.g., to all lower case.
@@ -23,7 +23,7 @@ optional arguments:
                         name by default (default: None)
   -c {unchanged,lower,upper,title}, --case {unchanged,lower,upper,title}
                         How to change the case of the text (default: lower)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the keywords; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

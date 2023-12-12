@@ -9,7 +9,7 @@ Keeps or discards data records based on keyword(s). Search is performed in lower
 ```
 usage: keyword [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
                -k KEYWORD [KEYWORD ...]
-               [-L {any,instruction,input,output,content}]
+               [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
 Keeps or discards data records based on keyword(s). Search is performed in
@@ -24,7 +24,7 @@ optional arguments:
                         name by default (default: None)
   -k KEYWORD [KEYWORD ...], --keyword KEYWORD [KEYWORD ...]
                         The keywords to look for (lower case) (default: None)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the keywords; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

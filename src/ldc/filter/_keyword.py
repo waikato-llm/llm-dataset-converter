@@ -1,10 +1,10 @@
 import argparse
-from typing import List, Set
+from typing import List, Set, Union
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
+    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
 from ._core import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -17,7 +17,7 @@ class Keyword(Filter):
     """
 
     def __init__(self, keywords: List[str] = None, action: str = FILTER_ACTION_KEEP,
-                 location: str = LOCATION_ANY, languages: List[str] = None,
+                 location: Union[str, List[str]] = LOCATION_ANY, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
@@ -27,7 +27,7 @@ class Keyword(Filter):
         :param action: the action to perform
         :type action: str
         :param location: in which part of the data to look for the keywords
-        :type location: str
+        :type location: str or list
         :param languages: the languages to restrict the keywords to, None to check all
         :type languages: list
         :param logger_name: the name to use for the logger
@@ -103,7 +103,7 @@ class Keyword(Filter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-k", "--keyword", type=str, help="The keywords to look for (lower case)", required=True, nargs="+")
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
+        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
             LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
             LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
@@ -133,6 +133,8 @@ class Keyword(Filter):
         self.keywords = [x.lower() for x in self.keywords]
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
+        if isinstance(self.location, str):
+            self.location = [self.location]
         self.kept = 0
         self.discarded = 0
 
@@ -146,14 +148,14 @@ class Keyword(Filter):
         words = set()
 
         if isinstance(data, PairData):
-            if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INSTRUCTION):
                 words.update(data.instruction.lower().split())
-            if self.location in [LOCATION_INPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INPUT):
                 words.update(data.input.lower().split())
-            if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_OUTPUT):
                 words.update(data.output.lower().split())
         elif isinstance(data, PretrainData):
-            if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_CONTENT):
                 words.update(data.content.lower().split())
         elif isinstance(data, TranslationData):
             if self.languages is None:

@@ -9,7 +9,7 @@ Computes basic statics from the textual data passing through.
 ```
 usage: text-stats [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                   [-N LOGGER_NAME] [-o OUTPUT] [-d]
-                  [-L {any,instruction,input,output,content}]
+                  [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                   [-g [LANGUAGE [LANGUAGE ...]]]
 
 Computes basic statics from the textual data passing through.
@@ -27,7 +27,7 @@ optional arguments:
                         (default: None)
   -d, --detailed        Whether to output more detailed statistics, e.g., the
                         counts per string length (default: False)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the text; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

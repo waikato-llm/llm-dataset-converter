@@ -9,7 +9,7 @@ Removes empty lines.
 ```
 usage: remove-empty [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                     [-N LOGGER_NAME]
-                    [-L {any,instruction,input,output,content}]
+                    [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                     [-g [LANGUAGE [LANGUAGE ...]]]
 
 Removes empty lines.
@@ -21,7 +21,7 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the keywords; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

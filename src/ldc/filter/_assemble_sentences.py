@@ -1,11 +1,11 @@
 import argparse
 import copy
-from typing import List
+from typing import List, Union
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
+    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
 from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -19,7 +19,7 @@ class AssembleSentences(Filter):
     """
 
     def __init__(self, end_chars: str = DEFAULT_END_CHARS, quote_chars: str = DEFAULT_QUOTE_CHARS,
-                 max_sentences: int = 1, location: str = LOCATION_ANY, languages: List[str] = None,
+                 max_sentences: int = 1, location: Union[str, List[str]] = LOCATION_ANY, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
@@ -106,7 +106,7 @@ class AssembleSentences(Filter):
         parser.add_argument("-c", "--end_chars", type=str, help="The characters signifying the end of a sentence.", default=DEFAULT_END_CHARS, required=False)
         parser.add_argument("-q", "--quote_chars", type=str, help="The characters that represent quotes.", default=DEFAULT_QUOTE_CHARS, required=False)
         parser.add_argument("-m", "--max_sentences", type=int, help="The maximum number of sentences per line.", default=1, required=False)
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
+        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
             LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
             LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
@@ -140,6 +140,8 @@ class AssembleSentences(Filter):
 
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
+        if isinstance(self.location, str):
+            self.location = [self.location]
 
     def _assemble_sentences(self, s: str) -> str:
         """
@@ -166,14 +168,14 @@ class AssembleSentences(Filter):
         :param data: the record to process
         """
         if isinstance(data, PairData):
-            if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INSTRUCTION):
                 data.instruction = self._assemble_sentences(data.instruction)
-            if self.location in [LOCATION_INPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INPUT):
                 data.input = self._assemble_sentences(data.input)
-            if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_OUTPUT):
                 data.output = self._assemble_sentences(data.output)
         elif isinstance(data, PretrainData):
-            if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_CONTENT):
                 data.content = self._assemble_sentences(data.content)
         elif isinstance(data, TranslationData):
             if self.languages is None:

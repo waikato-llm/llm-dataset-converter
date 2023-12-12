@@ -10,7 +10,7 @@ Replaces substrings that match regular expressions patterns.
 usage: replace-patterns [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                         [-N LOGGER_NAME] [-f [FIND [FIND ...]]]
                         [-r [REPLACE [REPLACE ...]]]
-                        [-L {any,instruction,input,output,content}]
+                        [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                         [-g [LANGUAGE [LANGUAGE ...]]]
 
 Replaces substrings that match regular expressions patterns.
@@ -28,7 +28,7 @@ optional arguments:
                         re.sub(...). (default: None)
   -r [REPLACE [REPLACE ...]], --replace [REPLACE [REPLACE ...]]
                         The corresponding replacement strings. (default: None)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the keywords; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

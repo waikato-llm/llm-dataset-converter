@@ -380,3 +380,29 @@ def initialize_handler(handler: CommandlineHandler, handler_type: str, raise_aga
         if raise_again:
             raise e
         return False
+
+
+def locations_match(locations: Union[str, List[str]], required: Union[str, List[str]]) -> bool:
+    """
+    Checks whether at least one of locations is present in the required list.
+
+    :param locations: the location(s) to check
+    :type locations: str or list
+    :param required: the required location(s)
+    :return: whether there was a match
+    :rtype: bool
+    """
+    if isinstance(locations, str):
+        locations = [locations]
+    if LOCATION_ANY in locations:
+        return True
+    if isinstance(required, str):
+        required = [required]
+
+    result = False
+    for location in locations:
+        if location in required:
+            result = True
+            break
+
+    return result

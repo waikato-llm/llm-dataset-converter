@@ -5,12 +5,12 @@ import sys
 import yaml
 
 from dataclasses import dataclass, field
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
+    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
 from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -61,7 +61,7 @@ class TextStatistics(Filter):
     Computes basic statics from the textual data passing through.
     """
 
-    def __init__(self, output: str = None, detailed: bool = False, location: str = LOCATION_ANY, languages: List[str] = None,
+    def __init__(self, output: str = None, detailed: bool = False, location: Union[str, List[str]] = LOCATION_ANY, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
@@ -71,7 +71,7 @@ class TextStatistics(Filter):
         :param detailed: whether to output detailed stats
         :type detailed: bool
         :param location: in which part of the data to look for the text
-        :type location: str
+        :type location: str or list
         :param languages: the languages to restrict the check to, None to check all
         :type languages: list
         :param logger_name: the name to use for the logger
@@ -145,7 +145,7 @@ class TextStatistics(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-o", "--output", type=str, help="The JSON file to store the statistics in; outputs a textual representation on stdout when missing", required=False, default=None)
         parser.add_argument("-d", "--detailed", action="store_true", help="Whether to output more detailed statistics, e.g., the counts per string length", required=False)
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the text; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
+        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Where to look for the text; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
         return parser
 
@@ -169,6 +169,8 @@ class TextStatistics(Filter):
         super().initialize()
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
+        if isinstance(self.location, str):
+            self.location = [self.location]
         self._stats = dict()
 
     def _update_container(self, stats: statistics, s: str):
@@ -235,14 +237,14 @@ class TextStatistics(Filter):
         :return: the potentially updated record or None if to drop
         """
         if isinstance(data, PairData):
-            if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INSTRUCTION):
                 self._update(DOMAIN_PAIRS, LOCATION_INSTRUCTION, "", data.instruction)
-            if self.location in [LOCATION_INPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INPUT):
                 self._update(DOMAIN_PAIRS, LOCATION_INPUT, "", data.input)
-            if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_OUTPUT):
                 self._update(DOMAIN_PAIRS, LOCATION_OUTPUT, "", data.output)
         elif isinstance(data, PretrainData):
-            if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_CONTENT):
                 self._update(DOMAIN_PRETRAIN, LOCATION_CONTENT, "", data.content)
         elif isinstance(data, TranslationData):
             if self.languages is None:

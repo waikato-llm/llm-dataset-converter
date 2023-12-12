@@ -1,10 +1,10 @@
 import argparse
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
+    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
 from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -17,7 +17,7 @@ class TextLength(Filter):
     """
 
     def __init__(self, min_length: int = None, max_length: int = None,
-                 location: str = LOCATION_ANY, languages: List[str] = None,
+                 location: Union[str, List[str]] = LOCATION_ANY, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
@@ -27,7 +27,7 @@ class TextLength(Filter):
         :param max_length: the maximum text length, ignored if None
         :type max_length: int
         :param location: in which part of the data to look for the text
-        :type location: str
+        :type location: str or list
         :param languages: the languages to restrict the check to, None to check all
         :type languages: list
         :param logger_name: the name to use for the logger
@@ -102,7 +102,7 @@ class TextLength(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-m", "--min_length", type=int, help="The minimum text length, ignored if <0", default=-1, required=False)
         parser.add_argument("-M", "--max_length", type=int, help="The maximum text length, ignored if <0", default=-1, required=False)
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the text; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
+        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Where to look for the text; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
         return parser
 
@@ -134,6 +134,8 @@ class TextLength(Filter):
 
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
+        if isinstance(self.location, str):
+            self.location = [self.location]
 
         self.kept = 0
         self.discarded = 0
@@ -160,14 +162,14 @@ class TextLength(Filter):
         lengths = list()
 
         if isinstance(data, PairData):
-            if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INSTRUCTION):
                 self._add_length(data.instruction, lengths)
-            if self.location in [LOCATION_INPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INPUT):
                 self._add_length(data.input, lengths)
-            if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_OUTPUT):
                 self._add_length(data.output, lengths)
         elif isinstance(data, PretrainData):
-            if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_CONTENT):
                 self._add_length(data.content, lengths)
         elif isinstance(data, TranslationData):
             if self.languages is None:

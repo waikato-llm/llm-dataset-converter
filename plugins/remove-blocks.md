@@ -11,7 +11,7 @@ usage: remove-blocks [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                      [-N LOGGER_NAME]
                      [--block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]]
                      [--block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]]
-                     [-L {any,instruction,input,output,content}]
+                     [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                      [-g [LANGUAGE [LANGUAGE ...]]]
 
 Removes text blocks, using strings identifying start/end of blocks.
@@ -29,7 +29,7 @@ optional arguments:
   --block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]
                         The ending strings for blocks to remove (default:
                         None)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the keywords; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

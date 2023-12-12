@@ -9,7 +9,7 @@ Keeps or discards data records based on sub-string(s) text matching. Search is p
 ```
 usage: find-substr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] -s SUB_STRING [SUB_STRING ...] [-r]
-                   [-L {any,instruction,input,output,content}]
+                   [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
                    [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
 Keeps or discards data records based on sub-string(s) text matching. Search is
@@ -28,7 +28,7 @@ optional arguments:
                         None)
   -r, --is_regexp       Whether the sub-strings represent regular expressions
                         (default: False)
-  -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
+  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
                         Where to look for the substrings; pairs:
                         any,instruction,input,output, pretrain: any,content,
                         translation: any,content (default: any)

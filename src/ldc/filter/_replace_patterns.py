@@ -1,11 +1,11 @@
 import argparse
 import copy
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
+    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
 from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -19,7 +19,7 @@ class ReplacePatterns(Filter):
     """
 
     def __init__(self, find: List[str] = None, replace: List[str] = None,
-                 location: str = LOCATION_ANY, languages: List[str] = None,
+                 location: Union[str, List[str]] = LOCATION_ANY, languages: List[str] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.
@@ -29,7 +29,7 @@ class ReplacePatterns(Filter):
         :param replace: the list of replacement strings
         :type replace: list
         :param location: in which part of the data to look for the keywords
-        :type location: str
+        :type location: str or list
         :param languages: the languages to restrict the keywords to, None to check all
         :type languages: list
         :param logger_name: the name to use for the logger
@@ -103,7 +103,7 @@ class ReplacePatterns(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-f", "--find", type=str, default=None, help="Regular expressions for replacing sub-strings in the text (gets applied before skipping empty lines); uses re.sub(...).", nargs="*")
         parser.add_argument("-r", "--replace", type=str, default=None, help="The corresponding replacement strings.", nargs="*")
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
+        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
             LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
             LOCATIONS_PRETRAIN))
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
@@ -129,6 +129,8 @@ class ReplacePatterns(Filter):
         super().initialize()
         if self.languages is not None:
             self.languages = [x.lower() for x in self.languages]
+        if isinstance(self.location, str):
+            self.location = [self.location]
         if (self.find is None) or (len(self.find) == 0):
             raise Exception("No regular expressions defined to find sub-strings!")
         if (self.replace is None) or (len(self.replace) == 0):
@@ -159,17 +161,17 @@ class ReplacePatterns(Filter):
         """
         removed = 0
         if isinstance(data, PairData):
-            if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INSTRUCTION):
                 data.instruction, r = self._replace_patterns(data.instruction)
                 removed += r
-            if self.location in [LOCATION_INPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INPUT):
                 data.input, r = self._replace_patterns(data.input)
                 removed += r
-            if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_OUTPUT):
                 data.output, r = self._replace_patterns(data.output)
                 removed += r
         elif isinstance(data, PretrainData):
-            if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_CONTENT):
                 data.content, r = self._replace_patterns(data.content)
                 removed += r
         elif isinstance(data, TranslationData):
