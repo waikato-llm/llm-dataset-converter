@@ -15,6 +15,7 @@ Changelog
 - added global option `-u/--update_interval` to `convert` tool to customize how often progress of # records
   processed is being output in the console (default: 1000)
 - `text-length` filter now handles None values, i.e., ignores them
+- locations (i.e., input/instructions/output/etc) can be specified now multiple times
 
 
 0.0.3 (2023-11-10)
