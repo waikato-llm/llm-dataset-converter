@@ -1,5 +1,5 @@
 import argparse
-from typing import List
+from typing import List, Optional
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
@@ -63,7 +63,7 @@ class TextLength(Filter):
         :return: the description
         :rtype: str
         """
-        return "Keeps or discards data records based on text length constraints."
+        return "Keeps or discards data records based on text length constraints. None values get ignored."
 
     def domains(self) -> List[str]:
         """
@@ -138,6 +138,18 @@ class TextLength(Filter):
         self.kept = 0
         self.discarded = 0
 
+    def _add_length(self, s: Optional[str], lengths: List[int]):
+        """
+        Records the length of the string.
+         
+        :param s: the string to get the length for, ignored if None
+        :type s: str 
+        :param lengths: for recording the lengths
+        :type lengths: list 
+        """
+        if s is not None:
+            lengths.append(len(s))
+
     def _get_lengths(self, data) -> List[int]:
         """
         Turns the record into list of lengths.
@@ -149,22 +161,22 @@ class TextLength(Filter):
 
         if isinstance(data, PairData):
             if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
-                lengths.append(len(data.instruction))
+                self._add_length(data.instruction, lengths)
             if self.location in [LOCATION_INPUT, LOCATION_ANY]:
-                lengths.append(len(data.input))
+                self._add_length(data.input, lengths)
             if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
-                lengths.append(len(data.output))
+                self._add_length(data.output, lengths)
         elif isinstance(data, PretrainData):
             if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
-                lengths.append(len(data.content))
+                self._add_length(data.content, lengths)
         elif isinstance(data, TranslationData):
             if self.languages is None:
                 for k in data.translations:
-                    lengths.append(len(data.translations[k]))
+                    self._add_length(data.translations[k], lengths)
             else:
                 for lang in self.languages:
                     if lang in data.translations:
-                        lengths.append(len(data.translations[lang]))
+                        self._add_length(data.translations[lang], lengths)
                     else:
                         # missing language gets length 0
                         lengths.append(0)
