@@ -241,9 +241,8 @@ optional arguments:
 ### Generating help screens for plugins
 
 ```
-usage: llm-help [-h] [-m [PACKAGE [PACKAGE ...]]] [-e EXCLUDED_MODULES]
-                [-p NAME] [-f FORMAT] [-L INT] [-o PATH]
-                [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                [-p NAME] [-f FORMAT] [-L INT] [-o PATH] [-i FILE]
+                [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Tool for outputting help for plugins in various formats.
 
@@ -267,8 +266,13 @@ optional arguments:
                         to stdout if not supplied; if pointing to a directory,
                         automatically generates file name from plugin name and
                         help format (default: None)
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -i FILE, --index FILE
+                        The file in the output directory to generate with an
+                        overview of all plugins, grouped by type (in markdown
+                        format, links them to the other generated files)
+                        (default: None)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
 ```
 
 
@@ -294,42 +298,9 @@ optional arguments:
 ```
 
 
-## Other plugins
+## Plugins
 
-Downloaders:
-* [huggingface](plugins/huggingface.md)
-
-Filters:  
-* [assemble-sentences](plugins/assemble-sentences.md)
-* [change-case](plugins/change-case.md)
-* [find-substr](plugins/find-substr.md)
-* [keyword](plugins/keyword.md)
-* [language](plugins/language.md)
-* [llama2-to-pairs](plugins/llama2-to-pairs.md)
-* [max-length-pt](plugins/max-length-pt.md)
-* [max-records](plugins/max-records.md)
-* [metadata](plugins/metadata.md)
-* [multi-filter](plugins/multi-filter.md)
-* [pairs-to-llama2](plugins/pairs-to-llama2.md)
-* [pairs-to-pretrain](plugins/pairs-to-pretrain.md)
-* [pretrain-sentences-to-pairs](plugins/pretrain-sentences-to-pairs.md)
-* [record-window](plugins/record-window.md)
-* [remove-blocks](plugins/remove-blocks.md)
-* [remove-empty](plugins/remove-empty.md)
-* [remove-patterns](plugins/remove-patterns.md)
-* [replace-patterns](plugins/replace-patterns.md)
-* [require-languages](plugins/require-languages.md)
-* [reset-ids](plugins/reset-ids.md)
-* [sentences-pt](plugins/sentences-pt.md)
-* [skip-duplicate-ids](plugins/skip-duplicate-ids.md)
-* [skip-duplicate-text](plugins/skip-duplicate-text.md)
-* [split](plugins/split.md)
-* [split-pt](plugins/split-pt.md)
-* [tee](plugins/tee.md)
-* [text-length](plugins/text-length.md)
-* [translation-to-pairs](plugins/translation-to-pairs.md)
-* [to-llama2-format](plugins/to-llama2-format.md)
-* [translation-to-pretrain](plugins/translation-to-pretrain.md)
+See [here](plugins/README.md) for an overview of all plugins.
 
 
 ## Command-line examples
