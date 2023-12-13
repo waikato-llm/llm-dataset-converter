@@ -16,6 +16,8 @@ Changelog
   processed is being output in the console (default: 1000)
 - `text-length` filter now handles None values, i.e., ignores them
 - locations (i.e., input/instructions/output/etc) can be specified now multiple times
+- the `llm-help` tool can generate index files for all the plugins now; in case of markdown
+  it will link to the other markdown files
 
 
 0.0.3 (2023-11-10)
