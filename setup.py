@@ -41,7 +41,7 @@ setup(
         "pyyaml",
         "wai.logging",
     ],
-    version="0.0.3",
+    version="0.0.4",
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
     entry_points={
