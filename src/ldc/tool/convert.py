@@ -71,6 +71,7 @@ def _print_usage(plugin_details: bool = False):
     print("  -c {%s}, --compression {%s}" % (compression_formats, compression_formats))
     print("                        the type of compression to use when only providing an output")
     print("                        directory to the writer (default: None)")
+    print("  -b, --force_batch     processes the data in batches")
     print()
     if plugin_details:
         for plugin in sorted(_available_plugins().keys()):
@@ -150,6 +151,7 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
     add_logging_level(parser)
     parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
     parser.add_argument("-u", "--update_interval", type=int, default=DEFAULT_UPDATE_INTERVAL)
+    parser.add_argument("-b", "--force_batch", action="store_true")
     session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
     session.logger = logging.getLogger(CONVERT)
     set_logging_level(session.logger, session.options.logging_level)

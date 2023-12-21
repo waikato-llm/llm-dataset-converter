@@ -9,6 +9,7 @@ from ._metadata import MetaData
 from ._pairs_to_llama2 import PairsToLlama2
 from ._pairs_to_pretrain import PairsToPretrain
 from ._pretrain_sentences_to_pairs import PretrainSentencesToPairs
+from ._randomize_records import RandomizeRecords
 from ._record_window import RecordWindow
 from ._remove_blocks import RemoveBlocks
 from ._remove_empty import RemoveEmpty

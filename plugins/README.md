@@ -33,6 +33,7 @@
 * [pairs-to-llama2](pairs-to-llama2.md)
 * [pairs-to-pretrain](pairs-to-pretrain.md)
 * [pretrain-sentences-to-pairs](pretrain-sentences-to-pairs.md)
+* [randomize-records](randomize-records.md)
 * [record-window](record-window.md)
 * [remove-blocks](remove-blocks.md)
 * [remove-empty](remove-empty.md)

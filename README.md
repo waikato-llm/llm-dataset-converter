@@ -98,11 +98,11 @@ filters:
    assemble-sentences, change-case, find-substr, keyword, language, 
    llama2-to-pairs, max-length-pt, max-records, metadata, multi-filter, 
    pairs-to-llama2, pairs-to-pretrain, pretrain-sentences-to-pairs, 
-   record-window, remove-blocks, remove-empty, remove-patterns, 
-   replace-patterns, require-languages, reset-ids, sentences-pt, 
-   skip-duplicate-ids, skip-duplicate-text, split, split-pt, tee, 
-   text-length, text-stats, to-llama2-format, translation-to-pairs, 
-   translation-to-pretrain
+   randomize-records, record-window, remove-blocks, remove-empty, 
+   remove-patterns, replace-patterns, require-languages, reset-ids, 
+   sentences-pt, skip-duplicate-ids, skip-duplicate-text, split, 
+   split-pt, tee, text-length, text-stats, to-llama2-format, 
+   translation-to-pairs, translation-to-pretrain
 writers:
    to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
    to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
@@ -120,6 +120,7 @@ optional arguments:
   -c {None,bz2,gz,xz,zstd}, --compression {None,bz2,gz,xz,zstd}
                         the type of compression to use when only providing an output
                         directory to the writer (default: None)
+  -b, --force_batch     processes the data in batches
 ```
 
 ### Download
