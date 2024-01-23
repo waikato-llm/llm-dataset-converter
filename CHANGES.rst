@@ -14,6 +14,8 @@ Changelog
 - default max number of bytes inspected for determining file encoding is now 10kb
 - method `locate_files` in `base_io` no longer includes directories when expanding globs
 - added tool `llm-file-encoding` for determining file encodings of text files
+- added method `replace_extension` to `base_io` module for changing a files extension
+  (removes any supported compression suffix first)
 
 
 0.0.4 (2023-12-19)

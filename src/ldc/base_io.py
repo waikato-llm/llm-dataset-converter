@@ -172,7 +172,7 @@ def is_compressed(path: str):
         return False
 
 
-def remove_compression_suffix(path: str):
+def remove_compression_suffix(path: str) -> str:
     """
     Removes the compression suffix from the file.
 
@@ -185,6 +185,23 @@ def remove_compression_suffix(path: str):
         return os.path.splitext(path)[0]
     else:
         return path
+
+
+def replace_extension(path: str, ext: str) -> str:
+    """
+    Replaces the current extension of the file with the new one.
+    Automatically removes any compression suffix first.
+
+    :param path: the file to replace the extension for
+    :type path: str
+    :param ext: the new extension to use (incl dot)
+    :type ext: str
+    :return: the updated filename
+    :rtype: str
+    """
+    result = remove_compression_suffix(path)
+    result = os.path.splitext(result)[0] + ext
+    return result
 
 
 def open_file(path: str, mode: str = None, encoding: str = None, compression: str = None, logger: logging.Logger = None):
