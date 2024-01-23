@@ -210,6 +210,39 @@ optional arguments:
                         The logging level to use (default: WARN)
 ```
 
+
+### File encodings
+
+The following tool allows you to determine the encoding of text files.
+
+```
+usage: llm-file-encoding [-h] [-i [INPUT [INPUT ...]]]
+                         [-I [INPUT_LIST [INPUT_LIST ...]]]
+                         [-m MAX_CHECK_LENGTH] [-o FILE]
+                         [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+
+Tool for determining the file encoding of text files.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
+                        Path to the text file(s) to check; glob syntax is
+                        supported (default: None)
+  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
+                        Path to the text file(s) listing the actual files to
+                        check (default: None)
+  -m MAX_CHECK_LENGTH, --max_check_length MAX_CHECK_LENGTH
+                        The maxmimum number of bytes to use for checking
+                        (default: None)
+  -o FILE, --output FILE
+                        The path of the file to store the determined encodings
+                        in; outputs it to stdout if omitted or a directory
+                        (default: None)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
+```
+
+
 ### Locating files
 
 Readers tend to support input via file lists. The `llm-find` tool can generate

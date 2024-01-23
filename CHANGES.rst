@@ -13,6 +13,7 @@ Changelog
   number of bytes used for determining the file encoding in auto-detect mode
 - default max number of bytes inspected for determining file encoding is now 10kb
 - method `locate_files` in `base_io` no longer includes directories when expanding globs
+- added tool `llm-file-encoding` for determining file encodings of text files
 
 
 0.0.4 (2023-12-19)
