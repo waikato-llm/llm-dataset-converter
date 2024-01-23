@@ -9,7 +9,7 @@ Reads pretrain data in TSV format.
 usage: from-tsv-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
                    [-I [INPUT_LIST [INPUT_LIST ...]]] [-c COL] [--col_id COL]
-                   [--col_meta [COL [COL ...]]] [-n]
+                   [--col_meta [COL [COL ...]]] [-n] [--encoding ENC]
 
 Reads pretrain data in TSV format.
 
@@ -36,4 +36,6 @@ optional arguments:
                         The name (or 1-based index) of the columns to store in
                         the meta-data (default: None)
   -n, --no_header       For files with no header row (default: False)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

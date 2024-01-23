@@ -31,7 +31,7 @@ class TxtTranslationReader(TranslationReader):
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  col_id: str = None, col_lang: str = None, col_content: str = None, col_sep: str = ":",
                  lang_in_id: bool = False, expr_lang: str = None, expr_id: str = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 encoding: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -51,6 +51,8 @@ class TxtTranslationReader(TranslationReader):
         :type expr_lang: str
         :param expr_id: the regexp to extract the actual ID as first group  (only if lang_in_id=True)
         :type expr_id: str
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -71,6 +73,7 @@ class TxtTranslationReader(TranslationReader):
         self.pattern_lang = None
         self.expr_id = expr_id
         self.pattern_id = None
+        self.encoding = encoding
         self._inputs = None
         self._current_input = None
 
@@ -109,6 +112,7 @@ class TxtTranslationReader(TranslationReader):
         parser.add_argument("--lang_in_id", action="store_true", help="Whether the language is part in the ID column.", required=False)
         parser.add_argument("--expr_lang", type=str, default="([a-z][a-z]).*", help="The regular expression for parsing the ID column and extracting the language as first group of the expression (only if --lang_in_id).")
         parser.add_argument("--expr_id", type=str, default="[a-z][a-z]-(.*)", help="The regular expression for parsing the ID column and extracting the actual ID as first group of the expression (only if --lang_in_id).")
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -128,6 +132,7 @@ class TxtTranslationReader(TranslationReader):
         self.lang_in_id = ns.lang_in_id
         self.expr_lang = ns.expr_lang
         self.expr_id = ns.expr_id
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -173,7 +178,7 @@ class TxtTranslationReader(TranslationReader):
             else:
                 sep = self.col_sep
 
-            with open_file(self.session.current_input, mode="r") as fp:
+            with open_file(self.session.current_input, mode="r", encoding=self.encoding) as fp:
                 lines = fp.readlines()
             for line in lines:
                 old_id = curr_id

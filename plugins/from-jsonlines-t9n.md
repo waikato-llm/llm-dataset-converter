@@ -9,7 +9,7 @@ Reads translation in JsonLines-like JSON format. Example: { "translation": { "en
 usage: from-jsonlines-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                           [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
                           [-I [INPUT_LIST [INPUT_LIST ...]]]
-                          [--att_meta [ATT [ATT ...]]]
+                          [--att_meta [ATT [ATT ...]]] [--encoding ENC]
 
 Reads translation in JsonLines-like JSON format. Example: { "translation": {
 "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o
@@ -31,4 +31,6 @@ optional arguments:
   --att_meta [ATT [ATT ...]]
                         The attributes to store in the meta-data (default:
                         None)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

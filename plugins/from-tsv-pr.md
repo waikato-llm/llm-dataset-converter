@@ -10,7 +10,7 @@ usage: from-tsv-pr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
                    [-I [INPUT_LIST [INPUT_LIST ...]]] [--col_instruction COL]
                    [--col_input COL] [--col_output COL] [--col_id COL]
-                   [--col_meta [COL [COL ...]]] [-n]
+                   [--col_meta [COL [COL ...]]] [-n] [--encoding ENC]
 
 Reads prompt/output pairs in TSV format.
 
@@ -41,4 +41,6 @@ optional arguments:
                         The name (or 1-based index) of the columns to store in
                         the meta-data (default: None)
   -n, --no_header       For files with no header row (default: False)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

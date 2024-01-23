@@ -8,7 +8,7 @@ Reads prompt/output pairs in Alpaca-like JSON format.
 ```
 usage: from-alpaca [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
-                   [-I [INPUT_LIST [INPUT_LIST ...]]]
+                   [-I [INPUT_LIST [INPUT_LIST ...]]] [--encoding ENC]
 
 Reads prompt/output pairs in Alpaca-like JSON format.
 
@@ -25,4 +25,6 @@ optional arguments:
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
                         Path to the text file(s) listing the data files to use
                         (default: None)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

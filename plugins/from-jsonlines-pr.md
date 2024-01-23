@@ -11,7 +11,7 @@ usage: from-jsonlines-pr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                          [-I [INPUT_LIST [INPUT_LIST ...]]]
                          [--att_instruction ATT] [--att_input ATT]
                          [--att_output ATT] [--att_id ATT]
-                         [--att_meta [ATT [ATT ...]]]
+                         [--att_meta [ATT [ATT ...]]] [--encoding ENC]
 
 Reads prompt/output pairs in JsonLines-like JSON format.
 
@@ -37,4 +37,6 @@ optional arguments:
   --att_meta [ATT [ATT ...]]
                         The attributes to store in the meta-data (default:
                         None)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

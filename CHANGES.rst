@@ -7,6 +7,7 @@ Changelog
 - added flag `-b/--force_batch` to the `llm-convert` tool which all data to be reader from the
   reader before filtering it and then passing it to the writer; useful for batch filters.
 - added the `randomize-records` batch filter
+- added the `--encoding ENC` option to file readers
 
 
 0.0.4 (2023-12-19)

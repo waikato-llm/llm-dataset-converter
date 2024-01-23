@@ -10,7 +10,7 @@ usage: from-jsonlines-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                          [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
                          [-I [INPUT_LIST [INPUT_LIST ...]]]
                          [--att_content ATT] [--att_id ATT]
-                         [--att_meta [ATT [ATT ...]]]
+                         [--att_meta [ATT [ATT ...]]] [--encoding ENC]
 
 Reads pretrain data in JsonLines-like JSON format.
 
@@ -33,4 +33,6 @@ optional arguments:
   --att_meta [ATT [ATT ...]]
                         The attributes to store in the meta-data (default:
                         None)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

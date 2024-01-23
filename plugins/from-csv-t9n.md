@@ -10,7 +10,7 @@ usage: from-csv-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                     [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
                     [-I [INPUT_LIST [INPUT_LIST ...]]] -c COL [COL ...] -g
                     LANG [LANG ...] [-n] [--col_id COL]
-                    [--col_meta [COL [COL ...]]]
+                    [--col_meta [COL [COL ...]]] [--encoding ENC]
 
 Reads translation data in CSV format.
 
@@ -39,4 +39,6 @@ optional arguments:
   --col_meta [COL [COL ...]]
                         The name (or 1-based index) of the columns to store in
                         the meta-data (default: None)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

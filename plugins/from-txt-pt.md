@@ -14,7 +14,7 @@ usage: from-txt-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-c END_CHARS] [-q QUOTE_CHARS]
                    [--block_removal_start [BLOCK_REMOVAL_START [BLOCK_REMOVAL_START ...]]]
                    [--block_removal_end [BLOCK_REMOVAL_END [BLOCK_REMOVAL_END ...]]]
-                   [-m MAX_SENTENCES]
+                   [-m MAX_SENTENCES] [--encoding ENC]
 
 Reads pretrain data from plain text files, with each file representing a data
 record. Text files can be split into lines and forwarded as separate records
@@ -56,4 +56,6 @@ optional arguments:
                         None)
   -m MAX_SENTENCES, --max_sentences MAX_SENTENCES
                         The maximum number of sentences per line. (default: 1)
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

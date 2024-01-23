@@ -19,7 +19,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, col_meta: List[str] = None,
+                 col_id: str = None, col_meta: List[str] = None, encoding: str = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
@@ -38,6 +38,8 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         :type col_id: str
         :param col_meta: the columns to store in the meta-data, can be None
         :type col_meta: list
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -57,6 +59,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         self.idx_output = -1
         self.idx_id = -1
         self.idx_meta = None
+        self.encoding = encoding
         self._inputs = None
         self._current_input = None
         self._current_reader = None
@@ -95,6 +98,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name (or 1-based index) of the columns to store in the meta-data", required=False, nargs="*")
         parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -113,6 +117,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         self.col_id = ns.col_id
         self.col_meta = ns.col_meta
         self.no_header = ns.no_header
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -158,7 +163,7 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
-        self._current_input = open_file(self._current_input, mode="rt")
+        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding)
         self._current_reader = self._init_reader(self._current_input)
 
         for row in self._current_reader:
@@ -406,7 +411,8 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 col_id: str = None, col_meta: List[str] = None, encoding: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -424,6 +430,8 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
         :type col_id: str
         :param col_meta: the columns to store in the meta-data, can be None
         :type col_meta: list
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -431,7 +439,7 @@ class CsvPairsReader(AbstractCsvLikePairsReader):
         """
         super().__init__(source=source, source_list=source_list,
                          no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, col_id=col_id, col_meta=col_meta,
+                         col_output=col_output, col_id=col_id, col_meta=col_meta, encoding=encoding,
                          logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
@@ -560,7 +568,8 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_instruction: str = None, col_input: str = None, col_output: str = None,
-                 col_id: str = None, col_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 col_id: str = None, col_meta: List[str] = None, encoding: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -578,12 +587,16 @@ class TsvPairsReader(AbstractCsvLikePairsReader):
         :type col_id: str
         :param col_meta: the columns to store in the meta-data, can be None
         :type col_meta: list
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
+        :param logger_name: the name to use for the logger
+        :type logger_name: str
         :param logging_level: the logging level to use
         :type logging_level: str
         """
         super().__init__(source=source, source_list=source_list,
                          no_header=no_header, col_instruction=col_instruction, col_input=col_input,
-                         col_output=col_output, col_id=col_id, col_meta=col_meta,
+                         col_output=col_output, col_id=col_id, col_meta=col_meta, encoding=encoding,
                          logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:

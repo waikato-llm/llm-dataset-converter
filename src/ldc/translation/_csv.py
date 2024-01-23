@@ -19,7 +19,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_id: str = None, col_meta: List[str] = None,
-                 columns: List[str] = None, languages: List[str] = None,
+                 columns: List[str] = None, languages: List[str] = None, encoding: str = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
@@ -36,6 +36,8 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -52,6 +54,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         self.columns = columns
         self.languages = languages
         self.indices = None
+        self.encoding = encoding
         self._inputs = None
         self._current_input = None
         self._current_reader = None
@@ -89,6 +92,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         parser.add_argument("-n", "--no_header", action="store_true", help="For files with no header row", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The 1-based column containing the row ID", required=False)
         parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name (or 1-based index) of the columns to store in the meta-data", required=False, nargs="*")
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -106,6 +110,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         self.no_header = ns.no_header
         self.col_id = ns.col_id
         self.col_meta = ns.col_meta
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -150,7 +155,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
-        self._current_input = open_file(self._current_input, mode="rt")
+        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding)
         self._current_reader = self._init_reader(self._current_input)
 
         count = 0
@@ -363,7 +368,7 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_id: str = None, col_meta: List[str] = None,
-                 columns: List[str] = None, languages: List[str] = None,
+                 columns: List[str] = None, languages: List[str] = None, encoding: str = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
@@ -380,6 +385,8 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type columns: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -387,7 +394,8 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
         """
         super().__init__(source=source, source_list=source_list,
                          no_header=no_header, columns=columns, languages=languages,
-                         col_id=col_id, col_meta=col_meta, logger_name=logger_name, logging_level=logging_level)
+                         col_id=col_id, col_meta=col_meta, encoding=encoding,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """
@@ -508,7 +516,7 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  no_header: bool = False, col_id: str = None, col_meta: List[str] = None,
-                 columns: List[str] = None, languages: List[str] = None,
+                 columns: List[str] = None, languages: List[str] = None, encoding: str = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
@@ -525,6 +533,8 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
         :type col_meta: list
         :param languages: the language IDs (ISO 639-1) corresponding to the columns
         :type languages: list
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -532,7 +542,8 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
         """
         super().__init__(source=source, source_list=source_list,
                          no_header=no_header, columns=columns, languages=languages,
-                         col_id=col_id, col_meta=col_meta, logger_name=logger_name, logging_level=logging_level)
+                         col_id=col_id, col_meta=col_meta, encoding=encoding,
+                         logger_name=logger_name, logging_level=logging_level)
 
     def name(self) -> str:
         """

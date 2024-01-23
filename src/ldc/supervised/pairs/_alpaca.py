@@ -13,12 +13,14 @@ class AlpacaReader(PairReader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
-                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 encoding: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
         :param source: the filename(s)
         :param source_list: the file(s) with filename(s)
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -27,6 +29,7 @@ class AlpacaReader(PairReader):
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
         self.source_list = source_list
+        self.encoding = encoding
         self._inputs = None
         self._current_input = None
 
@@ -58,6 +61,7 @@ class AlpacaReader(PairReader):
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; glob syntax is supported", required=False, nargs="*")
         parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -70,6 +74,7 @@ class AlpacaReader(PairReader):
         super()._apply_args(ns)
         self.source = ns.input
         self.source_list = ns.input_list
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -90,7 +95,7 @@ class AlpacaReader(PairReader):
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
-        self._current_input = open_file(self._current_input, mode="rt")
+        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding)
 
         array = json.load(self._current_input)
         for item in array:

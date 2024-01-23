@@ -17,7 +17,8 @@ class JsonLinesPairReader(PairReader):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  att_instruction: str = None, att_input: str = None, att_output: str = None, att_id: str = None,
-                 att_meta: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 att_meta: List[str] = None, encoding: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -33,6 +34,8 @@ class JsonLinesPairReader(PairReader):
         :type att_id: str
         :param att_meta: the attributes to store in the meta-data, can be None
         :type att_meta: list
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -46,6 +49,7 @@ class JsonLinesPairReader(PairReader):
         self.att_output = att_output
         self.att_id = att_id
         self.att_meta = att_meta
+        self.encoding = encoding
         self._inputs = None
         self._current_input = None
         self._reader = None
@@ -83,6 +87,7 @@ class JsonLinesPairReader(PairReader):
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute with the outputs", required=False)
         parser.add_argument("--att_id", metavar="ATT", type=str, default=None, help="The attribute the record ID (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("--att_meta", metavar="ATT", type=str, default=None, help="The attributes to store in the meta-data", required=False, nargs="*")
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -100,6 +105,7 @@ class JsonLinesPairReader(PairReader):
         self.att_output = ns.att_output
         self.att_id = ns.att_id
         self.att_meta = ns.att_meta
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -122,7 +128,7 @@ class JsonLinesPairReader(PairReader):
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
-        self._current_input = open_file(self._current_input, mode="rt")
+        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding)
 
         self._reader = jsonlines.Reader(self._current_input)
         for item in self._reader:

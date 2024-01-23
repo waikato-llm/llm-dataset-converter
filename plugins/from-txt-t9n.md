@@ -11,6 +11,7 @@ usage: from-txt-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                     [-I [INPUT_LIST [INPUT_LIST ...]]] [--col_id COL]
                     [--col_lang COL] --col_content COL [--col_sep COL_SEP]
                     [--lang_in_id] [--expr_lang EXPR_LANG] [--expr_id EXPR_ID]
+                    [--encoding ENC]
 
 Reads translation data from plain text files, with each line representing a
 record for one specific language.
@@ -47,4 +48,6 @@ optional arguments:
                         extracting the actual ID as first group of the
                         expression (only if --lang_in_id). (default:
                         [a-z][a-z]-(.*))
+  --encoding ENC        The encoding to force instead of auto-detecting it,
+                        e.g., 'utf-8' (default: None)
 ```

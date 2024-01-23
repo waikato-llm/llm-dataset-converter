@@ -23,7 +23,8 @@ class TxtPretrainReader(PretrainReader):
                  expr_remove: List[str] = None, sentences: bool = False, end_chars: str = DEFAULT_END_CHARS,
                  quote_chars: str = DEFAULT_QUOTE_CHARS,
                  block_removal_start: List[str] = None, block_removal_end: List[str] = None,
-                 max_sentences: int = 1, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 max_sentences: int = 1, encoding: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -47,6 +48,8 @@ class TxtPretrainReader(PretrainReader):
         :type block_removal_end: list
         :param max_sentences: the maximum number of sentences per line
         :type max_sentences: int
+        :param encoding: the encoding to use, None for auto-detect
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -64,6 +67,7 @@ class TxtPretrainReader(PretrainReader):
         self.block_removal_start = block_removal_start
         self.block_removal_end = block_removal_end
         self.max_sentences = max_sentences
+        self.encoding = encoding
         self._inputs = None
         self._current_input = None
 
@@ -105,6 +109,7 @@ class TxtPretrainReader(PretrainReader):
         parser.add_argument("--block_removal_start", type=str, help="The starting strings for blocks to remove", required=False, nargs="*")
         parser.add_argument("--block_removal_end", type=str, help="The ending strings for blocks to remove", required=False, nargs="*")
         parser.add_argument("-m", "--max_sentences", type=int, help="The maximum number of sentences per line.", default=1, required=False)
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -126,6 +131,7 @@ class TxtPretrainReader(PretrainReader):
         self.block_removal_start = ns.block_removal_start
         self.block_removal_end = ns.block_removal_end
         self.max_sentences = ns.max_sentences
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -220,7 +226,7 @@ class TxtPretrainReader(PretrainReader):
             self.session.current_input = input_file
             self.logger().info("Reading from: " + str(input_file))
             try:
-                with open_file(self.session.current_input, mode="rt") as fp:
+                with open_file(self.session.current_input, mode="rt", encoding=self.encoding) as fp:
                     lines = fp.readlines()
             except KeyboardInterrupt as e:
                 raise e
