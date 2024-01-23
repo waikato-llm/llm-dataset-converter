@@ -241,7 +241,7 @@ def open_file(path: str, mode: str = None, encoding: str = None, compression: st
             return open(path, mode=mode, encoding=encoding)
 
 
-def generate_output(input_path: str, output_path: str, ext: str, compression: str) -> str:
+def generate_output(input_path: str, output_path: str, ext: str, compression: Optional[str]) -> str:
     """
     Generates a new output filename based on the current input, the output and extension.
     If the output path is not a directory, simply returns that.
@@ -254,7 +254,7 @@ def generate_output(input_path: str, output_path: str, ext: str, compression: st
     :type output_path: str
     :param ext: the extension to use
     :type ext: str
-    :param compression: the compression to use
+    :param compression: the compression to use, None or empty string for no compression
     :type compression: str
     :return: the generated output file
     :rtype: str
