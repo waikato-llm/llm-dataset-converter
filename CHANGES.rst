@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.0.5 (????-??-??)
+0.0.5 (2024-01-24)
 ------------------
 
 - added flag `-b/--force_batch` to the `llm-convert` tool which all data to be reader from the
