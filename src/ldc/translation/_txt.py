@@ -316,7 +316,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
         super().initialize()
         self._first_item = True
         self._fname_format = "%0" + str(self.num_digits) + "d.txt"
-        if os.path.exists(self.target) and os.path.isdir(self.target):
+        if os.path.exists(self.target) and os.path.isdir(self.target) and (not self.session.options.force_batch):
             self._concatenate = False
         else:
             self._concatenate = True
@@ -360,10 +360,13 @@ class TxtTranslationWriter(StreamTranslationWriter):
         """
         self.logger().debug("flushing buffer: %d" % len(self._buffer))
         mode = "w" if self._first_item else "a"
+        output_file = self.target
+        if self.session.options.force_batch and os.path.isdir(output_file):
+            output_file = generate_output(self.session.current_input, output_file, ".txt", None)
         if self._first_item:
-            self.logger().info("Writing to: %s" % self.target)
+            self.logger().info("Writing to: %s" % output_file)
         self._first_item = False
-        with open(self.target, mode) as fp:
+        with open(output_file, mode) as fp:
             for d in self._buffer:
                 try:
                     id_ = self._get_id(d)

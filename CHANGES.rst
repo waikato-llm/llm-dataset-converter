@@ -16,6 +16,9 @@ Changelog
 - added tool `llm-file-encoding` for determining file encodings of text files
 - added method `replace_extension` to `base_io` module for changing a files extension
   (removes any supported compression suffix first)
+- stream writers (.jsonl/.txt) now work with `--force_batch` mode; the output file name
+  gets automatically generated from the input file name when just using a directory for
+  the output
 
 
 0.0.4 (2023-12-19)
