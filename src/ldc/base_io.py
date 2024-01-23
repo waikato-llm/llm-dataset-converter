@@ -77,7 +77,10 @@ def locate_files(inputs: Union[str, List[str]], input_lists: Union[str, List[str
     # globs
     if inputs is not None:
         for inp in inputs:
-            result.extend(sorted(glob.glob(inp)))
+            for f in sorted(glob.glob(inp)):
+                if os.path.isdir(f):
+                    continue
+                result.append(f)
 
     # path lists
     if input_lists is not None:
