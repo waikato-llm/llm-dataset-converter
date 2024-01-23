@@ -261,13 +261,11 @@ def generate_output(input_path: str, output_path: str, ext: str, compression: st
     """
     if compression is None:
         compression = ""
-    else:
+    elif len(compression) > 0:
         compression = "." + compression
     if os.path.isdir(output_path):
-        if is_compressed(input_path):
-            input_path = remove_compression_suffix(input_path)
-        base = os.path.basename(input_path)
-        return os.path.join(output_path, os.path.splitext(base)[0] + ext + compression)
+        base = os.path.basename(replace_extension(input_path, ext + compression))
+        return os.path.join(output_path, base)
     else:
         return output_path
 
