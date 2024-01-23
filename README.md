@@ -75,6 +75,22 @@ are automatically supported for loading/saving files:
 * [zstd](https://en.wikipedia.org/wiki/Zstd): `.zst`, `.zstd`
 
 
+## File encodings
+
+Most readers offer the `--encoding` option to override the automatically determined 
+file encoding, as that can be wrong due to only inspect a fixed number of bytes.
+The number of bytes of a file inspected can be influenced via the following
+environment variable:
+
+```
+LDC_ENCODING_MAX_CHECK_LENGTH
+```
+
+A value of `-1` means the complete file. However, that can be very slow and a smaller
+value <1MB is recommended.
+
+
+
 ## Tools
 
 ### Dataset conversion

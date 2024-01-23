@@ -28,8 +28,14 @@ COMPRESSION_FORMATS = [
 ]
 
 
-ENCODING_MAX_CHECK_LENGTH = 1024*1024
+DEFAULT_ENCODING_MAX_CHECK_LENGTH = 1024 * 10
 """ the maximum number of bytes to read for determining the encoding. """
+
+ENV_ENCODING_MAX_CHECK_LENGTH = "LDC_ENCODING_MAX_CHECK_LENGTH"
+""" the environment variable to use for overriding the max check length for determining the file encoding. """
+
+ENCODING_MAX_CHECK_LENGTH = None
+""" the determined max check length for determining the file encoding. """
 
 
 def locate_files(inputs: Union[str, List[str]], input_lists: Union[str, List[str]] = None,
@@ -96,18 +102,44 @@ def locate_files(inputs: Union[str, List[str]], input_lists: Union[str, List[str
     return result
 
 
-def determine_encoding(path: str) -> Optional[str]:
+def encoding_max_check_length() -> int:
+    """
+    Returns the maximum number of bytes to use for determining the file encoding.
+    See environment variable constant ENV_ENCODING_MAX_CHECK_LENGTH.
+
+    :return: the number of bytes, -1 for whole file
+    :rtype: int
+    """
+    global ENCODING_MAX_CHECK_LENGTH
+    if ENCODING_MAX_CHECK_LENGTH is None:
+        if ENV_ENCODING_MAX_CHECK_LENGTH in os.environ:
+            try:
+                ENCODING_MAX_CHECK_LENGTH = int(os.environ[ENV_ENCODING_MAX_CHECK_LENGTH])
+            except:
+                print("Failed to parsed env var '%s' as int: %s" % (ENV_ENCODING_MAX_CHECK_LENGTH, os.environ[ENV_ENCODING_MAX_CHECK_LENGTH]))
+                ENCODING_MAX_CHECK_LENGTH = DEFAULT_ENCODING_MAX_CHECK_LENGTH
+        else:
+            ENCODING_MAX_CHECK_LENGTH = DEFAULT_ENCODING_MAX_CHECK_LENGTH
+    return ENCODING_MAX_CHECK_LENGTH
+
+
+def determine_encoding(path: str, max_check_length: int = None) -> Optional[str]:
     """
     Determines the file encoding of the text file.
 
     :param path: the file to determine the encoding for
     :type path: str
+    :param max_check_length: the maximum number of bytes to use for determining the encoding, -1 for all
+    :type max_check_length: int
     :return: the encoding, None if file does not exist
     :rtype: str
     """
     if os.path.exists(path):
-        raw = open(path, "rb").read(ENCODING_MAX_CHECK_LENGTH)
-        result = chardet.detect(raw)['encoding']
+        if max_check_length is None:
+            max_check_length = encoding_max_check_length()
+        raw = open(path, "rb").read(max_check_length)
+        result = chardet.detect(raw)["encoding"]
+        # use utf-8 over ascii
         if result == "ascii":
             result = "utf-8"
         return result

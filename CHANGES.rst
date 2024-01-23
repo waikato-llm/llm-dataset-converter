@@ -9,6 +9,9 @@ Changelog
 - added the `randomize-records` batch filter
 - added the `--encoding ENC` option to file readers
 - auto-determined encoding is now being logged (`INFO` level)
+- the `LDC_ENCODING_MAX_CHECK_LENGTH` environment variable allows overriding the default
+  number of bytes used for determining the file encoding in auto-detect mode
+- default max number of bytes inspected for determining file encoding is now 10kb
 
 
 0.0.4 (2023-12-19)
