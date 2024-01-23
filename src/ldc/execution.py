@@ -88,6 +88,8 @@ def execute(reader: Reader, filters: Optional[Union[Filter, List[Filter]]], writ
                         count = len(data)
                         data = filter_.process(data)
                         session.logger.info("%d records filtered..." % count)
+                    if not isinstance(data, list):
+                        data = [data]
                     if writer is not None:
                         count = 0
                         for item in data:
