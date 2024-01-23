@@ -178,7 +178,7 @@ class TxtTranslationReader(TranslationReader):
             else:
                 sep = self.col_sep
 
-            with open_file(self.session.current_input, mode="r", encoding=self.encoding) as fp:
+            with open_file(self.session.current_input, mode="r", encoding=self.encoding, logger=self.logger()) as fp:
                 lines = fp.readlines()
             for line in lines:
                 old_id = curr_id

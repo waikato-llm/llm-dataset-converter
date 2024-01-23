@@ -155,7 +155,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
-        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding)
+        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding, logger=self.logger())
         self._current_reader = self._init_reader(self._current_input)
 
         count = 0

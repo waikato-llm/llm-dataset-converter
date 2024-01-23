@@ -1,5 +1,7 @@
 import abc
 import bz2
+import logging
+
 import chardet
 import glob
 import gzip
@@ -150,7 +152,7 @@ def remove_compression_suffix(path: str):
         return path
 
 
-def open_file(path: str, mode: str = None, encoding: str = None, compression: str = None):
+def open_file(path: str, mode: str = None, encoding: str = None, compression: str = None, logger: logging.Logger = None):
     """
     Opens the file and returns a file-like object.
     Automatically decompresses: .gz, bz2, .xz, .zst/.zstd
@@ -163,6 +165,8 @@ def open_file(path: str, mode: str = None, encoding: str = None, compression: st
     :type encoding: str
     :param compression: the explicit compression to use (gz/bz2/xz/zstd)
     :type compression: str
+    :param logger: the optional logger to use for outputting auto-determined encoding
+    :type logger: str
     :return: the file-like object
     """
     path_lc = path.lower()
@@ -180,6 +184,8 @@ def open_file(path: str, mode: str = None, encoding: str = None, compression: st
         else:
             if encoding is None:
                 encoding = determine_encoding(path)
+                if logger is not None:
+                    logger.info("Auto-determined encoding '%s' for %s" % (str(encoding), path))
             return open(path, mode=mode, encoding=encoding)
 
 

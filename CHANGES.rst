@@ -8,6 +8,7 @@ Changelog
   reader before filtering it and then passing it to the writer; useful for batch filters.
 - added the `randomize-records` batch filter
 - added the `--encoding ENC` option to file readers
+- auto-determined encoding is now being logged (`INFO` level)
 
 
 0.0.4 (2023-12-19)

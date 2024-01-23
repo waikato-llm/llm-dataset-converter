@@ -95,7 +95,7 @@ class AlpacaReader(PairReader):
         self._current_input = self._inputs.pop(0)
         self.session.current_input = self._current_input
         self.logger().info("Reading from: " + str(self.session.current_input))
-        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding)
+        self._current_input = open_file(self._current_input, mode="rt", encoding=self.encoding, logger=self.logger())
 
         array = json.load(self._current_input)
         for item in array:

@@ -226,7 +226,7 @@ class TxtPretrainReader(PretrainReader):
             self.session.current_input = input_file
             self.logger().info("Reading from: " + str(input_file))
             try:
-                with open_file(self.session.current_input, mode="rt", encoding=self.encoding) as fp:
+                with open_file(self.session.current_input, mode="rt", encoding=self.encoding, logger=self.logger()) as fp:
                     lines = fp.readlines()
             except KeyboardInterrupt as e:
                 raise e
