@@ -4,7 +4,7 @@
 * accepts: ldc.pretrain.PretrainData
 * generates: ldc.supervised.pairs.PairData
 
-Converts llama2 pretrain records to prompts/response ones. The 'instruction' (ie prompt) is extracted from [INST]...[/INST] and the 'output' (ie response) is the string that follows the [/INST]. Splits on </s> to generate multiple prompt/response records.
+Converts llama2 pretrain records to prompts/response ones. The 'instruction' (ie prompt) is extracted from [INST]...[/INST] and the 'output' (ie response) is the string that follows the [/INST]. Splits on <s> to generate multiple prompt/response records.
 
 ```
 usage: llama2-to-pairs [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
@@ -12,7 +12,7 @@ usage: llama2-to-pairs [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Converts llama2 pretrain records to prompts/response ones. The 'instruction'
 (ie prompt) is extracted from [INST]...[/INST] and the 'output' (ie response)
-is the string that follows the [/INST]. Splits on </s> to generate multiple
+is the string that follows the [/INST]. Splits on <s> to generate multiple
 prompt/response records.
 
 optional arguments:

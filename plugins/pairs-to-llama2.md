@@ -4,15 +4,15 @@
 * accepts: ldc.supervised.pairs.PairData
 * generates: ldc.pretrain.PretrainData
 
-Converts records of prompt/output pairs to llama2 pretrain ones. The 'instruction' (ie prompt) gets wrapped in [INST]...[/INST] and the 'output' (ie response) follows that.
+Converts records of prompt/response pairs to llama2-formatted pretrain ones. The 'instruction' (ie prompt) gets wrapped in [INST]...[/INST] and the 'output' (ie response) follows that.
 
 ```
 usage: pairs-to-llama2 [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                        [-N LOGGER_NAME] [-p PREFIX]
 
-Converts records of prompt/output pairs to llama2 pretrain ones. The
-'instruction' (ie prompt) gets wrapped in [INST]...[/INST] and the 'output'
-(ie response) follows that.
+Converts records of prompt/response pairs to llama2-formatted pretrain ones.
+The 'instruction' (ie prompt) gets wrapped in [INST]...[/INST] and the
+'output' (ie response) follows that.
 
 optional arguments:
   -h, --help            show this help message and exit
