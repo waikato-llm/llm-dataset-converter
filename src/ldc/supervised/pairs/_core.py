@@ -17,10 +17,10 @@ class PairData(MetaDataHandler):
     """
     Container for pair data.
     """
-    instruction: str
-    input: str
-    output: str
-    meta: dict = None
+    instruction: Optional[str]
+    input: Optional[str]
+    output: Optional[str]
+    meta: Optional[dict] = None
 
     def has_metadata(self) -> bool:
         """
