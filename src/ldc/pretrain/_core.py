@@ -12,8 +12,8 @@ class PretrainData(MetaDataHandler):
     """
     Container for pretrain data.
     """
-    content: str
-    meta: dict = None
+    content: Optional[str]
+    meta: Optional[dict] = None
 
     def has_metadata(self) -> bool:
         """

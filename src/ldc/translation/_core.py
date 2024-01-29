@@ -12,8 +12,8 @@ class TranslationData(MetaDataHandler):
     """
     Container for pretrain data.
     """
-    translations: dict  # lookup: language -> text
-    meta: dict = None
+    translations: Optional[dict]  # lookup: language -> text
+    meta: Optional[dict] = None
 
     def has_metadata(self) -> bool:
         """
