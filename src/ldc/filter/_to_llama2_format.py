@@ -9,7 +9,17 @@ from ldc.supervised.pairs import PairData
 
 class ToLlama2Format(Filter):
     """
-    Turns pretrain records into llama2 format (without the [INST]...[/INST] block).
+    Turns pretrain records into llama2 format.
+    https://github.com/facebookresearch/llama/blob/ef351e9cd9496c579bf9f2bb036ef11bdc5ca3d2/llama/generation.py#L320
+
+    <s>[INST] <<SYS>>
+    {{system message}}
+    <</SYS>>
+    {{message}} [/INST] {{answer}} </s>
+
+    <s>[INST] {{message}} [/INST] {{answer}} </s>
+
+    <s>[INST] {{message}} [/INST]
     """
 
     def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
@@ -39,7 +49,7 @@ class ToLlama2Format(Filter):
         :return: the description
         :rtype: str
         """
-        return "Turns pretrain records into llama2 format (without the [INST]...[/INST] block)."
+        return "Turns pretrain records into llama2 format. Based on: https://github.com/facebookresearch/llama/blob/ef351e9cd9496c579bf9f2bb036ef11bdc5ca3d2/llama/generation.py#L320"
 
     def domains(self) -> List[str]:
         """
@@ -76,5 +86,5 @@ class ToLlama2Format(Filter):
         :type data: PairData
         :return: the potentially updated record(s)
         """
-        content = "<s> %s </s>" % data.content
+        content = "<s>[INST] %s [/INST]" % data.content
         return PretrainData(content=content)
