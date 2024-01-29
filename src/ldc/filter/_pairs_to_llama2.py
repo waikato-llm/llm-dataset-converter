@@ -10,7 +10,16 @@ from ldc.supervised.pairs import PairData
 
 class PairsToLlama2(Filter):
     """
-    Converts records of prompt/output pairs to llama2 pretrain ones.
+    Converts records of prompt/response pairs to llama2-formatted pretrain ones.
+
+    <s>[INST] <<SYS>>
+    {{system message}}
+    <</SYS>>
+    {{message}} [/INST] {{answer}} </s>
+
+    <s>[INST] {{message}} [/INST] {{answer}} </s>
+
+    <s>[INST] {{message}} [/INST]
     """
 
     def __init__(self, prefix: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
@@ -43,7 +52,7 @@ class PairsToLlama2(Filter):
         :return: the description
         :rtype: str
         """
-        return "Converts records of prompt/output pairs to llama2 pretrain ones. " \
+        return "Converts records of prompt/response pairs to llama2-formatted pretrain ones. " \
                + "The 'instruction' (ie prompt) gets wrapped in [INST]...[/INST] " \
                + "and the 'output' (ie response) follows that."
 
