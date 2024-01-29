@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.0.6 (????-??-??)
+------------------
+
+- fixed output format of `to-llama2-format` filter
+- `llama2-to-pairs` filter has more robust parsing now
+
+
+
 0.0.5 (2024-01-24)
 ------------------
 

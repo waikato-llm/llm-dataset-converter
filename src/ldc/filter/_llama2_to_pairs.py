@@ -10,6 +10,15 @@ from ldc.supervised.pairs import PairData
 class Llama2ToPairs(Filter):
     """
     Converts llama2 pretrain records to prompt/response pairs.
+
+    <s>[INST] <<SYS>>
+    {{system message}}
+    <</SYS>>
+    {{message}} [/INST] {{answer}} </s>
+
+    <s>[INST] {{message}} [/INST] {{answer}} </s>
+
+    <s>[INST] {{message}} [/INST]
     """
 
     def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
@@ -42,7 +51,7 @@ class Llama2ToPairs(Filter):
         return "Converts llama2 pretrain records to prompts/response ones. " \
                + "The 'instruction' (ie prompt) is extracted from [INST]...[/INST] " \
                + "and the 'output' (ie response) is the string that follows the [/INST]. " \
-               + "Splits on </s> to generate multiple prompt/response records."
+               + "Splits on <s> to generate multiple prompt/response records."
 
     def domains(self) -> List[str]:
         """
@@ -81,18 +90,23 @@ class Llama2ToPairs(Filter):
         """
         result = []
 
-        if "</s>" in data.content:
-            items = data.content.replace("</s>", "\t").split("\t")
+        s = data.content
+        s = s.replace("\r", " ")
+        if "<s>" in s:
+            s = data.content.strip()
+            if s.startswith("<s>"):
+                s = s[3:].strip()
+            items = s.replace("<s>", "\b").split("\b")
         else:
-            items = [data.content]
+            items = [s]
 
         for item in items:
             instruction = None
             output = None
-            item = item.replace("<s>", "").replace("[INST]", "\r").replace("[/INST]", "\n")
-            if ("\r" in item) and ("\n" in item):
-                instruction = item[item.index("\r")+1:item.index("\n")].strip()
-                output = item[item.index("\n")+1:].strip()
+            item = item.replace("</s>", "").replace("[INST]", "\r").replace("[/INST]", "\b")
+            if ("\r" in item) and ("\b" in item):
+                instruction = item[item.index("\r")+1:item.index("\b")].strip()
+                output = item[item.index("\b")+1:].strip()
             if (instruction is not None) and (output is not None):
                 result.append(PairData(instruction=instruction, output=output, input=None))
 
