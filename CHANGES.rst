@@ -6,6 +6,8 @@ Changelog
 
 - fixed output format of `to-llama2-format` filter
 - `llama2-to-pairs` filter has more robust parsing now
+- removed numpy dependency for calculating the gcd for a list of integers in the
+  `Splitter` class (module `ldc.utils`)
 
 
 

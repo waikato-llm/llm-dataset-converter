@@ -1,6 +1,24 @@
-import numpy as np
+import math
 
 from typing import Dict, Optional, List
+
+
+def gcd(values: List[int]):
+    """
+    Computes the greatest common denominator for a list of integers.
+
+    :param values: the integers to find the gcd for (at least 2)
+    :type values: list
+    :return: the gcd
+    :rtype: int
+    """
+    if len(values) < 2:
+        raise Exception("At least two numbers required for gcd!")
+    result = values.pop(0)
+    while len(values) > 0:
+        b = values.pop(0)
+        result = math.gcd(result, b)
+    return result
 
 
 class Splitter:
@@ -37,10 +55,10 @@ class Splitter:
             raise Exception("Split ratios must sum up to 100, but got: %d" % sum(self.split_ratios))
 
         # compute greatest common denominator and generate schedule
-        gcd = np.gcd.reduce(np.asarray(self.split_ratios))
+        _gcd = gcd(self.split_ratios)
         self._schedule = [0] * (len(self.split_ratios) + 1)
         for i, ratio in enumerate(self.split_ratios):
-            self._schedule[i + 1] = self._schedule[i] + ratio / gcd
+            self._schedule[i + 1] = self._schedule[i] + ratio / _gcd
         self._counter = 0
         self._stats = dict()
 
