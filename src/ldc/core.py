@@ -5,7 +5,7 @@ import sys
 import traceback
 
 from dataclasses import dataclass
-from typing import List, Union, Dict, Optional
+from typing import List, Union
 
 from seppl import Plugin
 from seppl import check_compatibility as seppl_check_compatibility
@@ -242,55 +242,6 @@ class CommandlineHandler(Plugin, abc.ABC):
         Finishes the processing, e.g., for closing files or databases.
         """
         self.logger().info("Finalizing...")
-
-
-class MetaDataHandler(object):
-    """
-    Mixin for classes that manage meta-data.
-    """
-
-    def has_metadata(self) -> bool:
-        """
-        Returns whether meta-data is present.
-
-        :return: True if meta-data present
-        :rtype: bool
-        """
-        raise NotImplementedError()
-
-    def get_metadata(self) -> Optional[Dict]:
-        """
-        Returns the meta-data.
-
-        :return: the meta-data, None if not available
-        :rtype: dict
-        """
-        raise NotImplementedError()
-
-    def set_metadata(self, metadata: Optional[Dict]):
-        """
-        Sets the meta-data to use.
-
-        :param metadata: the new meta-data, can be None
-        :type metadata: dict
-        """
-        raise NotImplementedError()
-
-
-def get_metadata(o) -> Optional[Dict]:
-    """
-    Retrieves the meta-data from the specified object.
-
-    :param o: the object to get the meta-data from
-    :return: the meta-data, None if not available
-    """
-    if isinstance(o, MetaDataHandler):
-        return o.get_metadata()
-    if hasattr(o, "meta"):
-        obj = getattr(o, "meta")
-        if isinstance(obj, dict):
-            return obj
-    return None
 
 
 def ensure_valid_domains(plugin: Plugin):

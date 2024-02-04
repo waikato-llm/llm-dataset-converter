@@ -7,7 +7,7 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output, is_compressed
 from ._core import PairData, PairReader, StreamPairWriter
-from ldc.utils import add_meta_data
+from ldc.metadata import add_metadata
 
 
 class JsonLinesPairReader(PairReader):
@@ -150,13 +150,13 @@ class JsonLinesPairReader(PairReader):
 
             # ID?
             if id_ is not None:
-                meta = add_meta_data(meta, "id", id_)
+                meta = add_metadata(meta, "id", id_)
 
             # additional meta-data columns
             if self.att_meta is not None:
                 for c in self.att_meta:
                     if c in item:
-                        meta = add_meta_data(meta, c, item[c])
+                        meta = add_metadata(meta, c, item[c])
 
             yield PairData(
                 instruction=val_instruction,

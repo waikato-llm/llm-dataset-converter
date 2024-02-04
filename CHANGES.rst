@@ -8,6 +8,7 @@ Changelog
 - `llama2-to-pairs` filter has more robust parsing now
 - removed numpy dependency for calculating the gcd for a list of integers in the
   `Splitter` class (module `ldc.utils`)
+- moved meta-data related classes/methods into `ldc.metadata` module
 
 
 

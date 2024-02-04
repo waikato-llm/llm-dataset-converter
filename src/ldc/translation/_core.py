@@ -2,7 +2,8 @@ import abc
 from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
-from ldc.core import DOMAIN_TRANSLATION, MetaDataHandler
+from ldc.core import DOMAIN_TRANSLATION
+from ldc.metadata import MetaDataHandler
 from ldc.base_io import Reader, Writer, StreamWriter, BatchWriter
 from ldc.filter import Filter
 

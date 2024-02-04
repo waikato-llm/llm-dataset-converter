@@ -10,7 +10,7 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import domain_suffix
 from ldc.base_io import locate_files, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
-from ldc.utils import add_meta_data
+from ldc.metadata import add_metadata
 
 DATA_EXAMPLE = '{ "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." }'
 
@@ -134,13 +134,13 @@ class ParquetTranslationReader(TranslationReader):
 
             # ID?
             if id_ is not None:
-                meta = add_meta_data(meta, "id", id_)
+                meta = add_metadata(meta, "id", id_)
 
             # additional meta-data columns
             if self.col_meta is not None:
                 for c in self.col_meta:
                     if c in row:
-                        meta = add_meta_data(meta, c, row[c])
+                        meta = add_metadata(meta, c, row[c])
 
             yield TranslationData(
                 translations=val_content,

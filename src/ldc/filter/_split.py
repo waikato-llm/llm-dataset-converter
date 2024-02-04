@@ -2,7 +2,8 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
-from ldc.core import DOMAIN_ANY, get_metadata, MetaDataHandler
+from ldc.core import DOMAIN_ANY
+from ldc.metadata import MetaDataHandler, get_metadata
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData

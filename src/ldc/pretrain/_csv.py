@@ -9,7 +9,8 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output
 from ._core import PretrainData, PretrainReader, BatchPretrainWriter
-from ldc.utils import str_to_column_index, add_meta_data
+from ldc.utils import str_to_column_index
+from ldc.metadata import add_metadata
 
 
 class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
@@ -166,18 +167,18 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
 
                 # ID?
                 if id_ is not None:
-                    meta = add_meta_data(meta, "id", id_)
+                    meta = add_metadata(meta, "id", id_)
 
                 # additional meta-data columns
                 if self.col_meta is not None:
                     if self.no_header:
                         for i in self.idx_meta:
                             if i > -1:
-                                meta = add_meta_data(meta, str(i), row[i])
+                                meta = add_metadata(meta, str(i), row[i])
                     else:
                         for c in self.col_meta:
                             if c in row:
-                                meta = add_meta_data(meta, c, row[c])
+                                meta = add_metadata(meta, c, row[c])
 
                 if self.no_header:
                     yield PretrainData(

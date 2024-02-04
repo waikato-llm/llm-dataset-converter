@@ -7,7 +7,7 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output, is_compressed
 from ._core import TranslationData, TranslationReader, StreamTranslationWriter
-from ldc.utils import add_meta_data
+from ldc.metadata import add_metadata
 
 DATA_EXAMPLE = '{ "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." } }'
 DATA_DEFINITION_URL = "https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md"
@@ -121,7 +121,7 @@ class JsonLinesTranslationReader(TranslationReader):
                 if self.att_meta is not None:
                     for c in self.att_meta:
                         if c in item:
-                            meta = add_meta_data(meta, c, item[c])
+                            meta = add_metadata(meta, c, item[c])
 
                 yield TranslationData(
                     translations=translations,

@@ -9,7 +9,8 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import domain_suffix
 from ldc.base_io import locate_files, open_file, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
-from ldc.utils import str_to_column_index, add_meta_data
+from ldc.utils import str_to_column_index
+from ldc.metadata import add_metadata
 
 
 class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
@@ -174,20 +175,20 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
 
                 # ID?
                 if self.idx_id > -1:
-                    meta = add_meta_data(meta, "id", row[self.idx_id])
+                    meta = add_metadata(meta, "id", row[self.idx_id])
                 else:
-                    meta = add_meta_data(meta, "id", str(count))
+                    meta = add_metadata(meta, "id", str(count))
 
                 # additional meta-data columns
                 if self.col_meta is not None:
                     if self.no_header:
                         for i in self.idx_meta:
                             if i > -1:
-                                meta = add_meta_data(meta, str(i), row[i])
+                                meta = add_metadata(meta, str(i), row[i])
                     else:
                         for c in self.col_meta:
                             if c in row:
-                                meta = add_meta_data(meta, c, row[c])
+                                meta = add_metadata(meta, c, row[c])
 
                 yield TranslationData(
                     translations=translations,
