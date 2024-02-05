@@ -5,13 +5,13 @@ import traceback
 
 from typing import List, Tuple, Optional, Dict
 
-from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects
+from seppl import enumerate_plugins, is_help_requested, split_args, args_to_objects, Plugin
+from seppl.io import execute, Writer
 from wai.logging import init_logging, set_logging_level, add_logging_level, LOGGING_LEVELS
-from ldc.core import check_compatibility, CommandlineHandler, Session, ENV_LLM_LOGLEVEL
-from ldc.help import generate_plugin_usage
-from ldc.base_io import COMPRESSION_FORMATS, Reader, Writer
-from ldc.execution import execute
+from ldc.core import check_compatibility, Session, ENV_LLM_LOGLEVEL
 from ldc.filter import Filter, MultiFilter
+from ldc.help import generate_plugin_usage
+from ldc.base_io import COMPRESSION_FORMATS, Reader
 from ldc.registry import available_readers, available_filters, available_writers
 
 
@@ -21,11 +21,11 @@ CONVERT = "llm-convert"
 DEFAULT_UPDATE_INTERVAL = 1000
 
 
-def _available_plugins() -> Dict[str, CommandlineHandler]:
+def _available_plugins() -> Dict[str, Plugin]:
     """
     Returns the available reader/filter/writer plugins.
 
-    :return: the dictionary of plugins (name/CommandlineHandler)
+    :return: the dictionary of plugins (name/Plugin)
     :rtype: dict
     """
     result = dict()
@@ -170,7 +170,7 @@ def main(args=None):
     _args = sys.argv[1:] if (args is None) else args
     try:
         reader, filter_, writer, session = _parse_args(_args, require_writer=False)
-    except Exception as e:
+    except Exception:
         traceback.print_exc()
         print("options: %s" % str(_args), file=sys.stderr)
         _print_usage()

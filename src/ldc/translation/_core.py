@@ -2,9 +2,9 @@ import abc
 from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
+from seppl import MetaDataHandler
 from ldc.core import DOMAIN_TRANSLATION
-from ldc.metadata import MetaDataHandler
-from ldc.base_io import Reader, Writer, StreamWriter, BatchWriter
+from ldc.base_io import Reader, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
 
@@ -101,9 +101,9 @@ class TranslationReader(Reader, abc.ABC):
         raise NotImplementedError()
 
 
-class TranslationWriter(Writer, abc.ABC):
+class StreamTranslationWriter(StreamWriter, abc.ABC):
     """
-    Writer for pretrain data.
+    Stream writer for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -124,12 +124,6 @@ class TranslationWriter(Writer, abc.ABC):
         """
         return [TranslationData]
 
-
-class StreamTranslationWriter(TranslationWriter, StreamWriter, abc.ABC):
-    """
-    Stream writer for pretrain data.
-    """
-
     def write_stream(self, data: Union[TranslationData, Iterable[TranslationData]]):
         """
         Saves the data one by one.
@@ -139,10 +133,28 @@ class StreamTranslationWriter(TranslationWriter, StreamWriter, abc.ABC):
         raise NotImplementedError()
 
 
-class BatchTranslationWriter(TranslationWriter, BatchWriter, abc.ABC):
+class BatchTranslationWriter(BatchWriter, abc.ABC):
     """
     Batch writer for pretrain data.
     """
+
+    def domains(self) -> List[str]:
+        """
+        Returns the domains of the writer.
+
+        :return: the domains
+        :rtype: list
+        """
+        return [DOMAIN_TRANSLATION]
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [TranslationData]
 
     def write_batch(self, data: Iterable[TranslationData]):
         """

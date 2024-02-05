@@ -8,7 +8,7 @@ from typing import List, Optional
 from wai.logging import init_logging, set_logging_level, add_logging_level
 from ldc.core import ENV_LLM_LOGLEVEL
 from ldc.help import generate_plugin_usage, HELP_FORMATS, HELP_FORMAT_TEXT, HELP_FORMAT_MARKDOWN
-from ldc.registry import REGISTRY, register_plugins, available_plugins
+from ldc.registry import register_plugins, available_plugins
 from ldc.registry import available_downloaders, available_readers, available_filters, available_writers
 
 HELP = "llm-help"

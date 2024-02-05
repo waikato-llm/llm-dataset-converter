@@ -4,10 +4,11 @@ import os
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
+from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import locate_files, open_file, generate_output, is_compressed
+from ldc.base_io import open_file, generate_output, is_compressed
 from ._core import TranslationData, TranslationReader, StreamTranslationWriter
-from ldc.metadata import add_metadata
 
 DATA_EXAMPLE = '{ "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." } }'
 DATA_DEFINITION_URL = "https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md"

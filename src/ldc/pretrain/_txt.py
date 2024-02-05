@@ -4,8 +4,9 @@ import traceback
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
+from seppl.io import locate_files
 from ldc.core import domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
-from ldc.base_io import locate_files, open_file, generate_output, is_compressed
+from ldc.base_io import open_file, generate_output, is_compressed
 from ._core import PretrainData, PretrainReader, StreamPretrainWriter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences, remove_empty, \
     remove_patterns, remove_blocks

@@ -7,8 +7,8 @@ import traceback
 from typing import List
 
 from wai.logging import init_logging, set_logging_level, add_logging_level
+from seppl.io import Splitter
 from ldc.core import ENV_LLM_LOGLEVEL
-from ldc.utils import Splitter
 
 FIND = "llm-find"
 

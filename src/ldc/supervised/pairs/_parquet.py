@@ -6,10 +6,11 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
+from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import locate_files, generate_output
+from ldc.base_io import generate_output
 from ._core import PairData, PairReader, BatchPairWriter
-from ldc.metadata import add_metadata
 
 
 class ParquetPairsReader(PairReader):

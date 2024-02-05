@@ -37,11 +37,11 @@ setup(
         "pyarrow",
         "pyzstd",
         "huggingface-hub",
-        "seppl>=0.0.11",
+        "seppl>=0.1.0",
         "pyyaml",
         "wai.logging",
     ],
-    version="0.0.5",
+    version="0.1.0",
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
     entry_points={

@@ -6,11 +6,11 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
     LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
-from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
+from ._core import Filter
 
 
 class AssembleSentences(Filter):

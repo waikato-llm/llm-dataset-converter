@@ -13,7 +13,7 @@ def prune_lines(lines: List[str], min_len: int = 1) -> List[str]:
     :type lines: list
     :param min_len: the minimum length the line must have (after .strip() call)
     :type min_len: int
-    :return: the pruned list
+    :return: the pruned lines
     :rtype: list
     """
     result = []

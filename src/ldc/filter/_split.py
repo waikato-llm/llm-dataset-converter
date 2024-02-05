@@ -2,13 +2,13 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
+from seppl import MetaDataHandler, get_metadata
+from seppl.io import Splitter
 from ldc.core import DOMAIN_ANY
-from ldc.metadata import MetaDataHandler, get_metadata
-from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
-from ldc.utils import Splitter
+from ._core import Filter
 
 META_SPLIT = "split"
 """ the key for storing the split name in the meta-data. """

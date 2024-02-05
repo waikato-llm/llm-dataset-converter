@@ -3,9 +3,9 @@ from typing import List
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
-from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData, PAIRDATA_FIELDS, PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT
+from ._core import Filter
 
 
 class PairsToPretrain(Filter):

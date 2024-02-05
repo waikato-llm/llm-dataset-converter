@@ -7,10 +7,11 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
+from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import locate_files, generate_output
+from ldc.base_io import generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
-from ldc.metadata import add_metadata
 
 DATA_EXAMPLE = '{ "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." }'
 

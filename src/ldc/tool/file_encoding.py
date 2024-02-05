@@ -7,8 +7,9 @@ import traceback
 from typing import List
 
 from wai.logging import init_logging, set_logging_level, add_logging_level
+from seppl.io import locate_files
 from ldc.core import ENV_LLM_LOGLEVEL
-from ldc.base_io import locate_files, determine_encoding
+from ldc.base_io import determine_encoding
 
 FILE_ENCODING = "llm-file-encoding"
 

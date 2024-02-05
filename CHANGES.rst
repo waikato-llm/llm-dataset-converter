@@ -1,15 +1,13 @@
 Changelog
 =========
 
-0.0.6 (????-??-??)
+0.1.0 (2024-02-05)
 ------------------
 
 - fixed output format of `to-llama2-format` filter
 - `llama2-to-pairs` filter has more robust parsing now
-- removed numpy dependency for calculating the gcd for a list of integers in the
-  `Splitter` class (module `ldc.utils`)
-- moved meta-data related classes/methods into `ldc.metadata` module
-
+- upgraded seppl to 0.1.0
+- switched to seppl classes: Splitter, MetaDataHandler, Reader, Writer, StreamWriter, BatchWriter
 
 
 0.0.5 (2024-01-24)

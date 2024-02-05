@@ -1,4 +1,4 @@
-from ._core import Filter, MultiFilter, FILTER_ACTIONS, FILTER_ACTION_KEEP, FILTER_ACTION_DISCARD
+from ._core import Filter, MultiFilter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
 from ._assemble_sentences import AssembleSentences
 from ._change_case import ChangeCase, CASES, CASE_UNCHANGED, CASE_LOWER, CASE_UPPER, CASE_TITLE
 from ._find_substr import FindSubstring

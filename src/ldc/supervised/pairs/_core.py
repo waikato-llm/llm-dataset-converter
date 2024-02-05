@@ -2,9 +2,9 @@ import abc
 from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
+from seppl import MetaDataHandler
 from ldc.core import DOMAIN_PAIRS
-from ldc.metadata import MetaDataHandler
-from ldc.base_io import Reader, Writer, StreamWriter, BatchWriter
+from ldc.base_io import Reader, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
 PAIRDATA_INSTRUCTION = "instruction"
@@ -116,9 +116,9 @@ class PairReader(Reader, abc.ABC):
         raise NotImplementedError()
 
 
-class PairWriter(Writer, abc.ABC):
+class StreamPairWriter(StreamWriter, abc.ABC):
     """
-    Writer for pair data.
+    Stream writer for pair data.
     """
 
     def domains(self) -> List[str]:
@@ -139,12 +139,6 @@ class PairWriter(Writer, abc.ABC):
         """
         return [PairData]
 
-
-class StreamPairWriter(PairWriter, StreamWriter, abc.ABC):
-    """
-    Stream writer for pair data.
-    """
-
     def write_stream(self, data: Union[PairData, Iterable[PairData]]):
         """
         Saves the data one by one.
@@ -154,10 +148,28 @@ class StreamPairWriter(PairWriter, StreamWriter, abc.ABC):
         raise NotImplementedError()
 
 
-class BatchPairWriter(PairWriter, BatchWriter, abc.ABC):
+class BatchPairWriter(BatchWriter, abc.ABC):
     """
     Batch writer for pair data.
     """
+
+    def domains(self) -> List[str]:
+        """
+        Returns the domains of the writer.
+
+        :return: the domains
+        :rtype: list
+        """
+        return [DOMAIN_PAIRS]
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [PairData]
 
     def write_batch(self, data: Iterable[PairData]):
         """

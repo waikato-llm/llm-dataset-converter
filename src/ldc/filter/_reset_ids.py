@@ -2,12 +2,12 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
+from seppl import MetaDataHandler, get_metadata
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
-from ..metadata import MetaDataHandler, get_metadata
-from ._core import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
+from ._core import Filter
 
 
 class ResetIDs(Filter):

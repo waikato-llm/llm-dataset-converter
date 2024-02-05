@@ -6,9 +6,8 @@ import traceback
 from typing import Dict, List, Optional
 
 from ldc.downloader import Downloader
-from ldc.filter import Filter
-from ldc.base_io import Reader, Writer
 from seppl import Registry, Plugin, MODE_DYNAMIC, get_class_name
+from seppl.io import Filter, Reader, Writer
 
 # the entry points defined in setup.py
 ENTRY_POINT_DOWNLOADERS = "ldc.downloaders"

@@ -3,17 +3,16 @@ import bz2
 import logging
 
 import chardet
-import glob
 import gzip
 import lzma
 import os
 import pyzstd
+import seppl.io
 
-from typing import Union, Iterable, List, Optional
+from typing import Iterable, Optional
 
-from ldc.core import CommandlineHandler, DomainHandler, Session, SessionHandler
+from ldc.core import DomainHandler
 from wai.logging import LOGGING_WARNING
-from seppl import OutputProducer, InputConsumer
 
 
 COMPRESSION_BZIP2 = "bz2"
@@ -36,73 +35,6 @@ ENV_ENCODING_MAX_CHECK_LENGTH = "LDC_ENCODING_MAX_CHECK_LENGTH"
 
 ENCODING_MAX_CHECK_LENGTH = None
 """ the determined max check length for determining the file encoding. """
-
-
-def locate_files(inputs: Union[str, List[str]], input_lists: Union[str, List[str]] = None,
-                 fail_if_empty: bool = False) -> List[str]:
-    """
-    Locates all the files from the specified inputs, which may contain globs.
-    glob results get sorted to ensure the same file order each time.
-
-    :param inputs: the input path(s) with optional globs
-    :type inputs: str or list
-    :param input_lists: text file(s) that list the actual input files to use
-    :type input_lists: str or list
-    :param fail_if_empty: whether to throw an exception if no files were located
-    :type fail_if_empty: bool
-    :return: the expanded list of files
-    :rtype: list
-    """
-    if (inputs is None) and (input_lists is None):
-        raise Exception("Neither input paths nor input lists provided!")
-
-    if inputs is not None:
-        if isinstance(inputs, str):
-            inputs = [inputs]
-        elif isinstance(inputs, list):
-            inputs = inputs
-        else:
-            raise Exception("Invalid inputs, must be string(s)!")
-
-    if input_lists is not None:
-        if isinstance(input_lists, str):
-            input_lists = [input_lists]
-        elif isinstance(input_lists, list):
-            input_lists = input_lists
-        else:
-            raise Exception("Invalid input lists, must be string(s)!")
-
-    result = []
-
-    # globs
-    if inputs is not None:
-        for inp in inputs:
-            for f in sorted(glob.glob(inp)):
-                if os.path.isdir(f):
-                    continue
-                result.append(f)
-
-    # path lists
-    if input_lists is not None:
-        for inp in input_lists:
-            if not os.path.exists(inp):
-                print("WARNING: Input list does not exist: %s" % inp)
-                continue
-            if os.path.isdir(inp):
-                print("WARNING: Input list points to directory: %s" % inp)
-                continue
-            with open(inp, "r") as fp:
-                lines = [x.strip() for x in fp.readlines()]
-            for line in lines:
-                if not os.path.exists(line):
-                    print("WARNING: Path from input list '%s' does not exist: %s" % (inp, line))
-                    continue
-                result.append(line)
-
-    if fail_if_empty and (len(result) == 0):
-        raise Exception("Failed to locate any files using: %s" % str(inputs))
-
-    return result
 
 
 def encoding_max_check_length() -> int:
@@ -270,7 +202,7 @@ def generate_output(input_path: str, output_path: str, ext: str, compression: Op
         return output_path
 
 
-class Reader(CommandlineHandler, OutputProducer, DomainHandler, SessionHandler, abc.ABC):
+class Reader(seppl.io.Reader, seppl.Initializable, DomainHandler, abc.ABC):
     """
     Ancestor of classes that read data.
     """
@@ -285,111 +217,20 @@ class Reader(CommandlineHandler, OutputProducer, DomainHandler, SessionHandler, 
         :type logging_level: str
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
-        self._session = None
-
-    @property
-    def session(self) -> Session:
-        """
-        Returns the current session object
-
-        :return: the session object
-        :rtype: Session
-        """
-        return self._session
-
-    @session.setter
-    def session(self, s: Session):
-        """
-        Sets the session object to use.
-
-        :param s: the session object
-        :type s: Session
-        """
-        self._session = s
-
-    def read(self) -> Iterable:
-        """
-        Loads the data and returns the items one by one.
-
-        :return: the data
-        :rtype: Iterable
-        """
-        raise NotImplementedError()
-
-    def has_finished(self) -> bool:
-        """
-        Returns whether reading has finished.
-
-        :return: True if finished
-        :rtype: bool
-        """
-        raise NotImplementedError()
 
 
-class Writer(CommandlineHandler, InputConsumer, DomainHandler, SessionHandler, abc.ABC):
+class StreamWriter(seppl.io.StreamWriter, seppl.Initializable, DomainHandler, abc.ABC):
     """
-    Ancestor of classes that write data.
+    Ancestor for classes that write data one record at a time.
     """
 
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+    def write_stream(self, data):
         """
-        Initializes the handler.
+        Saves the data one by one.
 
-        :param logger_name: the name to use for the logger
-        :type logger_name: str
-        :param logging_level: the logging level to use
-        :type logging_level: str
+        :param data: the data to write (single record or iterable of records)
         """
-        super().__init__(logger_name=logger_name, logging_level=logging_level)
-        self._session = None
-        self._last_input = None
-
-    @property
-    def session(self) -> Session:
-        """
-        Returns the current session object
-
-        :return: the session object
-        :rtype: Session
-        """
-        return self._session
-
-    @session.setter
-    def session(self, s: Session):
-        """
-        Sets the session object to use.
-
-        :param s: the session object
-        :type s: Session
-        """
-        self._session = s
-
-    def _has_input_changed(self, current_input: str = None, update: bool = False) -> bool:
-        """
-        Checks whether the current input is different from the last one we processed.
-
-        :param current_input: the current input, uses the current_input from the session if None
-        :type current_input: str
-        :param update: whether to update the last input immediately
-        :type update: bool
-        :return: True if input has changed
-        :rtype: bool
-        """
-        if current_input is None:
-            current_input = self.session.current_input
-        result = self._last_input != current_input
-        if update:
-            self._update_last_input(current_input)
-        return result
-
-    def _update_last_input(self, current_input: str):
-        """
-        Updates the last input that was processed.
-
-        :param current_input: the "new" last input
-        :type current_input: str
-        """
-        self._last_input = current_input
+        raise NotImplementedError()
 
     def _output_needs_changing(self, current_output: str, target: str, ext: str) -> bool:
         """
@@ -412,21 +253,7 @@ class Writer(CommandlineHandler, InputConsumer, DomainHandler, SessionHandler, a
         return False
 
 
-class StreamWriter(Writer, abc.ABC):
-    """
-    Ancestor for classes that write data one record at a time.
-    """
-
-    def write_stream(self, data):
-        """
-        Saves the data one by one.
-
-        :param data: the data to write (single record or iterable of records)
-        """
-        raise NotImplementedError()
-
-
-class BatchWriter(Writer, abc.ABC):
+class BatchWriter(seppl.io.BatchWriter, seppl.Initializable, DomainHandler, abc.ABC):
     """
     Ancestor of classes that write data all at once.
     """
@@ -439,3 +266,23 @@ class BatchWriter(Writer, abc.ABC):
         :type data: Iterable
         """
         raise NotImplementedError()
+
+    def _output_needs_changing(self, current_output: str, target: str, ext: str) -> bool:
+        """
+        Checks whether the output needs changing.
+
+        :param current_output: the current output
+        :type current_output: str
+        :param target: the output target
+        :type target: str
+        :param ext: the extension for the output file, incl dot
+        :type ext: str
+        :return: True if the output needs to change
+        :rtype: bool
+        """
+        if current_output is None:
+            return True
+        output = generate_output(self.session.current_input, target, ext, self.session.options.compression)
+        if current_output != output:
+            return True
+        return False

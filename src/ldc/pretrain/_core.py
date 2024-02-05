@@ -2,9 +2,9 @@ import abc
 from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
+from seppl import MetaDataHandler
 from ldc.core import DOMAIN_PRETRAIN
-from ldc.metadata import MetaDataHandler
-from ldc.base_io import Reader, Writer, StreamWriter, BatchWriter
+from ldc.base_io import Reader, StreamWriter, BatchWriter
 from ldc.filter import Filter
 
 
@@ -101,9 +101,9 @@ class PretrainReader(Reader, abc.ABC):
         raise NotImplementedError()
 
 
-class PretrainWriter(Writer, abc.ABC):
+class StreamPretrainWriter(StreamWriter, abc.ABC):
     """
-    Writer for pretrain data.
+    Stream writer for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -124,12 +124,6 @@ class PretrainWriter(Writer, abc.ABC):
         """
         return [PretrainData]
 
-
-class StreamPretrainWriter(PretrainWriter, StreamWriter, abc.ABC):
-    """
-    Stream writer for pretrain data.
-    """
-
     def write_stream(self, data: Union[PretrainData, Iterable[PretrainData]]):
         """
         Saves the data one by one.
@@ -139,10 +133,28 @@ class StreamPretrainWriter(PretrainWriter, StreamWriter, abc.ABC):
         raise NotImplementedError()
 
 
-class BatchPretrainWriter(PretrainWriter, BatchWriter, abc.ABC):
+class BatchPretrainWriter(BatchWriter, abc.ABC):
     """
     Batch writer for pretrain data.
     """
+
+    def domains(self) -> List[str]:
+        """
+        Returns the domains of the writer.
+
+        :return: the domains
+        :rtype: list
+        """
+        return [DOMAIN_PRETRAIN]
+
+    def accepts(self) -> List:
+        """
+        Returns the list of classes that are accepted.
+
+        :return: the list of classes
+        :rtype: list
+        """
+        return [PretrainData]
 
     def write_batch(self, data: Iterable[PretrainData]):
         """

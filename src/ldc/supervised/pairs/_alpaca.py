@@ -3,7 +3,8 @@ import json
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
-from ldc.base_io import locate_files, open_file, generate_output
+from seppl.io import locate_files
+from ldc.base_io import open_file, generate_output
 from ._core import PairData, PairReader, BatchPairWriter
 
 

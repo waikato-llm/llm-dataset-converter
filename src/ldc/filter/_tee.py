@@ -2,12 +2,12 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
-from ldc.core import CommandlineHandler, DOMAIN_ANY
-from ldc.base_io import Writer, BatchWriter, StreamWriter
+from seppl import split_args, split_cmdline, Plugin
+from seppl.io import Writer, BatchWriter, StreamWriter
+from ldc.core import DOMAIN_ANY
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
-from seppl import split_args, split_cmdline, Plugin
 from ._core import Filter, MultiFilter
 
 
@@ -16,7 +16,7 @@ class Tee(Filter):
     Forwards the data coming through to the sub-flow.
     """
 
-    def __init__(self, sub_flow: List[CommandlineHandler] = None,
+    def __init__(self, sub_flow: List[Plugin] = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter.

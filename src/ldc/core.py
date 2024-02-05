@@ -1,15 +1,11 @@
-import abc
-import argparse
 import logging
-import sys
-import traceback
 
-from dataclasses import dataclass
 from typing import List, Union
 
-from seppl import Plugin
+import seppl
+
+from seppl import Plugin, get_class_name
 from seppl import check_compatibility as seppl_check_compatibility
-from wai.logging import add_logging_level, add_logger_name, set_logging_level, LOGGING_WARNING
 
 
 ENV_LLM_LOGLEVEL = "LLM_LOGLEVEL"
@@ -76,47 +72,12 @@ DEFAULT_QUOTE_CHARS = "\"'”’"
 """ the default quote characters. """
 
 
-@dataclass
-class Session:
+class Session(seppl.Session):
     """
     Session object shared among reader, filter(s), writer.
     """
-    options: argparse.Namespace = None
-    """ global options. """
-
     logger: logging.Logger = logging.getLogger("llm-dataset-converter")
     """ the global logger. """
-
-    count: int = 0
-    """ the record counter. """
-
-    current_input = None
-    """ the current input etc. """
-
-    def _add_option(self, name: str, value):
-        """
-        Adds the key/value to the global options.
-
-        :param name: the name of the option
-        :type name: str
-        :param value: the value of the option
-        """
-        if self.options is None:
-            self.options = argparse.Namespace()
-        setattr(self.options, name, value)
-
-    def set_logging_level(self, level: str):
-        """
-        Sets the global logging level.
-
-        :param level: the level
-        :type level: str
-        :return: itself
-        :rtype: Session
-        """
-        self._add_option("logging_level", level)
-        set_logging_level(self.logger, level)
-        return self
 
     def set_compression(self, compression: str):
         """
@@ -129,32 +90,6 @@ class Session:
         """
         self._add_option("compression", compression)
         return self
-
-
-class SessionHandler(object):
-    """
-    Mixin for classes that support session objects.
-    """
-
-    @property
-    def session(self) -> Session:
-        """
-        Returns the current session object
-
-        :return: the session object
-        :rtype: Session
-        """
-        raise NotImplementedError()
-
-    @session.setter
-    def session(self, s: Session):
-        """
-        Sets the session object to use.
-
-        :param s: the session object
-        :type s: Session
-        """
-        raise NotImplementedError()
 
 
 class DomainHandler(object):
@@ -172,90 +107,21 @@ class DomainHandler(object):
         raise NotImplementedError()
 
 
-class CommandlineHandler(Plugin, abc.ABC):
-    """
-    Base class for objects handle arguments.
-    """
-
-    def __init__(self, logger_name: str = None, logging_level: str = LOGGING_WARNING):
-        """
-        Initializes the handler.
-
-        :param logger_name: the name to use for the logger
-        :type logger_name: str
-        :param logging_level: the logging level to use
-        :type logging_level: str
-        """
-        super().__init__()
-        self.logging_level = logging_level
-        self.logger_name = logger_name
-        self._logger = None
-
-    def logger(self) -> logging.Logger:
-        """
-        Returns the logger instance to use.
-
-        :return: the logger
-        :rtype: logging.Logger
-        """
-        if self._logger is None:
-            if (self.logger_name is not None) and (len(self.logger_name) > 0):
-                logger_name = self.logger_name
-            else:
-                logger_name = self.name()
-            self._logger = logging.getLogger(logger_name)
-            set_logging_level(self._logger, self.logging_level)
-        return self._logger
-
-    def _create_argparser(self) -> argparse.ArgumentParser:
-        """
-        Creates an argument parser. Derived classes need to fill in the options.
-
-        :return: the parser
-        :rtype: argparse.ArgumentParser
-        """
-        parser = super()._create_argparser()
-        add_logging_level(parser)
-        add_logger_name(parser, help_str="The custom name to use for the logger, uses the plugin name by default")
-        return parser
-
-    def _apply_args(self, ns: argparse.Namespace):
-        """
-        Initializes the object with the arguments of the parsed namespace.
-
-        :param ns: the parsed arguments
-        :type ns: argparse.Namespace
-        """
-        super()._apply_args(ns)
-        self.logging_level = ns.logging_level
-        self.logger_name = ns.logger_name
-        self._logger = None
-
-    def initialize(self):
-        """
-        Initializes the processing, e.g., for opening files or databases.
-        """
-        self.logger().info("Initializing...")
-
-    def finalize(self):
-        """
-        Finishes the processing, e.g., for closing files or databases.
-        """
-        self.logger().info("Finalizing...")
-
-
-def ensure_valid_domains(plugin: Plugin):
+def ensure_valid_domains(handler: DomainHandler):
     """
     Checks whether valid domains are specified.
     Raises an exception if not valid.
 
-    :param plugin: the handler to check
-    :type plugin: CommandlineHandler
+    :param handler: the handler to check
+    :type handler: Plugin
     """
-    if isinstance(plugin, DomainHandler):
-        domains = plugin.domains()
+    if isinstance(handler, DomainHandler):
+        domains = handler.domains()
         if (domains is None) or (len(domains) == 0):
-            raise Exception("No domain(s) specified: " + plugin.name())
+            if isinstance(handler, Plugin):
+                raise Exception("No domain(s) specified: " + handler.name())
+            else:
+                raise Exception("No domain(s) specified: " + get_class_name(handler))
 
 
 def check_compatibility(plugins: List[Plugin]):
@@ -277,12 +143,12 @@ def check_compatibility(plugins: List[Plugin]):
         ensure_valid_domains(plugins[i + 1])
 
 
-def domain_suffix(o: Union[str, CommandlineHandler]) -> str:
+def domain_suffix(o: Union[str, Plugin]) -> str:
     """
     Returns the suffix for the domain. See DOMAIN_SUFFIX_LOOKUP.
     Returns the domain if no lookup defined.
 
-    :param o: commandhandler or domain to lookup the suffix for
+    :param o: plugin or domain to look up the suffix for
     :return: the suffix
     :rtype: str
     """
@@ -303,34 +169,6 @@ def domain_suffix(o: Union[str, CommandlineHandler]) -> str:
         return DOMAIN_SUFFIX_LOOKUP[domain]
     else:
         return domain
-
-
-def initialize_handler(handler: CommandlineHandler, handler_type: str, raise_again: bool = False) -> bool:
-    """
-    Initializes the commandline handler and outputs the stacktrace and help screen
-    if it fails to do so. Optionally, the exception can be raised again (to propagate).
-
-    :param handler: the handler to initialize
-    :type handler: CommandlineHandler
-    :param handler_type: the name of the type to use in the error message (eg "reader")
-    :type handler_type: str
-    :param raise_again: whether to raise the Exception again
-    :type raise_again: bool
-    :return: whether the initialization was successful
-    :rtype: str
-    """
-    try:
-        handler.initialize()
-        return True
-    except Exception as e:
-        print("\nFailed to initialize %s '%s':\n" % (handler_type, handler.name()), file=sys.stderr)
-        traceback.print_exc()
-        print()
-        handler.print_help()
-        print()
-        if raise_again:
-            raise e
-        return False
 
 
 def locations_match(locations: Union[str, List[str]], required: Union[str, List[str]]) -> bool:

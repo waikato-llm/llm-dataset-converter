@@ -6,11 +6,12 @@ import traceback
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
+from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import locate_files, open_file, generate_output
+from ldc.base_io import open_file, generate_output
 from ._core import TranslationData, TranslationReader, BatchTranslationWriter
 from ldc.utils import str_to_column_index
-from ldc.metadata import add_metadata
 
 
 class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):

@@ -1,10 +1,10 @@
 import abc
 
 from wai.logging import LOGGING_WARNING
-from ldc.core import CommandlineHandler
+from seppl import PluginWithLogging, Initializable
 
 
-class Downloader(CommandlineHandler, abc.ABC):
+class Downloader(PluginWithLogging, Initializable, abc.ABC):
     """
     Base class for downloader classes.
     """
