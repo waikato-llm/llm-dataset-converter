@@ -101,7 +101,7 @@ usage: llm-convert [-h|--help|--help-all|-help-plugin NAME] [-u INTERVAL]
                    [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    reader
                    [filter [filter [...]]]
-                   writer
+                   [writer]
 
 Tool for converting between large language model (LLM) dataset formats.
 
@@ -291,6 +291,7 @@ optional arguments:
 ### Generating help screens for plugins
 
 ```
+usage: llm-help [-h] [-m [PACKAGE [PACKAGE ...]]] [-e EXCLUDED_MODULES]
                 [-p NAME] [-f FORMAT] [-L INT] [-o PATH] [-i FILE]
                 [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
