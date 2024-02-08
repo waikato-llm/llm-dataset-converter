@@ -121,6 +121,7 @@ class RandomizeRecords(Filter):
         """
         if isinstance(data, list):
             result = list(data)
+            self.logger().info("Randomizing %d records" % len(result))
             self._rnd.shuffle(result)
             return result
         else:
