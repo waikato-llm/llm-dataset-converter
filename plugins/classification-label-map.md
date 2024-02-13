@@ -1,0 +1,28 @@
+# classification-label-map
+
+* domain(s): classification
+* accepts: ldc.supervised.classification.ClassificationData
+* generates: ldc.supervised.classification.ClassificationData
+
+Generates a label string/int map and can also replace the label with the integer index.
+
+```
+usage: classification-label-map [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+                                [-N LOGGER_NAME] [-L LABEL_MAP] [-u]
+
+Generates a label string/int map and can also replace the label with the
+integer index.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
+  -N LOGGER_NAME, --logger_name LOGGER_NAME
+                        The custom name to use for the logger, uses the plugin
+                        name by default (default: None)
+  -L LABEL_MAP, --label_map LABEL_MAP
+                        The JSON file to store the label map in. (default:
+                        None)
+  -u, --update_label    Whether to the string labels with the integer index.
+                        (default: False)
+```

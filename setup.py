@@ -11,7 +11,6 @@ def _read(f):
     """
     return open(f, 'rb').read()
 
-
 setup(
     name="llm-dataset-converter",
     description="Python3 library for converting between various LLM dataset formats.",
@@ -60,19 +59,23 @@ setup(
         ],
         "ldc.readers": [
             "lcd_readers1=ldc.pretrain:ldc.base_io.Reader",
-            "lcd_readers2=ldc.supervised.pairs:ldc.base_io.Reader",
-            "lcd_readers3=ldc.translation:ldc.base_io.Reader",
+            "lcd_readers2=ldc.supervised.classification:ldc.base_io.Reader",
+            "lcd_readers3=ldc.supervised.pairs:ldc.base_io.Reader",
+            "lcd_readers4=ldc.translation:ldc.base_io.Reader",
         ],
         "ldc.filters": [
             "lcd_filters1=ldc.filter:ldc.filter.Filter",
             "lcd_filters2=ldc.pretrain:ldc.filter.Filter",
-            "lcd_readers3=ldc.supervised.pairs:ldc.filter.Filter",
-            "lcd_filters4=ldc.translation:ldc.filter.Filter",
+            "lcd_readers3=ldc.supervised.classification:ldc.filter.Filter",
+            "lcd_readers4=ldc.supervised.pairs:ldc.filter.Filter",
+            "lcd_filters5=ldc.translation:ldc.filter.Filter",
         ],
         "ldc.writers": [
             "lcd_writers1=ldc.pretrain:ldc.base_io.Writer",
-            "lcd_writers2=ldc.supervised.pairs:ldc.base_io.Writer",
-            "lcd_writers3=ldc.translation:ldc.base_io.Writer",
+            "lcd_writers2=ldc.supervised.classification:ldc.base_io.Writer",
+            "lcd_writers3=ldc.supervised.pairs:ldc.base_io.Writer",
+            "lcd_writers4=ldc.translation:ldc.base_io.Writer",
         ]
     },
 )
+

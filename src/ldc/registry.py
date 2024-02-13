@@ -27,6 +27,7 @@ DEFAULT_LDC_MODULES = ",".join([
     "ldc.downloader",
     "ldc.filter",
     "ldc.pretrain",
+    "ldc.supervised.classification",
     "ldc.supervised.pairs",
     "ldc.translation",
 ])
