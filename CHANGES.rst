@@ -8,6 +8,7 @@ Changelog
 - added `from-jsonlines-cl` reader and `to-jsonlines-cl` writer for classification data in JSON lines format
 - added filter `pretrain-sentences-to-classification` to turn pretrain data into classification data (with a predefined label)
 - added filter `classification-label-map` that can generate a label string/int map
+- the `to-llama2-format` filter now has the `--skip_tokens` options to leave out the [INST] [/INST] tokens
 
 
 0.1.0 (2024-02-05)
