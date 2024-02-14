@@ -8,7 +8,7 @@ Turns pretrain records into llama2 format. Based on: https://github.com/facebook
 
 ```
 usage: to-llama2-format [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                        [-N LOGGER_NAME]
+                        [-N LOGGER_NAME] [--skip_tokens]
 
 Turns pretrain records into llama2 format. Based on: https://github.com/facebo
 okresearch/llama/blob/ef351e9cd9496c579bf9f2bb036ef11bdc5ca3d2/llama/generatio
@@ -21,4 +21,6 @@ optional arguments:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip_tokens         Whether to leave out the [INST] [/INST] tokens
+                        (default: False)
 ```
