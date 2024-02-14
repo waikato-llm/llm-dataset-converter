@@ -71,10 +71,10 @@ setup(
             "lcd_filters5=ldc.translation:ldc.filter.Filter",
         ],
         "ldc.writers": [
-            "lcd_writers1=ldc.pretrain:ldc.base_io.Writer",
-            "lcd_writers2=ldc.supervised.classification:ldc.base_io.Writer",
-            "lcd_writers3=ldc.supervised.pairs:ldc.base_io.Writer",
-            "lcd_writers4=ldc.translation:ldc.base_io.Writer",
+            "lcd_writers1=ldc.pretrain:seppl.io.Writer",
+            "lcd_writers2=ldc.supervised.classification:seppl.io.Writer",
+            "lcd_writers3=ldc.supervised.pairs:seppl.io.Writer",
+            "lcd_writers4=ldc.translation:seppl.io.Writer",
         ]
     },
 )
