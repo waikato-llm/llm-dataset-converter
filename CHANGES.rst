@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.0 (????-??-??)
+0.1.1 (2024-02-15)
 ------------------
 
 - added `classification` domain
