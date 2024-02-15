@@ -42,9 +42,9 @@ The following dataset formats are supported:
 
 | Domain         | Format | Read                                                | Write                                           | Compression |
 |:---------------| :---   |:----------------------------------------------------|:------------------------------------------------| :---:       |
+| classification | CSV | [from-csv-cl](plugins/from-csv-cl.md)               | [to-csv-cl](plugins/to-csv-cl.md)               | Y |
 | classification | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-cl](plugins/from-jsonlines-cl.md)   | [to-jsonlines-cl](plugins/to-jsonlines-cl.md)   | Y |
 | classification | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-cl](plugins/from-parquet-cl.md)       | [to-parquet-cl](plugins/to-parquet-cl.md)       | N |    
-| classification | CSV | [from-csv-cl](plugins/from-csv-cl.md)               | [to-csv-cl](plugins/to-csv-cl.md)               | Y |
 | classification | TSV | [from-tsv-cl](plugins/from-tsv-cl.md)               | [to-tsv-cl](plugins/to-tsv-cl.md)               | Y |
 | pairs          | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md)               | [to-alpaca](plugins/to-alpaca.md)               | Y |    
 | pairs          | CSV | [from-csv-pr](plugins/from-csv-pr.md)               | [to-csv-pr](plugins/to-csv-pr.md)               | Y |
