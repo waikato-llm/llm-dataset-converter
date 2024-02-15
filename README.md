@@ -43,6 +43,7 @@ The following dataset formats are supported:
 | Domain         | Format | Read                                                | Write                                           | Compression |
 |:---------------| :---   |:----------------------------------------------------|:------------------------------------------------| :---:       |
 | classification | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-cl](plugins/from-jsonlines-cl.md)   | [to-jsonlines-cl](plugins/to-jsonlines-cl.md)   | Y |
+| classification | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-cl](plugins/from-parquet-cl.md)       | [to-parquet-cl](plugins/to-parquet-cl.md)       | N |    
 | pairs          | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md)               | [to-alpaca](plugins/to-alpaca.md)               | Y |    
 | pairs          | CSV | [from-csv-pr](plugins/from-csv-pr.md)               | [to-csv-pr](plugins/to-csv-pr.md)               | Y |
 | pairs          | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pr](plugins/from-jsonlines-pr.md)   | [to-jsonlines-pr](plugins/to-jsonlines-pr.md)   | Y |

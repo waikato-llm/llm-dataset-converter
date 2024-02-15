@@ -1,3 +1,4 @@
 from ._core import ClassificationData, ClassificationFilter, ClassificationReader, BatchClassificationWriter, StreamClassificationWriter
 from ._jsonlines import JsonLinesClassificationReader, JsonLinesClassificationWriter
 from ._classification_label_map import ClassificationLabelMap
+from ._parquet import ParquetClassificationReader, ParquetClassificationWriter

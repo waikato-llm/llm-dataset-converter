@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.1 (????-??-??)
+0.2.0 (????-??-??)
 ------------------
 
 - added `classification` domain
@@ -9,6 +9,7 @@ Changelog
 - added filter `pretrain-sentences-to-classification` to turn pretrain data into classification data (with a predefined label)
 - added filter `classification-label-map` that can generate a label string/int map
 - the `to-llama2-format` filter now has the `--skip_tokens` options to leave out the [INST] [/INST] tokens
+- added `from-parquet-cl` reader and `to-parquet-cl` writer for classification data in Parquet database format
 
 
 0.1.0 (2024-02-05)

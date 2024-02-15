@@ -7,6 +7,7 @@ Dataset formats:
 - pairs: alpaca (r/w), csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w)
 - pretrain: csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w), txt (r/w)
 - translation: csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w), txt (r/w)
+- classification: jsonl (r/w), parquet (r/w)
 
 
 Compression formats:
