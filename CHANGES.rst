@@ -10,6 +10,7 @@ Changelog
 - added filter `classification-label-map` that can generate a label string/int map
 - the `to-llama2-format` filter now has the `--skip_tokens` options to leave out the [INST] [/INST] tokens
 - added `from-parquet-cl` reader and `to-parquet-cl` writer for classification data in Parquet database format
+- added `from-csv-cl`/`from-tsv-cl` readers and `to-csv-cl`/`to-tsv-cl` writers for classification data in CSV/TSV file format
 
 
 0.1.0 (2024-02-05)

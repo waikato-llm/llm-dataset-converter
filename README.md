@@ -44,6 +44,8 @@ The following dataset formats are supported:
 |:---------------| :---   |:----------------------------------------------------|:------------------------------------------------| :---:       |
 | classification | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-cl](plugins/from-jsonlines-cl.md)   | [to-jsonlines-cl](plugins/to-jsonlines-cl.md)   | Y |
 | classification | [Parquet](https://arrow.apache.org/docs/python/parquet.html) | [from-parquet-cl](plugins/from-parquet-cl.md)       | [to-parquet-cl](plugins/to-parquet-cl.md)       | N |    
+| classification | CSV | [from-csv-cl](plugins/from-csv-cl.md)               | [to-csv-cl](plugins/to-csv-cl.md)               | Y |
+| classification | TSV | [from-tsv-cl](plugins/from-tsv-cl.md)               | [to-tsv-cl](plugins/to-tsv-cl.md)               | Y |
 | pairs          | [Alpaca](https://github.com/tatsu-lab/stanford_alpaca#data-release)  | [from-alpaca](plugins/from-alpaca.md)               | [to-alpaca](plugins/to-alpaca.md)               | Y |    
 | pairs          | CSV | [from-csv-pr](plugins/from-csv-pr.md)               | [to-csv-pr](plugins/to-csv-pr.md)               | Y |
 | pairs          | [Jsonlines](https://jsonlines.org/) | [from-jsonlines-pr](plugins/from-jsonlines-pr.md)   | [to-jsonlines-pr](plugins/to-jsonlines-pr.md)   | Y |
@@ -108,24 +110,26 @@ usage: llm-convert [-h|--help|--help-all|-help-plugin NAME] [-u INTERVAL]
 Tool for converting between large language model (LLM) dataset formats.
 
 readers:
-   from-alpaca, from-csv-pr, from-csv-pt, from-csv-t9n, 
-   from-jsonlines-pr, from-jsonlines-pt, from-jsonlines-t9n, 
-   from-parquet-pr, from-parquet-pt, from-parquet-t9n, from-tsv-pr, 
+   from-alpaca, from-csv-cl, from-csv-pr, from-csv-pt, from-csv-t9n, 
+   from-jsonlines-cl, from-jsonlines-pr, from-jsonlines-pt, 
+   from-jsonlines-t9n, from-parquet-cl, from-parquet-pr, 
+   from-parquet-pt, from-parquet-t9n, from-tsv-cl, from-tsv-pr, 
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n
 filters:
-   assemble-sentences, change-case, find-substr, keyword, language, 
-   llama2-to-pairs, max-length-pt, max-records, metadata, multi-filter, 
-   pairs-to-llama2, pairs-to-pretrain, pretrain-sentences-to-pairs, 
-   randomize-records, record-window, remove-blocks, remove-empty, 
-   remove-patterns, replace-patterns, require-languages, reset-ids, 
-   sentences-pt, skip-duplicate-ids, skip-duplicate-text, split, 
-   split-pt, tee, text-length, text-stats, to-llama2-format, 
-   translation-to-pairs, translation-to-pretrain
+   assemble-sentences, change-case, classification-label-map, 
+   find-substr, keyword, language, llama2-to-pairs, max-length-pt, 
+   max-records, metadata, multi-filter, pairs-to-llama2, 
+   pairs-to-pretrain, pretrain-sentences-to-classification, 
+   pretrain-sentences-to-pairs, randomize-records, record-window, 
+   remove-blocks, remove-empty, remove-patterns, replace-patterns, 
+   require-languages, reset-ids, sentences-pt, skip-duplicate-ids, 
+   skip-duplicate-text, split, split-pt, tee, text-length, text-stats, 
+   to-llama2-format, translation-to-pairs, translation-to-pretrain
 writers:
-   to-alpaca, to-csv-pr, to-csv-pt, to-csv-t9n, to-jsonlines-pr, 
-   to-jsonlines-pt, to-jsonlines-t9n, to-parquet-pr, to-parquet-pt, 
-   to-parquet-t9n, to-tsv-pr, to-tsv-pt, to-tsv-t9n, to-txt-pt, 
-   to-txt-t9n
+   to-alpaca, to-csv-cl, to-csv-pr, to-csv-pt, to-csv-t9n, 
+   to-jsonlines-cl, to-jsonlines-pr, to-jsonlines-pt, to-jsonlines-t9n, 
+   to-parquet-cl, to-parquet-pr, to-parquet-pt, to-parquet-t9n, 
+   to-tsv-cl, to-tsv-pr, to-tsv-pt, to-tsv-t9n, to-txt-pt, to-txt-t9n
 
 optional arguments:
   -h, --help            show basic help message and exit
