@@ -23,6 +23,6 @@ optional arguments:
   -L LABEL_MAP, --label_map LABEL_MAP
                         The JSON file to store the label map in. (default:
                         None)
-  -u, --update_label    Whether to the string labels with the integer index.
-                        (default: False)
+  -u, --update_label    Whether to update the string labels with the integer
+                        index. (default: False)
 ```

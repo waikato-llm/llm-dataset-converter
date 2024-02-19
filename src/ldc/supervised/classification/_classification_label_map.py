@@ -56,7 +56,7 @@ class ClassificationLabelMap(ClassificationFilter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-L", "--label_map", type=str, help="The JSON file to store the label map in.", default=None, required=False)
-        parser.add_argument("-u", "--update_label", action="store_true", help="Whether to the string labels with the integer index.", required=False)
+        parser.add_argument("-u", "--update_label", action="store_true", help="Whether to update the string labels with the integer index.", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
