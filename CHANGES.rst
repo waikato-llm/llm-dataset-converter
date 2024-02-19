@@ -4,7 +4,9 @@ Changelog
 0.1.2 (????-??-??)
 ------------------
 
-- added support for XTuner conversation JSON format
+- added support for XTuner conversation JSON format: `from-xtuner` and `to-xtuner`
+- added filter `update-pair-data` to allow tweaking or rearranging of the data
+
 
 0.1.1 (2024-02-15)
 ------------------

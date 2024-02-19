@@ -59,6 +59,7 @@
 * [to-llama2-format](to-llama2-format.md)
 * [translation-to-pairs](translation-to-pairs.md)
 * [translation-to-pretrain](translation-to-pretrain.md)
+* [update-pair-data](update-pair-data.md)
 
 ## Writers
 * [to-alpaca](to-alpaca.md)
