@@ -22,6 +22,7 @@
 * [from-tsv-t9n](from-tsv-t9n.md)
 * [from-txt-pt](from-txt-pt.md)
 * [from-txt-t9n](from-txt-t9n.md)
+* [from-xtuner](from-xtuner.md)
 
 ## Filters
 * [assemble-sentences](assemble-sentences.md)
@@ -79,3 +80,4 @@
 * [to-tsv-t9n](to-tsv-t9n.md)
 * [to-txt-pt](to-txt-pt.md)
 * [to-txt-t9n](to-txt-t9n.md)
+* [to-xtuner](to-xtuner.md)

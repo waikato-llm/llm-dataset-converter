@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.1.2 (????-??-??)
+------------------
+
+- added support for XTuner conversation JSON format
+
 0.1.1 (2024-02-15)
 ------------------
 
