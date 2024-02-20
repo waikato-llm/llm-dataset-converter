@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.2 (????-??-??)
+0.2.0 (????-??-??)
 ------------------
 
 - added support for XTuner conversation JSON format: `from-xtuner` and `to-xtuner`
