@@ -58,17 +58,17 @@ setup(
             "ldc_downloaders1=ldc.downloader:ldc.downloader.Downloader"
         ],
         "ldc.readers": [
-            "lcd_readers1=ldc.pretrain:ldc.base_io.Reader",
-            "lcd_readers2=ldc.supervised.classification:ldc.base_io.Reader",
-            "lcd_readers3=ldc.supervised.pairs:ldc.base_io.Reader",
-            "lcd_readers4=ldc.translation:ldc.base_io.Reader",
+            "lcd_readers1=ldc.pretrain:ldc.api.Reader",
+            "lcd_readers2=ldc.supervised.classification:ldc.api.Reader",
+            "lcd_readers3=ldc.supervised.pairs:ldc.api.Reader",
+            "lcd_readers4=ldc.translation:ldc.api.Reader",
         ],
         "ldc.filters": [
-            "lcd_filters1=ldc.filter:ldc.filter.Filter",
-            "lcd_filters2=ldc.pretrain:ldc.filter.Filter",
-            "lcd_readers3=ldc.supervised.classification:ldc.filter.Filter",
-            "lcd_readers4=ldc.supervised.pairs:ldc.filter.Filter",
-            "lcd_filters5=ldc.translation:ldc.filter.Filter",
+            "lcd_filters1=ldc.filter:ldc.api.Filter",
+            "lcd_filters2=ldc.pretrain:ldc.api.Filter",
+            "lcd_readers3=ldc.supervised.classification:ldc.api.Filter",
+            "lcd_readers4=ldc.supervised.pairs:ldc.api.Filter",
+            "lcd_filters5=ldc.translation:ldc.api.Filter",
         ],
         "ldc.writers": [
             "lcd_writers1=ldc.pretrain:seppl.io.Writer",

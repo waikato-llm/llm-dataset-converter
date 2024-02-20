@@ -6,7 +6,7 @@ from seppl import get_metadata
 from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
-from ldc.api.filter import Filter
+from ldc.api import Filter
 
 
 class SkipDuplicateIDs(Filter):

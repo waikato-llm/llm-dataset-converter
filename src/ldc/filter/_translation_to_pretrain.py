@@ -5,7 +5,7 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_TRANSLATION, DOMAIN_PRETRAIN
 from ldc.api.pretrain import PretrainData
 from ldc.api.translation import TranslationData
-from ldc.api.filter import Filter
+from ldc.api import Filter
 
 
 class TranslationToPretrain(Filter):

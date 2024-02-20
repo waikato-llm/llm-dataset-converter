@@ -9,7 +9,7 @@ from ldc.core import COMPARISONS_EXT, COMPARISON_LESSTHAN, COMPARISON_LESSOREQUA
 from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
-from ldc.api.filter import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
+from ldc.api import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
 
 
 class MetaData(Filter):

@@ -2,7 +2,7 @@ import argparse
 from typing import List, Union
 
 from wai.logging import LOGGING_WARNING
-from ldc.api.downloader import Downloader
+from ldc.api._downloader import Downloader
 
 from huggingface_hub import hf_hub_download, snapshot_download
 from huggingface_hub.constants import REPO_TYPES

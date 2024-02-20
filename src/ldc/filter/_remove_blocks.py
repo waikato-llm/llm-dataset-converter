@@ -10,7 +10,7 @@ from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
 from ldc.text_utils import remove_blocks
-from ldc.api.filter import Filter
+from ldc.api import Filter
 
 
 class RemoveBlocks(Filter):

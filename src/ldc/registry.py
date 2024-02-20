@@ -6,7 +6,7 @@ import traceback
 from typing import Dict, List, Optional
 
 from seppl import Registry, Plugin, MODE_DYNAMIC, get_class_name
-from ldc.api.downloader import Downloader
+from ldc.api._downloader import Downloader
 from seppl.io import Filter, Reader, Writer
 
 # the entry points defined in setup.py

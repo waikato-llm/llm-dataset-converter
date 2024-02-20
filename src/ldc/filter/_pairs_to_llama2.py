@@ -5,7 +5,7 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN
 from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
-from ldc.api.filter import Filter
+from ldc.api import Filter
 
 
 class PairsToLlama2(Filter):

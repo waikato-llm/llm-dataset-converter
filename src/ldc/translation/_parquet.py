@@ -10,7 +10,7 @@ from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import generate_output
+from ldc.api import generate_output
 from ldc.api.translation import TranslationData, TranslationReader, BatchTranslationWriter
 
 DATA_EXAMPLE = '{ "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." }'

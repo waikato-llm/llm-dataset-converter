@@ -9,7 +9,7 @@ from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import generate_output
+from ldc.api import generate_output
 from ldc.api.pretrain import PretrainData, PretrainReader, BatchPretrainWriter
 
 

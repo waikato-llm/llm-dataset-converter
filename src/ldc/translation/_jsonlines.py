@@ -7,7 +7,7 @@ from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import open_file, generate_output, is_compressed
+from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.translation import TranslationData, TranslationReader, StreamTranslationWriter
 
 DATA_EXAMPLE = '{ "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." } }'

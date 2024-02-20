@@ -4,8 +4,8 @@ from typing import Iterable, List, Dict, Optional, Union
 
 from seppl import MetaDataHandler
 from ldc.core import DOMAIN_CLASSIFICATION
-from ldc.base_io import Reader, StreamWriter, BatchWriter
-from ldc.api.filter import Filter
+from ldc.api import Reader, StreamWriter, BatchWriter
+from ldc.api import Filter
 
 PAIRDATA_INSTRUCTION = "instruction"
 PAIRDATA_INPUT = "input"

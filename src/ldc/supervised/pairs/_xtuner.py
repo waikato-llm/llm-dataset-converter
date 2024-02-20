@@ -4,7 +4,7 @@ from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
 from seppl.io import locate_files
-from ldc.base_io import open_file, generate_output
+from ldc.api import open_file, generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
 
 

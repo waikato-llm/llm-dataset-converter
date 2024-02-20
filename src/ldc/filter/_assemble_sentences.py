@@ -9,7 +9,7 @@ from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATIO
 from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
-from ldc.api.filter import Filter
+from ldc.api import Filter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
 
 

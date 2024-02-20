@@ -7,7 +7,7 @@ from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
-from ldc.base_io import open_file, generate_output, is_compressed
+from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.supervised.classification import ClassificationData, ClassificationReader, StreamClassificationWriter
 
 

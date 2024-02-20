@@ -7,7 +7,7 @@ from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
-from ldc.api.filter import Filter
+from ldc.api import Filter
 
 
 class ResetIDs(Filter):

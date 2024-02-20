@@ -9,9 +9,9 @@ from seppl import enumerate_plugins, is_help_requested, split_args, args_to_obje
 from seppl.io import execute, Writer
 from wai.logging import init_logging, set_logging_level, add_logging_level, LOGGING_LEVELS
 from ldc.core import check_compatibility, Session, ENV_LLM_LOGLEVEL
-from ldc.api.filter import Filter, MultiFilter
+from ldc.api import Filter, MultiFilter
 from ldc.help import generate_plugin_usage
-from ldc.base_io import COMPRESSION_FORMATS, Reader
+from ldc.api import COMPRESSION_FORMATS, Reader
 from ldc.registry import available_readers, available_filters, available_writers
 
 
