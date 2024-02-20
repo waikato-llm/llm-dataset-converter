@@ -540,10 +540,11 @@ and then outputs it in zstandard-compressed jsonlines format:
 ```python
 from wai.logging import LOGGING_INFO, init_logging
 from seppl.io import execute
+from ldc.api.supervised.pairs import PAIRDATA_FIELDS
 from ldc.core import Session, ENV_LLM_LOGLEVEL
 from ldc.base_io import COMPRESSION_ZSTD
 from ldc.registry import register_plugins
-from ldc.supervised.pairs import AlpacaReader, PAIRDATA_FIELDS
+from ldc.supervised.pairs import AlpacaReader
 from ldc.pretrain import JsonLinesPretrainWriter
 from ldc.filter import PairsToPretrain, Keyword
 
