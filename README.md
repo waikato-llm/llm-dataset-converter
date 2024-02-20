@@ -579,6 +579,7 @@ execute(
 ## Additional libraries
 
 * [Google integration](https://github.com/waikato-llm/ldc-google)
+* [MS Word .docx integration](https://github.com/waikato-llm/ldc-docx)
 * [OpenAI integration](https://github.com/waikato-llm/ldc-openai)
 * [PDF handling](https://github.com/waikato-llm/ldc-pdf)
 * [TinT](https://github.com/waikato-llm/ldc-tint)
