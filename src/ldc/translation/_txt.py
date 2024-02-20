@@ -7,7 +7,7 @@ from wai.logging import LOGGING_WARNING
 from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.base_io import open_file, generate_output, is_compressed
-from ._core import TranslationData, TranslationReader, StreamTranslationWriter
+from ldc.api.translation import TranslationData, TranslationReader, StreamTranslationWriter
 from ldc.utils import str_to_column_index
 
 

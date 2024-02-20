@@ -3,7 +3,7 @@ import copy
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import domain_suffix
-from ._core import PretrainData, PretrainFilter
+from ldc.api.pretrain import PretrainData, PretrainFilter
 from ldc.text_utils import apply_max_length
 
 

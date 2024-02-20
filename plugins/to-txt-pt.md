@@ -1,7 +1,7 @@
 # to-txt-pt
 
 * domain(s): pretrain
-* accepts: ldc.pretrain.PretrainData
+* accepts: ldc.api.pretrain.PretrainData
 
 Writes pretrain data to plain text files.
 When providing an output directory, either uses the current session counter as the filename or, if present, the 'id' value from the meta-data.

@@ -5,10 +5,10 @@ from wai.logging import LOGGING_WARNING
 from seppl import split_args, split_cmdline, Plugin
 from seppl.io import Writer, BatchWriter, StreamWriter
 from ldc.core import DOMAIN_ANY
-from ldc.pretrain import PretrainData
-from ldc.supervised.pairs import PairData
-from ldc.translation import TranslationData
-from ._core import Filter, MultiFilter
+from ldc.api.pretrain import PretrainData
+from ldc.api.supervised.pairs import PairData
+from ldc.api.translation import TranslationData
+from ldc.api.filter import Filter, MultiFilter
 
 
 class Tee(Filter):

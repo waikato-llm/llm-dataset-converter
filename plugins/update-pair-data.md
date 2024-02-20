@@ -1,8 +1,8 @@
 # update-pair-data
 
 * domain(s): pairs
-* accepts: ldc.supervised.pairs.PairData
-* generates: ldc.supervised.pairs.PairData
+* accepts: ldc.api.supervised.pairs.PairData
+* generates: ldc.api.supervised.pairs.PairData
 
 Updates the pair data according to the format strings, allowing for tweaking or rearranging of the data.
 

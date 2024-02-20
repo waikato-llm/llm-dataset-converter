@@ -1,7 +1,7 @@
 # from-xtuner
 
 * domain(s): pairs
-* generates: ldc.supervised.pairs.PairData
+* generates: ldc.api.supervised.pairs.PairData
 
 Reads single-turn conversations in XTuner JSON format (https://github.com/InternLM/xtuner/blob/v0.1.13/docs/en/user_guides/dataset_format.md#single-turn-dialogue-dataset-format).
 

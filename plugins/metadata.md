@@ -1,8 +1,8 @@
 # metadata
 
 * domain(s): pairs, pretrain, translation
-* accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
-* generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
 
 Keeps or discards data records based on meta-data comparisons. Performs the following comparison: METADATA_VALUE COMPARISON VALUE. Records that do not have the required field get discarded automatically.
 

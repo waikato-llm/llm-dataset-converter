@@ -1,7 +1,7 @@
 # to-tsv-cl
 
 * domain(s): classification
-* accepts: ldc.supervised.classification.ClassificationData
+* accepts: ldc.api.supervised.classification.ClassificationData
 
 Writes classification data in TSV format.
 

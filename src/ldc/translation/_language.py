@@ -2,8 +2,7 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
-from ._core import TranslationFilter
-from ldc.translation import TranslationData
+from ldc.api.translation import TranslationData, TranslationFilter
 
 KEYWORD_ACTION_KEEP = "keep"
 KEYWORD_ACTION_DISCARD = "discard"

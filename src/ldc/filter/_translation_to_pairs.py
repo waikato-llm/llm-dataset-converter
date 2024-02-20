@@ -3,9 +3,9 @@ from typing import List
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_TRANSLATION, DOMAIN_PAIRS
-from ldc.supervised.pairs import PairData
-from ldc.translation import TranslationData
-from ._core import Filter
+from ldc.api.supervised.pairs import PairData
+from ldc.api.translation import TranslationData
+from ldc.api.filter import Filter
 
 
 class TranslationToPairs(Filter):

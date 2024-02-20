@@ -1,7 +1,7 @@
 # to-jsonlines-t9n
 
 * domain(s): translation
-* accepts: ldc.translation.TranslationData
+* accepts: ldc.api.translation.TranslationData
 
 Writes prompt/output pairs in JsonLines-like JSON format. Example: { "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." } }
 

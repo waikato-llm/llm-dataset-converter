@@ -3,24 +3,17 @@ from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
 from seppl import MetaDataHandler
-from ldc.core import DOMAIN_PAIRS
+from ldc.core import DOMAIN_PRETRAIN
 from ldc.base_io import Reader, StreamWriter, BatchWriter
-from ldc.filter import Filter
-
-PAIRDATA_INSTRUCTION = "instruction"
-PAIRDATA_INPUT = "input"
-PAIRDATA_OUTPUT = "output"
-PAIRDATA_FIELDS = [PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT]
+from ldc.api.filter import Filter
 
 
 @dataclass
-class PairData(MetaDataHandler):
+class PretrainData(MetaDataHandler):
     """
-    Container for pair data.
+    Container for pretrain data.
     """
-    instruction: Optional[str]
-    input: Optional[str]
-    output: Optional[str]
+    content: Optional[str]
     meta: Optional[dict] = None
 
     def has_metadata(self) -> bool:
@@ -51,42 +44,34 @@ class PairData(MetaDataHandler):
         self.meta = metadata
 
     @classmethod
-    def parse(cls, d):
+    def parse(cls, d: dict) -> 'PretrainData':
         """
-        Obtains the data from the provided dictionary and creates a PairData instance.
+        Obtains the data from the provided dictionary and creates a PretrainData instance.
 
         :param d: the dictionary to get the data from
         :type d: dict
         :return: the generated instance
-        :rtype: PairData
+        :rtype: PretrainData
         """
-        return PairData(
-            instruction=d.get("instruction", None),
-            input=d.get("input", None),
-            output=d.get("output", None),
+        return PretrainData(
+            content=d.get("content", None),
         )
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """
         Returns its data as a dictionary.
 
         :return: the data a dictionary
         :rtype: dict
         """
-        result = dict()
-        atts = ["instruction", "input", "output"]
-        for att in atts:
-            value = getattr(self, att)
-            if (value is None) and (att == "input"):
-                value = ""
-            if value is not None:
-                result[att] = value
-        return result
+        return {
+            "content": self.content,
+        }
+    
 
-
-class PairReader(Reader, abc.ABC):
+class PretrainReader(Reader, abc.ABC):
     """
-    Reader for pair data.
+    Reader for pretrain data.
     """
     def domains(self) -> List[str]:
         """
@@ -95,7 +80,7 @@ class PairReader(Reader, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS]
+        return [DOMAIN_PRETRAIN]
 
     def generates(self) -> List:
         """
@@ -104,9 +89,9 @@ class PairReader(Reader, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData]
+        return [PretrainData]
 
-    def read(self) -> Iterable[PairData]:
+    def read(self) -> Iterable[PretrainData]:
         """
         Loads the data and returns the items one by one.
 
@@ -116,9 +101,9 @@ class PairReader(Reader, abc.ABC):
         raise NotImplementedError()
 
 
-class StreamPairWriter(StreamWriter, abc.ABC):
+class StreamPretrainWriter(StreamWriter, abc.ABC):
     """
-    Stream writer for pair data.
+    Stream writer for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -128,7 +113,7 @@ class StreamPairWriter(StreamWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS]
+        return [DOMAIN_PRETRAIN]
 
     def accepts(self) -> List:
         """
@@ -137,9 +122,9 @@ class StreamPairWriter(StreamWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData]
+        return [PretrainData]
 
-    def write_stream(self, data: Union[PairData, Iterable[PairData]]):
+    def write_stream(self, data: Union[PretrainData, Iterable[PretrainData]]):
         """
         Saves the data one by one.
 
@@ -148,9 +133,9 @@ class StreamPairWriter(StreamWriter, abc.ABC):
         raise NotImplementedError()
 
 
-class BatchPairWriter(BatchWriter, abc.ABC):
+class BatchPretrainWriter(BatchWriter, abc.ABC):
     """
-    Batch writer for pair data.
+    Batch writer for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -160,7 +145,7 @@ class BatchPairWriter(BatchWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS]
+        return [DOMAIN_PRETRAIN]
 
     def accepts(self) -> List:
         """
@@ -169,20 +154,20 @@ class BatchPairWriter(BatchWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData]
+        return [PretrainData]
 
-    def write_batch(self, data: Iterable[PairData]):
+    def write_batch(self, data: Iterable[PretrainData]):
         """
         Saves the data in one go.
 
-        :param data: the data to write as iterable of PairData
+        :param data: the data to write as iterable of PretrainData
         """
         raise NotImplementedError()
 
 
-class PairFilter(Filter, abc.ABC):
+class PretrainFilter(Filter, abc.ABC):
     """
-    Filter for pair data.
+    Filter for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -192,7 +177,7 @@ class PairFilter(Filter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS]
+        return [DOMAIN_PRETRAIN]
 
     def accepts(self) -> List:
         """
@@ -201,7 +186,7 @@ class PairFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData]
+        return [PretrainData]
 
     def generates(self) -> List:
         """
@@ -210,4 +195,4 @@ class PairFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData]
+        return [PretrainData]

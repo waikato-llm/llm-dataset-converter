@@ -1,8 +1,8 @@
 # translation-to-pairs
 
 * domain(s): translation, pairs
-* accepts: ldc.translation.TranslationData
-* generates: ldc.supervised.pairs.PairData
+* accepts: ldc.api.translation.TranslationData
+* generates: ldc.api.supervised.pairs.PairData
 
 Converts records of translation data to pair ones, using specific languages for instruction, input (optional) and output.
 

@@ -1,8 +1,8 @@
 # pretrain-sentences-to-classification
 
 * domain(s): classification, pretrain
-* accepts: ldc.pretrain.PretrainData
-* generates: ldc.supervised.classification.ClassificationData
+* accepts: ldc.api.pretrain.PretrainData
+* generates: ldc.api.supervised.classification.ClassificationData
 
 Converts sentences from pretrain records to text classification ones by using X sentences as text and the specified label. Can be used to generate classification datasets from just pretrain data.
 

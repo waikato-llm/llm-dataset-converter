@@ -1,7 +1,7 @@
 # from-parquet-cl
 
 * domain(s): classification
-* generates: ldc.supervised.classification.ClassificationData
+* generates: ldc.api.supervised.classification.ClassificationData
 
 Reads classification data from Parquet database files.
 

@@ -1,8 +1,8 @@
 # max-length-pt
 
 * domain(s): pretrain
-* accepts: ldc.pretrain.PretrainData
-* generates: ldc.pretrain.PretrainData
+* accepts: ldc.api.pretrain.PretrainData
+* generates: ldc.api.pretrain.PretrainData
 
 Splits pretrain text into segments of at most the specified length (uses word boundary).
 

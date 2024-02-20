@@ -35,7 +35,6 @@
 * [max-length-pt](max-length-pt.md)
 * [max-records](max-records.md)
 * [metadata](metadata.md)
-* [multi-filter](multi-filter.md)
 * [pairs-to-llama2](pairs-to-llama2.md)
 * [pairs-to-pretrain](pairs-to-pretrain.md)
 * [pretrain-sentences-to-classification](pretrain-sentences-to-classification.md)

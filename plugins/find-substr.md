@@ -1,8 +1,8 @@
 # find-substr
 
 * domain(s): pairs, pretrain, translation
-* accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
-* generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
 
 Keeps or discards data records based on sub-string(s) text matching. Search is performed in lower-case. Optionally, the sub-strings can represent regular expressions used for searching the strings.
 

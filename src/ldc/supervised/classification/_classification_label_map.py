@@ -3,7 +3,7 @@ import copy
 import json
 
 from wai.logging import LOGGING_WARNING
-from ._core import ClassificationData, ClassificationFilter
+from ldc.api.supervised.classification import ClassificationData, ClassificationFilter
 
 
 class ClassificationLabelMap(ClassificationFilter):

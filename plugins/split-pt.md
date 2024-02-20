@@ -1,8 +1,8 @@
 # split-pt
 
 * domain(s): pretrain
-* accepts: ldc.pretrain.PretrainData
-* generates: ldc.pretrain.PretrainData
+* accepts: ldc.api.pretrain.PretrainData
+* generates: ldc.api.pretrain.PretrainData
 
 Splits pretrain text data into separate records on new lines. Automatically skips empty lines.
 

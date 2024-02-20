@@ -3,10 +3,10 @@ from typing import List
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from seppl import get_metadata
-from ldc.pretrain import PretrainData
-from ldc.supervised.pairs import PairData
-from ldc.translation import TranslationData
-from ._core import Filter
+from ldc.api.pretrain import PretrainData
+from ldc.api.supervised.pairs import PairData
+from ldc.api.translation import TranslationData
+from ldc.api.filter import Filter
 
 
 class SkipDuplicateIDs(Filter):

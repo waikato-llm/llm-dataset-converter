@@ -8,7 +8,7 @@ from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.base_io import open_file, generate_output, is_compressed
-from ._core import TranslationData, TranslationReader, StreamTranslationWriter
+from ldc.api.translation import TranslationData, TranslationReader, StreamTranslationWriter
 
 DATA_EXAMPLE = '{ "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." } }'
 DATA_DEFINITION_URL = "https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md"

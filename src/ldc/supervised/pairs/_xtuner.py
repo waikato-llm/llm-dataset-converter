@@ -5,7 +5,7 @@ from typing import Iterable, List, Union
 from wai.logging import LOGGING_WARNING
 from seppl.io import locate_files
 from ldc.base_io import open_file, generate_output
-from ._core import PairData, PairReader, BatchPairWriter
+from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
 
 
 class XTunerReader(PairReader):

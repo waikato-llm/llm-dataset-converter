@@ -6,10 +6,10 @@ from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import COMPARISONS_EXT, COMPARISON_LESSTHAN, COMPARISON_LESSOREQUAL, COMPARISON_EQUAL, COMPARISON_NOTEQUAL, \
     COMPARISON_GREATEROREQUAL, COMPARISON_GREATERTHAN, COMPARISON_CONTAINS, COMPARISON_MATCHES, COMPARISON_EXT_HELP
-from ldc.pretrain import PretrainData
-from ldc.supervised.pairs import PairData
-from ldc.translation import TranslationData
-from ._core import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
+from ldc.api.pretrain import PretrainData
+from ldc.api.supervised.pairs import PairData
+from ldc.api.translation import TranslationData
+from ldc.api.filter import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
 
 
 class MetaData(Filter):

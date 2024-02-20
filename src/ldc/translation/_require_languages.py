@@ -3,7 +3,7 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
-from ._core import TranslationData, TranslationFilter
+from ldc.api.translation import TranslationData, TranslationFilter
 
 
 class RequireLanguages(TranslationFilter):

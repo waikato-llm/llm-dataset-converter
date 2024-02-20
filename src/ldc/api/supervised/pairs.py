@@ -3,17 +3,24 @@ from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
 from seppl import MetaDataHandler
-from ldc.core import DOMAIN_TRANSLATION
+from ldc.core import DOMAIN_PAIRS
 from ldc.base_io import Reader, StreamWriter, BatchWriter
-from ldc.filter import Filter
+from ldc.api.filter import Filter
+
+PAIRDATA_INSTRUCTION = "instruction"
+PAIRDATA_INPUT = "input"
+PAIRDATA_OUTPUT = "output"
+PAIRDATA_FIELDS = [PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT]
 
 
 @dataclass
-class TranslationData(MetaDataHandler):
+class PairData(MetaDataHandler):
     """
-    Container for pretrain data.
+    Container for pair data.
     """
-    translations: Optional[dict]  # lookup: language -> text
+    instruction: Optional[str]
+    input: Optional[str]
+    output: Optional[str]
     meta: Optional[dict] = None
 
     def has_metadata(self) -> bool:
@@ -44,34 +51,42 @@ class TranslationData(MetaDataHandler):
         self.meta = metadata
 
     @classmethod
-    def parse(cls, d: dict) -> 'TranslationData':
+    def parse(cls, d):
         """
-        Obtains the data from the provided dictionary and creates a TranslationData instance.
+        Obtains the data from the provided dictionary and creates a PairData instance.
 
         :param d: the dictionary to get the data from
         :type d: dict
         :return: the generated instance
-        :rtype: TranslationData
+        :rtype: PairData
         """
-        return TranslationData(
-            translations=d.get("translations", None),
+        return PairData(
+            instruction=d.get("instruction", None),
+            input=d.get("input", None),
+            output=d.get("output", None),
         )
 
-    def to_dict(self) -> dict:
+    def to_dict(self):
         """
         Returns its data as a dictionary.
 
         :return: the data a dictionary
         :rtype: dict
         """
-        return {
-            "translations": self.translations,
-        }
-    
+        result = dict()
+        atts = ["instruction", "input", "output"]
+        for att in atts:
+            value = getattr(self, att)
+            if (value is None) and (att == "input"):
+                value = ""
+            if value is not None:
+                result[att] = value
+        return result
 
-class TranslationReader(Reader, abc.ABC):
+
+class PairReader(Reader, abc.ABC):
     """
-    Reader for pretrain data.
+    Reader for pair data.
     """
     def domains(self) -> List[str]:
         """
@@ -80,7 +95,7 @@ class TranslationReader(Reader, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_TRANSLATION]
+        return [DOMAIN_PAIRS]
 
     def generates(self) -> List:
         """
@@ -89,9 +104,9 @@ class TranslationReader(Reader, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [TranslationData]
+        return [PairData]
 
-    def read(self) -> Iterable[TranslationData]:
+    def read(self) -> Iterable[PairData]:
         """
         Loads the data and returns the items one by one.
 
@@ -101,9 +116,9 @@ class TranslationReader(Reader, abc.ABC):
         raise NotImplementedError()
 
 
-class StreamTranslationWriter(StreamWriter, abc.ABC):
+class StreamPairWriter(StreamWriter, abc.ABC):
     """
-    Stream writer for pretrain data.
+    Stream writer for pair data.
     """
 
     def domains(self) -> List[str]:
@@ -113,7 +128,7 @@ class StreamTranslationWriter(StreamWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_TRANSLATION]
+        return [DOMAIN_PAIRS]
 
     def accepts(self) -> List:
         """
@@ -122,9 +137,9 @@ class StreamTranslationWriter(StreamWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [TranslationData]
+        return [PairData]
 
-    def write_stream(self, data: Union[TranslationData, Iterable[TranslationData]]):
+    def write_stream(self, data: Union[PairData, Iterable[PairData]]):
         """
         Saves the data one by one.
 
@@ -133,9 +148,9 @@ class StreamTranslationWriter(StreamWriter, abc.ABC):
         raise NotImplementedError()
 
 
-class BatchTranslationWriter(BatchWriter, abc.ABC):
+class BatchPairWriter(BatchWriter, abc.ABC):
     """
-    Batch writer for pretrain data.
+    Batch writer for pair data.
     """
 
     def domains(self) -> List[str]:
@@ -145,7 +160,7 @@ class BatchTranslationWriter(BatchWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_TRANSLATION]
+        return [DOMAIN_PAIRS]
 
     def accepts(self) -> List:
         """
@@ -154,20 +169,20 @@ class BatchTranslationWriter(BatchWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [TranslationData]
+        return [PairData]
 
-    def write_batch(self, data: Iterable[TranslationData]):
+    def write_batch(self, data: Iterable[PairData]):
         """
         Saves the data in one go.
 
-        :param data: the data to write as iterable of TranslationData
+        :param data: the data to write as iterable of PairData
         """
         raise NotImplementedError()
 
 
-class TranslationFilter(Filter, abc.ABC):
+class PairFilter(Filter, abc.ABC):
     """
-    Filter for pretrain data.
+    Filter for pair data.
     """
 
     def domains(self) -> List[str]:
@@ -177,7 +192,7 @@ class TranslationFilter(Filter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_TRANSLATION]
+        return [DOMAIN_PAIRS]
 
     def accepts(self) -> List:
         """
@@ -186,7 +201,7 @@ class TranslationFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [TranslationData]
+        return [PairData]
 
     def generates(self) -> List:
         """
@@ -195,4 +210,4 @@ class TranslationFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [TranslationData]
+        return [PairData]

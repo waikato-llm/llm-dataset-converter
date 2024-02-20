@@ -1,8 +1,8 @@
 # sentences-pt
 
 * domain(s): pretrain
-* accepts: ldc.pretrain.PretrainData
-* generates: ldc.pretrain.PretrainData
+* accepts: ldc.api.pretrain.PretrainData
+* generates: ldc.api.pretrain.PretrainData
 
 Splits pretrain text data into sentences and puts them on separate lines (using new-lines).
 

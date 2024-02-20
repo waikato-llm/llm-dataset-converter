@@ -10,7 +10,7 @@ from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.base_io import open_file, generate_output
-from ._core import TranslationData, TranslationReader, BatchTranslationWriter
+from ldc.api.translation import TranslationData, TranslationReader, BatchTranslationWriter
 from ldc.utils import str_to_column_index
 
 

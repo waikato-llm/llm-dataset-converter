@@ -8,7 +8,7 @@ from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.base_io import open_file, generate_output, is_compressed
-from ._core import ClassificationData, ClassificationReader, StreamClassificationWriter
+from ldc.api.supervised.classification import ClassificationData, ClassificationReader, StreamClassificationWriter
 
 
 class JsonLinesClassificationReader(ClassificationReader):

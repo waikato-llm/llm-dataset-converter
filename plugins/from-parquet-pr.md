@@ -1,7 +1,7 @@
 # from-parquet-pr
 
 * domain(s): pairs
-* generates: ldc.supervised.pairs.PairData
+* generates: ldc.api.supervised.pairs.PairData
 
 Reads prompt/output pairs from Parquet database files.
 

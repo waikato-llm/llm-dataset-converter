@@ -10,7 +10,7 @@ from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.base_io import generate_output
-from ._core import PretrainData, PretrainReader, BatchPretrainWriter
+from ldc.api.pretrain import PretrainData, PretrainReader, BatchPretrainWriter
 
 
 class ParquetPretrainReader(PretrainReader):

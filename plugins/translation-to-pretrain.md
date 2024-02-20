@@ -1,8 +1,8 @@
 # translation-to-pretrain
 
 * domain(s): translation, pretrain
-* accepts: ldc.translation.TranslationData
-* generates: ldc.pretrain.PretrainData
+* accepts: ldc.api.translation.TranslationData
+* generates: ldc.api.pretrain.PretrainData
 
 Converts records of translation data to pretrain ones, extracting a specific language.
 

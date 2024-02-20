@@ -3,9 +3,9 @@ from typing import List
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_TRANSLATION, DOMAIN_PRETRAIN
-from ldc.pretrain import PretrainData
-from ldc.translation import TranslationData
-from ._core import Filter
+from ldc.api.pretrain import PretrainData
+from ldc.api.translation import TranslationData
+from ldc.api.filter import Filter
 
 
 class TranslationToPretrain(Filter):

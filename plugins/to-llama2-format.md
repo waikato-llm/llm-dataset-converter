@@ -1,8 +1,8 @@
 # to-llama2-format
 
 * domain(s): pretrain
-* accepts: ldc.pretrain.PretrainData
-* generates: ldc.pretrain.PretrainData
+* accepts: ldc.api.pretrain.PretrainData
+* generates: ldc.api.pretrain.PretrainData
 
 Turns pretrain records into llama2 format. Based on: https://github.com/facebookresearch/llama/blob/ef351e9cd9496c579bf9f2bb036ef11bdc5ca3d2/llama/generation.py#L320
 

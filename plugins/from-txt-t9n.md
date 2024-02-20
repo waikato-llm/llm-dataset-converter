@@ -1,7 +1,7 @@
 # from-txt-t9n
 
 * domain(s): translation
-* generates: ldc.translation.TranslationData
+* generates: ldc.api.translation.TranslationData
 
 Reads translation data from plain text files, with each line representing a record for one specific language.
 

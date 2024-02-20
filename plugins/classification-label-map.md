@@ -1,8 +1,8 @@
 # classification-label-map
 
 * domain(s): classification
-* accepts: ldc.supervised.classification.ClassificationData
-* generates: ldc.supervised.classification.ClassificationData
+* accepts: ldc.api.supervised.classification.ClassificationData
+* generates: ldc.api.supervised.classification.ClassificationData
 
 Generates a label string/int map and can also replace the label with the integer index.
 

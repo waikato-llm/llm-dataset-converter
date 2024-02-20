@@ -1,7 +1,7 @@
 # to-parquet-pt
 
 * domain(s): pretrain
-* accepts: ldc.pretrain.PretrainData
+* accepts: ldc.api.pretrain.PretrainData
 
 Writes text used for pretraining in Parquet database format.
 

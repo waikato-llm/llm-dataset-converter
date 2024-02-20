@@ -3,7 +3,7 @@ import copy
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS, domain_suffix
-from ._core import PretrainData, PretrainFilter
+from ldc.api.pretrain import PretrainData, PretrainFilter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences
 
 

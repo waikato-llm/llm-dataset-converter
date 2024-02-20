@@ -3,23 +3,17 @@ from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
 from seppl import MetaDataHandler
-from ldc.core import DOMAIN_CLASSIFICATION
+from ldc.core import DOMAIN_TRANSLATION
 from ldc.base_io import Reader, StreamWriter, BatchWriter
-from ldc.filter import Filter
-
-PAIRDATA_INSTRUCTION = "instruction"
-PAIRDATA_INPUT = "input"
-PAIRDATA_OUTPUT = "output"
-PAIRDATA_FIELDS = [PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT]
+from ldc.api.filter import Filter
 
 
 @dataclass
-class ClassificationData(MetaDataHandler):
+class TranslationData(MetaDataHandler):
     """
-    Container for classification data.
+    Container for pretrain data.
     """
-    text: Optional[str]
-    label: Optional[Union[str, int]]
+    translations: Optional[dict]  # lookup: language -> text
     meta: Optional[dict] = None
 
     def has_metadata(self) -> bool:
@@ -50,39 +44,34 @@ class ClassificationData(MetaDataHandler):
         self.meta = metadata
 
     @classmethod
-    def parse(cls, d):
+    def parse(cls, d: dict) -> 'TranslationData':
         """
-        Obtains the data from the provided dictionary and creates a ClassificationData instance.
+        Obtains the data from the provided dictionary and creates a TranslationData instance.
 
         :param d: the dictionary to get the data from
         :type d: dict
         :return: the generated instance
-        :rtype: ClassificationData
+        :rtype: TranslationData
         """
-        return ClassificationData(
-            text=d.get("text", None),
-            label=d.get("label", None),
+        return TranslationData(
+            translations=d.get("translations", None),
         )
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """
         Returns its data as a dictionary.
 
         :return: the data a dictionary
         :rtype: dict
         """
-        result = dict()
-        atts = ["text", "label"]
-        for att in atts:
-            value = getattr(self, att)
-            if value is not None:
-                result[att] = value
-        return result
+        return {
+            "translations": self.translations,
+        }
+    
 
-
-class ClassificationReader(Reader, abc.ABC):
+class TranslationReader(Reader, abc.ABC):
     """
-    Reader for classification data.
+    Reader for pretrain data.
     """
     def domains(self) -> List[str]:
         """
@@ -91,7 +80,7 @@ class ClassificationReader(Reader, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_CLASSIFICATION]
+        return [DOMAIN_TRANSLATION]
 
     def generates(self) -> List:
         """
@@ -100,9 +89,9 @@ class ClassificationReader(Reader, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [ClassificationData]
+        return [TranslationData]
 
-    def read(self) -> Iterable[ClassificationData]:
+    def read(self) -> Iterable[TranslationData]:
         """
         Loads the data and returns the items one by one.
 
@@ -112,9 +101,9 @@ class ClassificationReader(Reader, abc.ABC):
         raise NotImplementedError()
 
 
-class StreamClassificationWriter(StreamWriter, abc.ABC):
+class StreamTranslationWriter(StreamWriter, abc.ABC):
     """
-    Stream writer for classification data.
+    Stream writer for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -124,7 +113,7 @@ class StreamClassificationWriter(StreamWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_CLASSIFICATION]
+        return [DOMAIN_TRANSLATION]
 
     def accepts(self) -> List:
         """
@@ -133,9 +122,9 @@ class StreamClassificationWriter(StreamWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [ClassificationData]
+        return [TranslationData]
 
-    def write_stream(self, data: Union[ClassificationData, Iterable[ClassificationData]]):
+    def write_stream(self, data: Union[TranslationData, Iterable[TranslationData]]):
         """
         Saves the data one by one.
 
@@ -144,9 +133,9 @@ class StreamClassificationWriter(StreamWriter, abc.ABC):
         raise NotImplementedError()
 
 
-class BatchClassificationWriter(BatchWriter, abc.ABC):
+class BatchTranslationWriter(BatchWriter, abc.ABC):
     """
-    Batch writer for classification data.
+    Batch writer for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -156,7 +145,7 @@ class BatchClassificationWriter(BatchWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_CLASSIFICATION]
+        return [DOMAIN_TRANSLATION]
 
     def accepts(self) -> List:
         """
@@ -165,20 +154,20 @@ class BatchClassificationWriter(BatchWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [ClassificationData]
+        return [TranslationData]
 
-    def write_batch(self, data: Iterable[ClassificationData]):
+    def write_batch(self, data: Iterable[TranslationData]):
         """
         Saves the data in one go.
 
-        :param data: the data to write as iterable of ClassificationData
+        :param data: the data to write as iterable of TranslationData
         """
         raise NotImplementedError()
 
 
-class ClassificationFilter(Filter, abc.ABC):
+class TranslationFilter(Filter, abc.ABC):
     """
-    Filter for classification data.
+    Filter for pretrain data.
     """
 
     def domains(self) -> List[str]:
@@ -188,7 +177,7 @@ class ClassificationFilter(Filter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_CLASSIFICATION]
+        return [DOMAIN_TRANSLATION]
 
     def accepts(self) -> List:
         """
@@ -197,7 +186,7 @@ class ClassificationFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [ClassificationData]
+        return [TranslationData]
 
     def generates(self) -> List:
         """
@@ -206,4 +195,4 @@ class ClassificationFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [ClassificationData]
+        return [TranslationData]

@@ -10,7 +10,7 @@ from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.base_io import generate_output
-from ._core import ClassificationData, ClassificationReader, BatchClassificationWriter
+from ldc.api.supervised.classification import ClassificationData, ClassificationReader, BatchClassificationWriter
 
 
 class ParquetClassificationReader(ClassificationReader):

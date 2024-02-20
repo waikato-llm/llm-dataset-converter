@@ -1,7 +1,7 @@
 # to-jsonlines-pr
 
 * domain(s): pairs
-* accepts: ldc.supervised.pairs.PairData
+* accepts: ldc.api.supervised.pairs.PairData
 
 Writes prompt/output pairs in JsonLines-like JSON format.
 

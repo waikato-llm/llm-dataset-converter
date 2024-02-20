@@ -1,8 +1,8 @@
 # pretrain-sentences-to-pairs
 
 * domain(s): pairs, pretrain
-* accepts: ldc.pretrain.PretrainData
-* generates: ldc.supervised.pairs.PairData
+* accepts: ldc.api.pretrain.PretrainData
+* generates: ldc.api.supervised.pairs.PairData
 
 Converts sentences from pretrain records to prompt/response pairs by using one sentence as the prompt and the following X sentences as response. Can be used to generate artificial prompt/response datasets from just pretrain data.
 

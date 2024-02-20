@@ -3,17 +3,23 @@ from dataclasses import dataclass
 from typing import Iterable, List, Dict, Optional, Union
 
 from seppl import MetaDataHandler
-from ldc.core import DOMAIN_PRETRAIN
+from ldc.core import DOMAIN_CLASSIFICATION
 from ldc.base_io import Reader, StreamWriter, BatchWriter
-from ldc.filter import Filter
+from ldc.api.filter import Filter
+
+PAIRDATA_INSTRUCTION = "instruction"
+PAIRDATA_INPUT = "input"
+PAIRDATA_OUTPUT = "output"
+PAIRDATA_FIELDS = [PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT]
 
 
 @dataclass
-class PretrainData(MetaDataHandler):
+class ClassificationData(MetaDataHandler):
     """
-    Container for pretrain data.
+    Container for classification data.
     """
-    content: Optional[str]
+    text: Optional[str]
+    label: Optional[Union[str, int]]
     meta: Optional[dict] = None
 
     def has_metadata(self) -> bool:
@@ -44,34 +50,39 @@ class PretrainData(MetaDataHandler):
         self.meta = metadata
 
     @classmethod
-    def parse(cls, d: dict) -> 'PretrainData':
+    def parse(cls, d):
         """
-        Obtains the data from the provided dictionary and creates a PretrainData instance.
+        Obtains the data from the provided dictionary and creates a ClassificationData instance.
 
         :param d: the dictionary to get the data from
         :type d: dict
         :return: the generated instance
-        :rtype: PretrainData
+        :rtype: ClassificationData
         """
-        return PretrainData(
-            content=d.get("content", None),
+        return ClassificationData(
+            text=d.get("text", None),
+            label=d.get("label", None),
         )
 
-    def to_dict(self) -> dict:
+    def to_dict(self):
         """
         Returns its data as a dictionary.
 
         :return: the data a dictionary
         :rtype: dict
         """
-        return {
-            "content": self.content,
-        }
-    
+        result = dict()
+        atts = ["text", "label"]
+        for att in atts:
+            value = getattr(self, att)
+            if value is not None:
+                result[att] = value
+        return result
 
-class PretrainReader(Reader, abc.ABC):
+
+class ClassificationReader(Reader, abc.ABC):
     """
-    Reader for pretrain data.
+    Reader for classification data.
     """
     def domains(self) -> List[str]:
         """
@@ -80,7 +91,7 @@ class PretrainReader(Reader, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PRETRAIN]
+        return [DOMAIN_CLASSIFICATION]
 
     def generates(self) -> List:
         """
@@ -89,9 +100,9 @@ class PretrainReader(Reader, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [ClassificationData]
 
-    def read(self) -> Iterable[PretrainData]:
+    def read(self) -> Iterable[ClassificationData]:
         """
         Loads the data and returns the items one by one.
 
@@ -101,9 +112,9 @@ class PretrainReader(Reader, abc.ABC):
         raise NotImplementedError()
 
 
-class StreamPretrainWriter(StreamWriter, abc.ABC):
+class StreamClassificationWriter(StreamWriter, abc.ABC):
     """
-    Stream writer for pretrain data.
+    Stream writer for classification data.
     """
 
     def domains(self) -> List[str]:
@@ -113,7 +124,7 @@ class StreamPretrainWriter(StreamWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PRETRAIN]
+        return [DOMAIN_CLASSIFICATION]
 
     def accepts(self) -> List:
         """
@@ -122,9 +133,9 @@ class StreamPretrainWriter(StreamWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [ClassificationData]
 
-    def write_stream(self, data: Union[PretrainData, Iterable[PretrainData]]):
+    def write_stream(self, data: Union[ClassificationData, Iterable[ClassificationData]]):
         """
         Saves the data one by one.
 
@@ -133,9 +144,9 @@ class StreamPretrainWriter(StreamWriter, abc.ABC):
         raise NotImplementedError()
 
 
-class BatchPretrainWriter(BatchWriter, abc.ABC):
+class BatchClassificationWriter(BatchWriter, abc.ABC):
     """
-    Batch writer for pretrain data.
+    Batch writer for classification data.
     """
 
     def domains(self) -> List[str]:
@@ -145,7 +156,7 @@ class BatchPretrainWriter(BatchWriter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PRETRAIN]
+        return [DOMAIN_CLASSIFICATION]
 
     def accepts(self) -> List:
         """
@@ -154,20 +165,20 @@ class BatchPretrainWriter(BatchWriter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [ClassificationData]
 
-    def write_batch(self, data: Iterable[PretrainData]):
+    def write_batch(self, data: Iterable[ClassificationData]):
         """
         Saves the data in one go.
 
-        :param data: the data to write as iterable of PretrainData
+        :param data: the data to write as iterable of ClassificationData
         """
         raise NotImplementedError()
 
 
-class PretrainFilter(Filter, abc.ABC):
+class ClassificationFilter(Filter, abc.ABC):
     """
-    Filter for pretrain data.
+    Filter for classification data.
     """
 
     def domains(self) -> List[str]:
@@ -177,7 +188,7 @@ class PretrainFilter(Filter, abc.ABC):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PRETRAIN]
+        return [DOMAIN_CLASSIFICATION]
 
     def accepts(self) -> List:
         """
@@ -186,7 +197,7 @@ class PretrainFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [ClassificationData]
 
     def generates(self) -> List:
         """
@@ -195,4 +206,4 @@ class PretrainFilter(Filter, abc.ABC):
         :return: the list of classes
         :rtype: list
         """
-        return [PretrainData]
+        return [ClassificationData]

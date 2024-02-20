@@ -3,10 +3,10 @@ from typing import List
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DEFAULT_END_CHARS
-from ldc.pretrain import PretrainData
-from ldc.supervised.pairs import PairData
+from ldc.api.pretrain import PretrainData
+from ldc.api.supervised.pairs import PairData
 from ldc.text_utils import split_into_sentences
-from ._core import Filter
+from ldc.api.filter import Filter
 
 
 class PretrainSentencesToPairs(Filter):

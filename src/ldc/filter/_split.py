@@ -5,10 +5,10 @@ from wai.logging import LOGGING_WARNING
 from seppl import MetaDataHandler, get_metadata
 from seppl.io import Splitter
 from ldc.core import DOMAIN_ANY
-from ldc.pretrain import PretrainData
-from ldc.supervised.pairs import PairData
-from ldc.translation import TranslationData
-from ._core import Filter
+from ldc.api.pretrain import PretrainData
+from ldc.api.supervised.pairs import PairData
+from ldc.api.translation import TranslationData
+from ldc.api.filter import Filter
 
 META_SPLIT = "split"
 """ the key for storing the split name in the meta-data. """

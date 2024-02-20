@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS
-from ._core import PairData, PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT, PairFilter
+from ldc.api.supervised.pairs import PairData, PAIRDATA_INSTRUCTION, PAIRDATA_INPUT, PAIRDATA_OUTPUT, PairFilter
 
 
 PH_START = "{"

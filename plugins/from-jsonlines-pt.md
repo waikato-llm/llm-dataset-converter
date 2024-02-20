@@ -1,7 +1,7 @@
 # from-jsonlines-pt
 
 * domain(s): pretrain
-* generates: ldc.pretrain.PretrainData
+* generates: ldc.api.pretrain.PretrainData
 
 Reads pretrain data in JsonLines-like JSON format.
 

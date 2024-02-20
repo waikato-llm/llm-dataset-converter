@@ -1,8 +1,8 @@
 # llama2-to-pairs
 
 * domain(s): pairs, pretrain
-* accepts: ldc.pretrain.PretrainData
-* generates: ldc.supervised.pairs.PairData
+* accepts: ldc.api.pretrain.PretrainData
+* generates: ldc.api.supervised.pairs.PairData
 
 Converts llama2 pretrain records to prompts/response ones. The 'instruction' (ie prompt) is extracted from [INST]...[/INST] and the 'output' (ie response) is the string that follows the [/INST]. Splits on <s> to generate multiple prompt/response records.
 

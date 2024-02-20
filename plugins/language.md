@@ -1,8 +1,8 @@
 # language
 
 * domain(s): translation
-* accepts: ldc.translation.TranslationData
-* generates: ldc.translation.TranslationData
+* accepts: ldc.api.translation.TranslationData
+* generates: ldc.api.translation.TranslationData
 
 Keeps or discards languages.
 

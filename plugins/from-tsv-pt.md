@@ -1,7 +1,7 @@
 # from-tsv-pt
 
 * domain(s): pretrain
-* generates: ldc.pretrain.PretrainData
+* generates: ldc.api.pretrain.PretrainData
 
 Reads pretrain data in TSV format.
 
