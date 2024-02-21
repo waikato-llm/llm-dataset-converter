@@ -28,8 +28,8 @@ optional arguments:
                         The characters signifying the end of a sentence.
                         (default: .!?;:))
   -p PROMPT_STEP, --prompt_step PROMPT_STEP
-                        The step size for selecting sentences as prompt.
-                        (default: 1)
+                        The step size for selecting sentences as prompt; no
+                        sentence will be used for prompt if 0. (default: 1)
   -r NUM_SENTENCES_RESPONSE, --num_sentences_response NUM_SENTENCES_RESPONSE
                         The number of sentences following the prompt sentence
                         to use as response. (default: 5)

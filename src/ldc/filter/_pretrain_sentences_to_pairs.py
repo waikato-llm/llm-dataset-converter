@@ -1,6 +1,7 @@
 import argparse
 from typing import List
 
+from seppl import add_metadata
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DEFAULT_END_CHARS
 from ldc.api.pretrain import PretrainData
@@ -93,7 +94,7 @@ class PretrainSentencesToPairs(Filter):
         """
         parser = super()._create_argparser()
         parser.add_argument("-c", "--end_chars", type=str, help="The characters signifying the end of a sentence.", default=DEFAULT_END_CHARS, required=False)
-        parser.add_argument("-p", "--prompt_step", type=int, help="The step size for selecting sentences as prompt.", default=1, required=False)
+        parser.add_argument("-p", "--prompt_step", type=int, help="The step size for selecting sentences as prompt; no sentence will be used for prompt if 0.", default=1, required=False)
         parser.add_argument("-r", "--num_sentences_response", type=int, help="The number of sentences following the prompt sentence to use as response.", default=5, required=False)
         return parser
 
@@ -118,8 +119,8 @@ class PretrainSentencesToPairs(Filter):
             self.end_chars = ""
         if len(self.end_chars) == 0:
             raise Exception("At least one character required to identify the end of a sentence!")
-        if self.prompt_step < 1:
-            raise Exception("Prompt step must be at least 1, provided: %d" % self.prompt_step)
+        if self.prompt_step < 0:
+            raise Exception("Prompt step must be at least 0, provided: %d" % self.prompt_step)
         if self.num_sentences_response < 1:
             raise Exception("Number of sentences making up a response must be at least 1, provided: %d" % self.num_sentences_response)
 
@@ -136,15 +137,35 @@ class PretrainSentencesToPairs(Filter):
         lines = data.content.split("\n")
         sentences = split_into_sentences(lines, self.end_chars)
 
+        # metadata
+        filename = None
+        if data.has_metadata() and ("file" in data.get_metadata()):
+            filename = data.get_metadata()["file"]
+
         i = 0
         while True:
             if i + self.num_sentences_response < len(sentences):
-                instruction = sentences[i]
-                output = " ".join(sentences[i+1:i+self.num_sentences_response+1])
-                result.append(PairData(instruction=instruction, output=output, input=None))
+                meta = None
+                if filename is not None:
+                    meta = add_metadata(meta, "file", filename)
+                # instruction
+                if self.prompt_step > 0:
+                    n = 1
+                    instruction = sentences[i]
+                    meta = add_metadata(meta, "instruction", i)
+                else:
+                    n = 0
+                    instruction = ""
+                # output
+                output = " ".join(sentences[i+n:i+self.num_sentences_response+n])
+                meta = add_metadata(meta, "output", str(i+n) + ":" + str(i+self.num_sentences_response+n))
+                result.append(PairData(instruction=instruction, output=output, input=None, meta=meta))
             else:
                 break
-            i += self.prompt_step
+            if self.prompt_step > 0:
+                i += self.prompt_step
+            else:
+                i += self.num_sentences_response
 
         self.logger().info("# lines -> # pair records: %d -> %d" % (len(lines), len(result)))
 

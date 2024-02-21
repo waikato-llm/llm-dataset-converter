@@ -10,6 +10,7 @@ Changelog
 - readers now set the 'file' meta-data value
 - added `file-filter` filter for explicitly allowing/discarding records that stem from certain files (entry in meta-data: 'file')
 - added `record-files` filter for recording the files that the records are based on (entry in meta-data: 'file')
+- filter `pretrain-sentences-to-pairs` can now omit filling the `instruction` when using 0 as prompt step
 
 
 0.1.1 (2024-02-15)
