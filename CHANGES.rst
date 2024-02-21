@@ -11,6 +11,8 @@ Changelog
 - added `file-filter` filter for explicitly allowing/discarding records that stem from certain files (entry in meta-data: 'file')
 - added `record-files` filter for recording the files that the records are based on (entry in meta-data: 'file')
 - filter `pretrain-sentences-to-pairs` can now omit filling the `instruction` when using 0 as prompt step
+- requiring seppl>=0.1.2 now
+- added global option `-U, --unescape_unicode` to `llm-convert` tool to allow conversion of escaped unicode characters
 
 
 0.1.1 (2024-02-15)

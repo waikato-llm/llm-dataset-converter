@@ -61,17 +61,18 @@ def _print_usage(plugin_details: bool = False):
     print("writers:\n" + enumerate_plugins(available_writers().keys(), prefix="   "))
     print()
     print("optional arguments:")
-    print("  -h, --help            show basic help message and exit")
-    print("  --help-all            show basic help message plus help on all plugins and exit")
-    print("  --help-plugin NAME    show help message for plugin NAME and exit")
+    print("  -h, --help              show basic help message and exit")
+    print("  --help-all              show basic help message plus help on all plugins and exit")
+    print("  --help-plugin NAME      show help message for plugin NAME and exit")
     print("  -u INTERVAL, --update_interval INTERVAL")
-    print("                        outputs the progress every INTERVAL records (default: %d)" % DEFAULT_UPDATE_INTERVAL)
+    print("                          outputs the progress every INTERVAL records (default: %d)" % DEFAULT_UPDATE_INTERVAL)
     print("  -l {%s}, --logging_level {%s}" % (logging_levels, logging_levels))
-    print("                        the logging level to use (default: WARN)")
+    print("                          the logging level to use (default: WARN)")
     print("  -c {%s}, --compression {%s}" % (compression_formats, compression_formats))
-    print("                        the type of compression to use when only providing an output")
-    print("                        directory to the writer (default: None)")
-    print("  -b, --force_batch     processes the data in batches")
+    print("                          the type of compression to use when only providing an output")
+    print("                          directory to the writer (default: None)")
+    print("  -b, --force_batch       processes the data in batches")
+    print("  -U, --unescape_unicode  unescape unicode characters in the command-line")
     print()
     if plugin_details:
         for plugin in sorted(_available_plugins().keys()):
@@ -101,7 +102,20 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
         sys.exit(0)
 
     parsed = split_args(args, list(_available_plugins().keys()))
-    plugins = args_to_objects(parsed, _available_plugins(), allow_global_options=True)
+
+    # global options?
+    # see print_usage() method above
+    parser = argparse.ArgumentParser()
+    add_logging_level(parser)
+    parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
+    parser.add_argument("-u", "--update_interval", type=int, default=DEFAULT_UPDATE_INTERVAL)
+    parser.add_argument("-b", "--force_batch", action="store_true")
+    parser.add_argument("-U", "--unescape_unicode", action="store_true")
+    session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
+    session.logger = logging.getLogger(CONVERT)
+    set_logging_level(session.logger, session.options.logging_level)
+
+    plugins = args_to_objects(parsed, _available_plugins(), allow_global_options=True, unescape=session.options.unescape_unicode)
     reader = None
     writer = None
     filters = []
@@ -144,17 +158,6 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
             check_compatibility([reader, filter_, writer])
         else:
             check_compatibility([reader, writer])
-
-    # global options?
-    # see print_usage() method above
-    parser = argparse.ArgumentParser()
-    add_logging_level(parser)
-    parser.add_argument("-c", "--compression", default=None, choices=COMPRESSION_FORMATS)
-    parser.add_argument("-u", "--update_interval", type=int, default=DEFAULT_UPDATE_INTERVAL)
-    parser.add_argument("-b", "--force_batch", action="store_true")
-    session = Session(options=parser.parse_args(parsed[""] if ("" in parsed) else []))
-    session.logger = logging.getLogger(CONVERT)
-    set_logging_level(session.logger, session.options.logging_level)
 
     return reader, filter_, writer, session
 
