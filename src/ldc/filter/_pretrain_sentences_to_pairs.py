@@ -167,7 +167,7 @@ class PretrainSentencesToPairs(Filter):
             else:
                 i += self.num_sentences_response
 
-        self.logger().info("# lines -> # pair records: %d -> %d" % (len(lines), len(result)))
+        self.logger().info("#lines -> #sentences -> #records: %d -> %d -> %d" % (len(lines), len(sentences), len(result)))
 
         if len(result) == 1:
             result = result[0]
