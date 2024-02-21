@@ -3,6 +3,7 @@ import json
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.api import open_file, generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
@@ -133,7 +134,8 @@ class XTunerReader(PairReader):
                     _input = conversation[self.att_input]
                 if self.att_output in conversation:
                     _output = conversation[self.att_output]
-                yield PairData(instruction=_instruction, input=_input, output=_output)
+                meta = add_metadata(None, "file", self.session.current_input)
+                yield PairData(instruction=_instruction, input=_input, output=_output, meta=meta)
 
     def has_finished(self) -> bool:
         """

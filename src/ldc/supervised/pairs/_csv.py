@@ -197,6 +197,9 @@ class AbstractCsvLikePairsReader(PairReader, abc.ABC):
 
                 meta = None
 
+                # file
+                meta = add_metadata(meta, "file", self.session.current_input)
+
                 # ID?
                 if id_ is not None:
                     meta = add_metadata(meta, "id", id_)

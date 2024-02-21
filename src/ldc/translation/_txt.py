@@ -4,6 +4,7 @@ import re
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
@@ -211,6 +212,8 @@ class TxtTranslationReader(TranslationReader):
 
             if len(translations) > 0:
                 meta = {"id": curr_id}
+                # file
+                meta = add_metadata(meta, "file", self.session.current_input)
                 yield TranslationData(translations=translations, meta=meta)
 
         self._inputs = []

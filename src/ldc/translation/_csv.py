@@ -174,6 +174,9 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
 
                 meta = None
 
+                # file
+                meta = add_metadata(meta, "file", self.session.current_input)
+
                 # ID?
                 if self.idx_id > -1:
                     meta = add_metadata(meta, "id", row[self.idx_id])

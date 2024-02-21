@@ -118,6 +118,9 @@ class JsonLinesTranslationReader(TranslationReader):
 
                 meta = None
 
+                # file
+                meta = add_metadata(meta, "file", self.session.current_input)
+
                 # additional meta-data columns
                 if self.att_meta is not None:
                     for c in self.att_meta:

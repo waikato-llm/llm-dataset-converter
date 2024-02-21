@@ -3,6 +3,7 @@ import json
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.api import open_file, generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
@@ -100,7 +101,10 @@ class AlpacaReader(PairReader):
 
         array = json.load(self._current_input)
         for item in array:
-            yield PairData.parse(item)
+            data = PairData.parse(item)
+            meta = add_metadata(None, "file", self.session.current_input)
+            data.set_metadata(meta)
+            yield data
 
     def has_finished(self) -> bool:
         """

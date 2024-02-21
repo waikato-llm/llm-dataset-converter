@@ -4,6 +4,7 @@ import traceback
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
+from seppl import add_metadata
 from seppl.io import locate_files
 from ldc.core import domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.api import open_file, generate_output, is_compressed
@@ -248,15 +249,22 @@ class TxtPretrainReader(PretrainReader):
             if self.skip_empty:
                 lines = self._remove_empty(lines)
 
+            meta = None
+
+            # file
+            meta = add_metadata(meta, "file", self.session.current_input)
+
             if self.split_lines:
                 for index, line in enumerate(lines):
+                    meta = add_metadata(meta, METADATA_LINE, index)
                     yield PretrainData(
                         content=line.strip(),
-                        meta={METADATA_LINE: index}
+                        meta=meta
                     )
             else:
                 yield PretrainData(
-                    content="".join(lines)
+                    content="".join(lines),
+                    meta=meta
                 )
         self._inputs = []
 
