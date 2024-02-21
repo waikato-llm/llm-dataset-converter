@@ -143,29 +143,27 @@ class PretrainSentencesToPairs(Filter):
             filename = data.get_metadata()["file"]
 
         i = 0
-        while True:
-            if i + self.num_sentences_response < len(sentences):
+        while len(sentences) > 0:
+            # prompt
+            if self.prompt_step > 0:
+                instruction = sentences.pop(0)
+                i += 1
+            else:
+                instruction = ""
+
+            # response
+            response = []
+            while (len(response) < self.num_sentences_response) and (len(sentences) > 0):
+                response.append(sentences.pop(0))
+
+            if len(response) > 0:
                 meta = None
                 if filename is not None:
                     meta = add_metadata(meta, "file", filename)
-                # instruction
-                if self.prompt_step > 0:
-                    n = 1
-                    instruction = sentences[i]
-                    meta = add_metadata(meta, "instruction", i)
-                else:
-                    n = 0
-                    instruction = ""
-                # output
-                output = " ".join(sentences[i+n:i+self.num_sentences_response+n])
-                meta = add_metadata(meta, "output", str(i+n) + ":" + str(i+self.num_sentences_response+n))
+                output = " ".join(response)
+                meta = add_metadata(meta, "output", str(i+self.prompt_step) + ":" + str(i+self.prompt_step+len(response) - 1))
                 result.append(PairData(instruction=instruction, output=output, input=None, meta=meta))
-            else:
-                break
-            if self.prompt_step > 0:
-                i += self.prompt_step
-            else:
-                i += self.num_sentences_response
+                i += len(response)
 
         self.logger().info("#lines -> #sentences -> #records: %d -> %d -> %d" % (len(lines), len(sentences), len(result)))
 
