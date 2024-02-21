@@ -136,6 +136,26 @@ def replace_extension(path: str, ext: str) -> str:
     return result
 
 
+def strip_filename(path: str, strip_path: bool = False, strip_extension: bool = False):
+    """
+    Optional stripping of path/extension.
+
+    :param path: the filename to process
+    :type path: str
+    :param strip_path: whether to strip the path
+    :type strip_path: bool
+    :param strip_extension: whether to strip the extension
+    :type strip_extension: bool
+    :return: the processed filename
+    :rtype: str
+    """
+    if strip_path:
+        path = os.path.basename(path)
+    if strip_extension:
+        path = os.path.splitext(path)[0]
+    return path
+
+
 def open_file(path: str, mode: str = None, encoding: str = None, compression: str = None, logger: logging.Logger = None):
     """
     Opens the file and returns a file-like object.

@@ -1,5 +1,6 @@
 from ._assemble_sentences import AssembleSentences
 from ._change_case import ChangeCase, CASES, CASE_UNCHANGED, CASE_LOWER, CASE_UPPER, CASE_TITLE
+from ._file_filter import FileFilter
 from ._find_substr import FindSubstring
 from ._keyword import Keyword
 from ._llama2_to_pairs import Llama2ToPairs
@@ -10,6 +11,7 @@ from ._pairs_to_pretrain import PairsToPretrain
 from ._pretrain_sentences_to_classification import PretrainSentencesToClassification
 from ._pretrain_sentences_to_pairs import PretrainSentencesToPairs
 from ._randomize_records import RandomizeRecords
+from ._record_files import RecordFiles
 from ._record_window import RecordWindow
 from ._remove_blocks import RemoveBlocks
 from ._remove_empty import RemoveEmpty

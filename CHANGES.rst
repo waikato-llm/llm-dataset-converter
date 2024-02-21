@@ -7,6 +7,9 @@ Changelog
 - added support for XTuner conversation JSON format: `from-xtuner` and `to-xtuner`
 - added filter `update-pair-data` to allow tweaking or rearranging of the data
 - introduced `ldc.api` module to separate out abstract superclasses and avoid circular imports
+- readers now set the 'file' meta-data value
+- added `file-filter` filter for explicitly allowing/discarding records that stem from certain files (entry in meta-data: 'file')
+- added `record-files` filter for recording the files that the records are based on (entry in meta-data: 'file')
 
 
 0.1.1 (2024-02-15)
