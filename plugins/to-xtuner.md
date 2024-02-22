@@ -7,8 +7,10 @@ Writes single-turn conversations in XTuner JSON format (https://github.com/Inter
 
 ```
 usage: to-xtuner [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                 [-N LOGGER_NAME] -o OUTPUT [--att_instruction ATT]
-                 [--att_input ATT] [--att_output ATT] [-p] [-a]
+                 [-N LOGGER_NAME] -o OUTPUT [--att_system ATT]
+                 [--att_input ATT] [--att_output ATT] [--text_system TEXT]
+                 [--format_system FORMAT] [--format_input FORMAT]
+                 [--format_output FORMAT] [-p] [-a]
 
 Writes single-turn conversations in XTuner JSON format (https://github.com/Int
 ernLM/xtuner/blob/v0.1.13/docs/en/user_guides/dataset_format.md#single-turn-
@@ -24,10 +26,27 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         Path of the XTuner file to write (directory when
                         processing multiple files) (default: None)
-  --att_instruction ATT
-                        The attribute for the instructions (default: None)
+  --att_system ATT      The attribute for the system instructions (default:
+                        None)
   --att_input ATT       The attribute for the inputs (default: None)
   --att_output ATT      The attribute for the outputs (default: None)
+  --text_system TEXT    The text to use for the system instructions (default:
+                        None)
+  --format_system FORMAT
+                        The format to use for the system instructions,
+                        available placeholders:
+                        {SYSTEM_TEXT}|{INSTRUCTION}|{INPUT}|{OUTPUT} (default:
+                        None)
+  --format_input FORMAT
+                        The format to use for the input, available
+                        placeholders:
+                        {SYSTEM_TEXT}|{INSTRUCTION}|{INPUT}|{OUTPUT} (default:
+                        None)
+  --format_output FORMAT
+                        The format to use for the output, available
+                        placeholders:
+                        {SYSTEM_TEXT}|{INSTRUCTION}|{INPUT}|{OUTPUT} (default:
+                        None)
   -p, --pretty_print    Whether to output the JSON in more human-readable
                         format. (default: False)
   -a, --ensure_ascii    Whether to ensure that the output is ASCII compatible.

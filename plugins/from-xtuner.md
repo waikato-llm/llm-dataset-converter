@@ -8,7 +8,7 @@ Reads single-turn conversations in XTuner JSON format (https://github.com/Intern
 ```
 usage: from-xtuner [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
-                   [-I [INPUT_LIST [INPUT_LIST ...]]] [--att_instruction ATT]
+                   [-I [INPUT_LIST [INPUT_LIST ...]]] [--att_system ATT]
                    [--att_input ATT] [--att_output ATT] [--encoding ENC]
 
 Reads single-turn conversations in XTuner JSON format (https://github.com/Inte
@@ -28,8 +28,8 @@ optional arguments:
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
                         Path to the text file(s) listing the data files to use
                         (default: None)
-  --att_instruction ATT
-                        The attribute with the instructions (default: None)
+  --att_system ATT      The attribute with the system instructions (default:
+                        None)
   --att_input ATT       The attribute with the inputs (default: None)
   --att_output ATT      The attribute with the outputs (default: None)
   --encoding ENC        The encoding to force instead of auto-detecting it,
