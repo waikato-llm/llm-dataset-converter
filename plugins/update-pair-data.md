@@ -25,12 +25,18 @@ optional arguments:
                         name by default (default: None)
   --format_instruction FORMAT_INSTRUCTION
                         The format for the instruction content, use
-                        placeholder {instruction} for current value. (default:
-                        None)
+                        placeholder {instruction} for current value; available
+                        placeholders:
+                        {NEWLINE}|{TAB}|{instruction}|{input}|{output}
+                        (default: None)
   --format_input FORMAT_INPUT
                         The format for the input content, use placeholder
-                        {input} for current value. (default: None)
+                        {input} for current value; available placeholders:
+                        {NEWLINE}|{TAB}|{instruction}|{input}|{output}
+                        (default: None)
   --format_output FORMAT_OUTPUT
                         The format for the output content, use placeholder
-                        {output} for current value. (default: None)
+                        {output} for current value; available placeholders:
+                        {NEWLINE}|{TAB}|{instruction}|{input}|{output}
+                        (default: None)
 ```

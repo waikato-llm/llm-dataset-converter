@@ -9,9 +9,18 @@ from ldc.api.supervised.pairs import PairData, PAIRDATA_INSTRUCTION, PAIRDATA_IN
 
 PH_START = "{"
 PH_END = "}"
+PH_NEWLINE = PH_START + "NEWLINE" + PH_END
+PH_TAB = PH_START + "TAB" + PH_END
 PH_INSTRUCTION = PH_START + PAIRDATA_INSTRUCTION + PH_END
 PH_INPUT = PH_START + PAIRDATA_INPUT + PH_END
 PH_OUTPUT = PH_START + PAIRDATA_OUTPUT + PH_END
+PLACEHOLDERS = [
+    PH_NEWLINE,
+    PH_TAB,
+    PH_INSTRUCTION,
+    PH_INPUT,
+    PH_OUTPUT,
+]
 
 
 class UpdatePairData(PairFilter):
@@ -93,9 +102,9 @@ class UpdatePairData(PairFilter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("--format_instruction", type=str, default=None, help="The format for the instruction content, use placeholder " + PH_INSTRUCTION + " for current value.", required=False)
-        parser.add_argument("--format_input", type=str, default=None, help="The format for the input content, use placeholder " + PH_INPUT + " for current value.", required=False)
-        parser.add_argument("--format_output", type=str, default=None, help="The format for the output content, use placeholder " + PH_OUTPUT + " for current value.", required=False)
+        parser.add_argument("--format_instruction", type=str, default=None, help="The format for the instruction content, use placeholder " + PH_INSTRUCTION + " for current value; available placeholders: " + "|".join(PLACEHOLDERS), required=False)
+        parser.add_argument("--format_input", type=str, default=None, help="The format for the input content, use placeholder " + PH_INPUT + " for current value; available placeholders: " + "|".join(PLACEHOLDERS), required=False)
+        parser.add_argument("--format_output", type=str, default=None, help="The format for the output content, use placeholder " + PH_OUTPUT + " for current value; available placeholders: " + "|".join(PLACEHOLDERS), required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -127,6 +136,10 @@ class UpdatePairData(PairFilter):
         _input = "" if (data.input is None) else data.input
         _output = "" if (data.output is None) else data.output
         result = format_string
+        if PH_START in result:
+            result = result.replace(PH_NEWLINE, "\n")
+        if PH_START in result:
+            result = result.replace(PH_TAB, "\t")
         if PH_START in result:
             result = result.replace(PH_INSTRUCTION, _instruction)
         if PH_START in result:
