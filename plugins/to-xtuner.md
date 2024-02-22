@@ -30,23 +30,21 @@ optional arguments:
                         None)
   --att_input ATT       The attribute for the inputs (default: None)
   --att_output ATT      The attribute for the outputs (default: None)
-  --text_system TEXT    The text to use for the system instructions (default:
+  --text_system TEXT    The text to use for the system instructions; supports
+                        following placeholders: {NEWLINE}|{TAB} (default:
                         None)
   --format_system FORMAT
                         The format to use for the system instructions,
-                        available placeholders:
-                        {SYSTEM_TEXT}|{INSTRUCTION}|{INPUT}|{OUTPUT} (default:
-                        None)
+                        available placeholders: {NEWLINE}|{TAB}|{SYSTEM_TEXT}|
+                        {INSTRUCTION}|{INPUT}|{OUTPUT} (default: None)
   --format_input FORMAT
                         The format to use for the input, available
-                        placeholders:
-                        {SYSTEM_TEXT}|{INSTRUCTION}|{INPUT}|{OUTPUT} (default:
-                        None)
+                        placeholders: {NEWLINE}|{TAB}|{SYSTEM_TEXT}|{INSTRUCTI
+                        ON}|{INPUT}|{OUTPUT} (default: None)
   --format_output FORMAT
                         The format to use for the output, available
-                        placeholders:
-                        {SYSTEM_TEXT}|{INSTRUCTION}|{INPUT}|{OUTPUT} (default:
-                        None)
+                        placeholders: {NEWLINE}|{TAB}|{SYSTEM_TEXT}|{INSTRUCTI
+                        ON}|{INPUT}|{OUTPUT} (default: None)
   -p, --pretty_print    Whether to output the JSON in more human-readable
                         format. (default: False)
   -a, --ensure_ascii    Whether to ensure that the output is ASCII compatible.
