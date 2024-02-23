@@ -118,15 +118,15 @@ readers:
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n, from-xtuner
 filters:
    assemble-sentences, change-case, classification-label-map, 
-   find-substr, keyword, language, llama2-to-pairs, max-length-pt, 
-   max-records, metadata, multi-filter, pairs-to-llama2, 
+   file-filter, find-substr, keyword, language, llama2-to-pairs, 
+   max-length-pt, max-records, metadata, pairs-to-llama2, 
    pairs-to-pretrain, pretrain-sentences-to-classification, 
-   pretrain-sentences-to-pairs, randomize-records, record-window, 
-   remove-blocks, remove-empty, remove-patterns, replace-patterns, 
-   require-languages, reset-ids, sentences-pt, skip-duplicate-ids, 
-   skip-duplicate-text, split, split-pt, tee, text-length, text-stats, 
-   to-llama2-format, translation-to-pairs, translation-to-pretrain, 
-   update-pair-data
+   pretrain-sentences-to-pairs, randomize-records, record-files, 
+   record-window, remove-blocks, remove-empty, remove-patterns, 
+   replace-patterns, require-languages, reset-ids, sentences-pt, 
+   skip-duplicate-ids, skip-duplicate-text, split, split-pt, tee, 
+   text-length, text-stats, to-llama2-format, translation-to-pairs, 
+   translation-to-pretrain, update-pair-data
 writers:
    to-alpaca, to-csv-cl, to-csv-pr, to-csv-pt, to-csv-t9n, 
    to-jsonlines-cl, to-jsonlines-pr, to-jsonlines-pt, to-jsonlines-t9n, 
@@ -135,17 +135,18 @@ writers:
    to-xtuner
 
 optional arguments:
-  -h, --help            show basic help message and exit
-  --help-all            show basic help message plus help on all plugins and exit
-  --help-plugin NAME    show help message for plugin NAME and exit
+  -h, --help              show basic help message and exit
+  --help-all              show basic help message plus help on all plugins and exit
+  --help-plugin NAME      show help message for plugin NAME and exit
   -u INTERVAL, --update_interval INTERVAL
-                        outputs the progress every INTERVAL records (default: 1000)
+                          outputs the progress every INTERVAL records (default: 1000)
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
-                        the logging level to use (default: WARN)
+                          the logging level to use (default: WARN)
   -c {None,bz2,gz,xz,zstd}, --compression {None,bz2,gz,xz,zstd}
-                        the type of compression to use when only providing an output
-                        directory to the writer (default: None)
-  -b, --force_batch     processes the data in batches
+                          the type of compression to use when only providing an output
+                          directory to the writer (default: None)
+  -b, --force_batch       processes the data in batches
+  -U, --unescape_unicode  unescape unicode characters in the command-line
 ```
 
 ### Download
