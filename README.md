@@ -169,8 +169,9 @@ optional arguments:
 
 ```
 usage: llm-append [-h] [-i [INPUT [INPUT ...]]]
-                  [-I [INPUT_LIST [INPUT_LIST ...]]] [-o FILE]
-                  [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                  [-I [INPUT_LIST [INPUT_LIST ...]]]
+                  [-t {csv,json,jsonlines,plain-text,tsv}] [-o FILE] [-p]
+                  [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Tool for combining multiple text files by appending them.
 
@@ -182,12 +183,17 @@ optional arguments:
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
                         Path to the text file(s) listing the data files to
                         append (default: None)
+  -t {csv,json,jsonlines,plain-text,tsv}, --file_type {csv,json,jsonlines,plain-text,tsv}
+                        The type of files that are being processed. (default:
+                        plain-text)
   -o FILE, --output FILE
                         The path of the file to store the combined data in;
                         outputs it to stdout if omitted or a directory
                         (default: None)
-  -l {DEBUG,INFO,WARN,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARN,ERROR,CRITICAL}
-                        The logging level to use (default: WARN)
+  -p, --pretty_print    Whether to output the JSON in more human-readable
+                        format. (default: False)
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        The logging level to use. (default: WARN)
 ```
 
 ### Combining multiple files (side-by-side)

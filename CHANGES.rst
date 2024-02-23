@@ -13,6 +13,7 @@ Changelog
 - filter `pretrain-sentences-to-pairs` can now omit filling the `instruction` when using 0 as prompt step
 - requiring seppl>=0.1.2 now
 - added global option `-U, --unescape_unicode` to `llm-convert` tool to allow conversion of escaped unicode characters
+- the `llm-append` tool now supports appending for json, jsonlines and CSV files apart from plain-text files (default)
 
 
 0.1.1 (2024-02-15)
