@@ -6,6 +6,7 @@ from ._keyword import Keyword
 from ._llama2_to_pairs import Llama2ToPairs
 from ._max_records import MaxRecords
 from ._metadata import MetaData
+from ._metadata_from_name import MetaDataFromName
 from ._pairs_to_llama2 import PairsToLlama2
 from ._pairs_to_pretrain import PairsToPretrain
 from ._pretrain_sentences_to_classification import PretrainSentencesToClassification

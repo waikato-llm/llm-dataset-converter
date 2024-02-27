@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - filters `split` and `tee` now support `ClassificationData` as well
+- added `metadata-from-name` filter to extract meta-data from the current input file name
 
 
 0.2.0 (2024-02-27)

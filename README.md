@@ -119,14 +119,14 @@ readers:
 filters:
    assemble-sentences, change-case, classification-label-map, 
    file-filter, find-substr, keyword, language, llama2-to-pairs, 
-   max-length-pt, max-records, metadata, pairs-to-llama2, 
-   pairs-to-pretrain, pretrain-sentences-to-classification, 
-   pretrain-sentences-to-pairs, randomize-records, record-files, 
-   record-window, remove-blocks, remove-empty, remove-patterns, 
-   replace-patterns, require-languages, reset-ids, sentences-pt, 
-   skip-duplicate-ids, skip-duplicate-text, split, split-pt, tee, 
-   text-length, text-stats, to-llama2-format, translation-to-pairs, 
-   translation-to-pretrain, update-pair-data
+   max-length-pt, max-records, metadata, metadata-from-name, 
+   pairs-to-llama2, pairs-to-pretrain, 
+   pretrain-sentences-to-classification, pretrain-sentences-to-pairs, 
+   randomize-records, record-files, record-window, remove-blocks, 
+   remove-empty, remove-patterns, replace-patterns, require-languages, 
+   reset-ids, sentences-pt, skip-duplicate-ids, skip-duplicate-text, 
+   split, split-pt, tee, text-length, text-stats, to-llama2-format, 
+   translation-to-pairs, translation-to-pretrain, update-pair-data
 writers:
    to-alpaca, to-csv-cl, to-csv-pr, to-csv-pt, to-csv-t9n, 
    to-jsonlines-cl, to-jsonlines-pr, to-jsonlines-pt, to-jsonlines-t9n, 
