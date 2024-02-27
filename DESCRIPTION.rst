@@ -4,7 +4,7 @@ Filters can be supplied as well, e.g., for cleaning up the data.
 
 Dataset formats:
 
-- pairs: alpaca (r/w), csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w)
+- pairs: alpaca (r/w), csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w), xtuner (r/w)
 - pretrain: csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w), txt (r/w)
 - translation: csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w), txt (r/w)
 - classification: csv (r/w), jsonl (r/w), parquet (r/w), tsv (r/w)
