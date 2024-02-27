@@ -89,7 +89,7 @@ class MetaDataFromName(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-r", "--regexp", type=str, help="The regular expression apply to the image name, with the 1st group being used as the meta-data value.", default=None, required=False)
+        parser.add_argument("-r", "--regexp", type=str, help="The regular expression apply to the current input name, with the 1st group being used as the meta-data value.", default=None, required=False)
         parser.add_argument("-k", "--metadata_key", type=str, help="The key in the meta-data to store the extracted sub-string under.", default=None, required=False)
         return parser
 

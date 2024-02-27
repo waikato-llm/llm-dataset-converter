@@ -21,9 +21,9 @@ optional arguments:
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
   -r REGEXP, --regexp REGEXP
-                        The regular expression apply to the image name, with
-                        the 1st group being used as the meta-data value.
-                        (default: None)
+                        The regular expression apply to the current input
+                        name, with the 1st group being used as the meta-data
+                        value. (default: None)
   -k METADATA_KEY, --metadata_key METADATA_KEY
                         The key in the meta-data to store the extracted sub-
                         string under. (default: None)
