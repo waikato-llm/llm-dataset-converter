@@ -7,6 +7,7 @@ from seppl.io import Writer, BatchWriter, StreamWriter
 from ldc.core import DOMAIN_ANY
 from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
+from ldc.api.supervised.classification import ClassificationData
 from ldc.api.translation import TranslationData
 from ldc.api import Filter, MultiFilter
 
@@ -68,7 +69,7 @@ class Tee(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData]
+        return [PairData, PretrainData, TranslationData, ClassificationData]
 
     def generates(self) -> List:
         """
@@ -77,7 +78,7 @@ class Tee(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData]
+        return [PairData, PretrainData, TranslationData, ClassificationData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
