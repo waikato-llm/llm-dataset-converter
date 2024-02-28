@@ -1,8 +1,8 @@
 # replace-patterns
 
-* domain(s): pairs, pretrain, translation
-* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
-* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* domain(s): pairs, pretrain, translation, classification
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
 
 Replaces substrings that match regular expressions patterns.
 
@@ -10,7 +10,7 @@ Replaces substrings that match regular expressions patterns.
 usage: replace-patterns [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                         [-N LOGGER_NAME] [-f [FIND [FIND ...]]]
                         [-r [REPLACE [REPLACE ...]]]
-                        [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
+                        [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
                         [-g [LANGUAGE [LANGUAGE ...]]]
 
 Replaces substrings that match regular expressions patterns.
@@ -28,10 +28,11 @@ optional arguments:
                         re.sub(...). (default: None)
   -r [REPLACE [REPLACE ...]], --replace [REPLACE [REPLACE ...]]
                         The corresponding replacement strings. (default: None)
-  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
-                        Where to look for the keywords; pairs:
-                        any,instruction,input,output, pretrain: any,content,
-                        translation: any,content (default: any)
+  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+                        Where to replace the patterns; classification:
+                        any|text, pairs: any|instruction|input|output,
+                        pretrain: any|content, translation: any|content
+                        (default: any)
   -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
                         The languages to inspect; inspects all if not
                         specified (default: None)

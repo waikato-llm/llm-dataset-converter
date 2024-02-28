@@ -1,8 +1,8 @@
 # assemble-sentences
 
-* domain(s): pairs, pretrain, translation
-* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
-* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* domain(s): pairs, pretrain, translation, classification
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
 
 For keeping sentences together, e.g., when reading preformatted text.
 
@@ -10,7 +10,7 @@ For keeping sentences together, e.g., when reading preformatted text.
 usage: assemble-sentences [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                           [-N LOGGER_NAME] [-c END_CHARS] [-q QUOTE_CHARS]
                           [-m MAX_SENTENCES]
-                          [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
+                          [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
                           [-g [LANGUAGE [LANGUAGE ...]]]
 
 For keeping sentences together, e.g., when reading preformatted text.
@@ -29,10 +29,11 @@ optional arguments:
                         The characters that represent quotes. (default: "'”’)
   -m MAX_SENTENCES, --max_sentences MAX_SENTENCES
                         The maximum number of sentences per line. (default: 1)
-  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
-                        Where to look for the keywords; pairs:
-                        any,instruction,input,output, pretrain: any,content,
-                        translation: any,content (default: any)
+  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+                        Where to assemble the sentences; classification:
+                        any|text, pairs: any|instruction|input|output,
+                        pretrain: any|content, translation: any|content
+                        (default: any)
   -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
                         The languages to inspect; inspects all if not
                         specified (default: None)

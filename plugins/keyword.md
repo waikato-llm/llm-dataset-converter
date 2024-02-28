@@ -1,15 +1,15 @@
 # keyword
 
-* domain(s): pairs, pretrain, translation
-* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
-* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* domain(s): pairs, pretrain, translation, classification
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
 
 Keeps or discards data records based on keyword(s). Search is performed in lower-case.
 
 ```
 usage: keyword [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
                -k KEYWORD [KEYWORD ...]
-               [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
+               [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
                [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
 Keeps or discards data records based on keyword(s). Search is performed in
@@ -24,10 +24,11 @@ optional arguments:
                         name by default (default: None)
   -k KEYWORD [KEYWORD ...], --keyword KEYWORD [KEYWORD ...]
                         The keywords to look for (lower case) (default: None)
-  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
-                        Where to look for the keywords; pairs:
-                        any,instruction,input,output, pretrain: any,content,
-                        translation: any,content (default: any)
+  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+                        Where to look for the keywords; classification:
+                        any|text, pairs: any|instruction|input|output,
+                        pretrain: any|content, translation: any|content
+                        (default: any)
   -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
                         The languages to inspect; inspects all if not
                         specified (default: None)

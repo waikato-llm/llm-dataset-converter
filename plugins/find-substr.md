@@ -1,15 +1,15 @@
 # find-substr
 
-* domain(s): pairs, pretrain, translation
-* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
-* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* domain(s): pairs, pretrain, translation, classification
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
 
 Keeps or discards data records based on sub-string(s) text matching. Search is performed in lower-case. Optionally, the sub-strings can represent regular expressions used for searching the strings.
 
 ```
 usage: find-substr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] -s SUB_STRING [SUB_STRING ...] [-r]
-                   [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
+                   [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
                    [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
 
 Keeps or discards data records based on sub-string(s) text matching. Search is
@@ -28,10 +28,11 @@ optional arguments:
                         None)
   -r, --is_regexp       Whether the sub-strings represent regular expressions
                         (default: False)
-  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
-                        Where to look for the substrings; pairs:
-                        any,instruction,input,output, pretrain: any,content,
-                        translation: any,content (default: any)
+  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+                        Where to look for the substrings; classification:
+                        any|text, pairs: any|instruction|input|output,
+                        pretrain: any|content, translation: any|content
+                        (default: any)
   -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
                         The languages to inspect; inspects all if not
                         specified (default: None)

@@ -1,15 +1,15 @@
 # text-length
 
-* domain(s): pairs, pretrain, translation
-* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
-* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* domain(s): pairs, pretrain, translation, classification
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
 
 Keeps or discards data records based on text length constraints. None values get ignored.
 
 ```
 usage: text-length [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] [-m MIN_LENGTH] [-M MAX_LENGTH]
-                   [-L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]]
+                   [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
                    [-g [LANGUAGE [LANGUAGE ...]]]
 
 Keeps or discards data records based on text length constraints. None values
@@ -26,10 +26,10 @@ optional arguments:
                         The minimum text length, ignored if <0 (default: -1)
   -M MAX_LENGTH, --max_length MAX_LENGTH
                         The maximum text length, ignored if <0 (default: -1)
-  -L [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]], --location [{any,instruction,input,output,content} [{any,instruction,input,output,content} ...]]
-                        Where to look for the text; pairs:
-                        any,instruction,input,output, pretrain: any,content,
-                        translation: any,content (default: any)
+  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+                        Where to apply the checks; classification: any|text,
+                        pairs: any|instruction|input|output, pretrain:
+                        any|content, translation: any|content (default: any)
   -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
                         The languages to inspect; inspects all if not
                         specified (default: None)

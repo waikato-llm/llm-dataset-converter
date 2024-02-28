@@ -187,10 +187,10 @@ def add_location_argument(parser: argparse.ArgumentParser, help_str: str):
     """
     parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY,
                         help=help_str + "; "
-                             + "classification: " + ",".join(LOCATIONS_CLASSIFICATION)
-                             + ", pairs: " + ",".join(LOCATIONS_PAIRS)
-                             + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN)
-                             + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
+                             + "classification: " + "|".join(LOCATIONS_CLASSIFICATION)
+                             + ", pairs: " + "|".join(LOCATIONS_PAIRS)
+                             + ", pretrain: " + "|".join(LOCATIONS_PRETRAIN)
+                             + ", translation: " + "|".join(LOCATIONS_PRETRAIN))
 
 
 def locations_match(locations: Union[str, List[str]], required: Union[str, List[str]]) -> bool:
