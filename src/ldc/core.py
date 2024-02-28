@@ -176,7 +176,7 @@ def domain_suffix(o: Union[str, Plugin]) -> str:
         return domain
 
 
-def add_location_argument(parser: argparse.ArgumentParser, help_str: str):
+def add_location_argument(parser: argparse.ArgumentParser, help_str: str, default: str = LOCATION_ANY):
     """
     Adds the location option to the parser.
 
@@ -184,8 +184,10 @@ def add_location_argument(parser: argparse.ArgumentParser, help_str: str):
     :type parser: argparse.ArgumentParser
     :param help_str: the help string preceding the classification/pairs/etc help
     :type help_str: str
+    :param default: the default location to use
+    :type default: str
     """
-    parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY,
+    parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=default,
                         help=help_str + "; "
                              + "classification: " + "|".join(LOCATIONS_CLASSIFICATION)
                              + ", pairs: " + "|".join(LOCATIONS_PAIRS)
