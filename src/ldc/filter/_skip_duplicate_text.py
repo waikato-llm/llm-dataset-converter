@@ -2,10 +2,11 @@ import argparse
 from typing import List, Union
 
 from wai.logging import LOGGING_WARNING
-from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, DOMAIN_CLASSIFICATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
+    LOCATION_TEXT, LOCATIONS, locations_match, add_location_argument
 from ldc.api.pretrain import PretrainData
+from ldc.api.supervised.classification import ClassificationData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
 from ldc.api import Filter
@@ -63,7 +64,7 @@ class SkipDuplicateText(Filter):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION]
+        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, DOMAIN_CLASSIFICATION]
 
     def accepts(self) -> List:
         """
@@ -72,7 +73,7 @@ class SkipDuplicateText(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData]
+        return [PairData, PretrainData, TranslationData, ClassificationData]
 
     def generates(self) -> List:
         """
@@ -81,7 +82,7 @@ class SkipDuplicateText(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData]
+        return [PairData, PretrainData, TranslationData, ClassificationData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -91,9 +92,7 @@ class SkipDuplicateText(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
-            LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
-            LOCATIONS_PRETRAIN))
+        add_location_argument(parser, "Which portion to take into account for detecting duplicate text")
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
         return parser
 
@@ -136,6 +135,9 @@ class SkipDuplicateText(Filter):
                 words.append(data.input.lower())
             if locations_match(self.location, LOCATION_OUTPUT):
                 words.append(data.output.lower())
+        elif isinstance(data, ClassificationData):
+            if locations_match(self.location, LOCATION_TEXT):
+                words.append(data.text.lower())
         elif isinstance(data, PretrainData):
             if locations_match(self.location, LOCATION_CONTENT):
                 words.append(data.content.lower())

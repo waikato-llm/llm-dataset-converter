@@ -3,10 +3,11 @@ import copy
 from typing import List, Tuple, Union
 
 from wai.logging import LOGGING_WARNING
-from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, DOMAIN_CLASSIFICATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
+    LOCATION_TEXT, LOCATIONS, locations_match, add_location_argument
 from ldc.api.pretrain import PretrainData
+from ldc.api.supervised.classification import ClassificationData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
 from ldc.text_utils import replace_patterns
@@ -73,7 +74,7 @@ class ReplacePatterns(Filter):
         :return: the domains
         :rtype: list
         """
-        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION]
+        return [DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION, DOMAIN_CLASSIFICATION]
 
     def accepts(self) -> List:
         """
@@ -82,7 +83,7 @@ class ReplacePatterns(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData]
+        return [PairData, PretrainData, TranslationData, ClassificationData]
 
     def generates(self) -> List:
         """
@@ -91,7 +92,7 @@ class ReplacePatterns(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData]
+        return [PairData, PretrainData, TranslationData, ClassificationData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
@@ -103,9 +104,7 @@ class ReplacePatterns(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-f", "--find", type=str, default=None, help="Regular expressions for replacing sub-strings in the text (gets applied before skipping empty lines); uses re.sub(...).", nargs="*")
         parser.add_argument("-r", "--replace", type=str, default=None, help="The corresponding replacement strings.", nargs="*")
-        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Where to look for the keywords; pairs: " + ",".join(
-            LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(
-            LOCATIONS_PRETRAIN))
+        add_location_argument(parser, "Where to replace the patterns")
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
         return parser
 
@@ -169,6 +168,10 @@ class ReplacePatterns(Filter):
                 removed += r
             if locations_match(self.location, LOCATION_OUTPUT):
                 data.output, r = self._replace_patterns(data.output)
+                removed += r
+        elif isinstance(data, ClassificationData):
+            if locations_match(self.location, LOCATION_TEXT):
+                data.text, r = self._replace_patterns(data.text)
                 removed += r
         elif isinstance(data, PretrainData):
             if locations_match(self.location, LOCATION_CONTENT):

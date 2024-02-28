@@ -1,3 +1,4 @@
+import argparse
 import logging
 
 from typing import List, Union
@@ -61,7 +62,9 @@ LOCATION_INSTRUCTION = "instruction"
 LOCATION_INPUT = "input"
 LOCATION_OUTPUT = "output"
 LOCATION_CONTENT = "content"
-LOCATIONS = [LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT]
+LOCATION_TEXT = "text"
+LOCATIONS = [LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, LOCATION_TEXT]
+LOCATIONS_CLASSIFICATION = [LOCATION_ANY, LOCATION_TEXT]
 LOCATIONS_PAIRS = [LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT]
 LOCATIONS_PRETRAIN = [LOCATION_ANY, LOCATION_CONTENT]
 LOCATIONS_TRANSLATION = [LOCATION_ANY, LOCATION_CONTENT]
@@ -171,6 +174,23 @@ def domain_suffix(o: Union[str, Plugin]) -> str:
         return DOMAIN_SUFFIX_LOOKUP[domain]
     else:
         return domain
+
+
+def add_location_argument(parser: argparse.ArgumentParser, help_str: str):
+    """
+    Adds the location option to the parser.
+
+    :param parser: the parser to add to
+    :type parser: argparse.ArgumentParser
+    :param help_str: the help string preceding the classification/pairs/etc help
+    :type help_str: str
+    """
+    parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY,
+                        help=help_str + "; "
+                             + "classification: " + ",".join(LOCATIONS_CLASSIFICATION)
+                             + ", pairs: " + ",".join(LOCATIONS_PAIRS)
+                             + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN)
+                             + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
 
 
 def locations_match(locations: Union[str, List[str]], required: Union[str, List[str]]) -> bool:
