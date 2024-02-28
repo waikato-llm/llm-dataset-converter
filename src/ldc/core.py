@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from typing import List, Union
+from typing import List, Union, Optional
 
 import seppl
 
@@ -176,7 +176,7 @@ def domain_suffix(o: Union[str, Plugin]) -> str:
         return domain
 
 
-def add_location_argument(parser: argparse.ArgumentParser, help_str: str, default: str = LOCATION_ANY):
+def add_location_argument(parser: argparse.ArgumentParser, help_str: str, default: Optional[str] = LOCATION_ANY):
     """
     Adds the location option to the parser.
 
