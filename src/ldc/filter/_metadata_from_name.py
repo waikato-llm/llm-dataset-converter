@@ -1,16 +1,13 @@
 import argparse
 import copy
 import re
-
 from typing import List
 
 from wai.logging import LOGGING_WARNING
+
 from ldc.api import Filter
 from ldc.core import DOMAIN_ANY
-from ldc.api.pretrain import PretrainData
-from ldc.api.supervised.pairs import PairData
-from ldc.api.supervised.classification import ClassificationData
-from ldc.api.translation import TranslationData
+from seppl import AnyData
 
 
 class MetaDataFromName(Filter):
@@ -70,7 +67,7 @@ class MetaDataFromName(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData, ClassificationData]
+        return [AnyData]
 
     def generates(self) -> List:
         """
@@ -79,7 +76,7 @@ class MetaDataFromName(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData, ClassificationData]
+        return [AnyData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """

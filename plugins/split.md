@@ -1,8 +1,8 @@
 # split
 
 * domain(s): any
-* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
-* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
+* accepts: seppl.AnyData
+* generates: seppl.AnyData
 
 Splits the incoming records into the specified split ratios by setting the 'split' meta-data value. Also stores the split names in the current session.
 

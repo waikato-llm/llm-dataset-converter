@@ -1,8 +1,8 @@
 # metadata-from-name
 
 * domain(s): any
-* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
-* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData, ldc.api.supervised.classification.ClassificationData
+* accepts: seppl.AnyData
+* generates: seppl.AnyData
 
 Extracts a sub-string from the current input file name and stores it in the meta-data.
 

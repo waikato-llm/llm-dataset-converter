@@ -2,14 +2,11 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
-from seppl import split_args, split_cmdline, Plugin
-from seppl.io import Writer, BatchWriter, StreamWriter
-from ldc.core import DOMAIN_ANY
-from ldc.api.pretrain import PretrainData
-from ldc.api.supervised.pairs import PairData
-from ldc.api.supervised.classification import ClassificationData
-from ldc.api.translation import TranslationData
+
 from ldc.api import Filter, MultiFilter
+from ldc.core import DOMAIN_ANY
+from seppl import split_args, split_cmdline, Plugin, AnyData
+from seppl.io import Writer, BatchWriter, StreamWriter
 
 
 class Tee(Filter):
@@ -69,7 +66,7 @@ class Tee(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData, ClassificationData]
+        return [AnyData]
 
     def generates(self) -> List:
         """
@@ -78,7 +75,7 @@ class Tee(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData, ClassificationData]
+        return [AnyData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """

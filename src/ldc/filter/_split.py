@@ -2,14 +2,11 @@ import argparse
 from typing import List
 
 from wai.logging import LOGGING_WARNING
-from seppl import MetaDataHandler, get_metadata
-from seppl.io import Splitter
-from ldc.core import DOMAIN_ANY
-from ldc.api.pretrain import PretrainData
-from ldc.api.supervised.pairs import PairData
-from ldc.api.supervised.classification import ClassificationData
-from ldc.api.translation import TranslationData
+
 from ldc.api import Filter
+from ldc.core import DOMAIN_ANY
+from seppl import MetaDataHandler, get_metadata, AnyData
+from seppl.io import Splitter
 
 META_SPLIT = "split"
 """ the key for storing the split name in the meta-data. """
@@ -73,7 +70,7 @@ class Split(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData, ClassificationData]
+        return [AnyData]
 
     def generates(self) -> List:
         """
@@ -82,7 +79,7 @@ class Split(Filter):
         :return: the list of classes
         :rtype: list
         """
-        return [PairData, PretrainData, TranslationData, ClassificationData]
+        return [AnyData]
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
