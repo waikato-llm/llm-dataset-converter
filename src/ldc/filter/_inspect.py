@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 from typing import List, Union
 
@@ -162,6 +163,10 @@ class Inspect(Filter):
         super().initialize()
         if (self.output == OUTPUT_FILE) and ((self.output_file is None) or (self.output_file == "")):
             raise Exception("No output file provided!")
+        if (self.output == OUTPUT_FILE) and (os.path.exists(self.output_file)):
+            if os.path.isdir(self.output_file):
+                raise Exception("Output file points to directory: %s" % self.output_file)
+            os.remove(self.output_file)
 
     def _assemble_data(self, data) -> str:
         """
@@ -212,7 +217,7 @@ class Inspect(Filter):
         elif self.output == OUTPUT_STDERR:
             print(data, file=sys.stderr)
         elif self.output == OUTPUT_FILE:
-            with open(self.output_file, "w") as fp:
+            with open(self.output_file, "a") as fp:
                 fp.write(data)
                 fp.write("\n")
         else:
