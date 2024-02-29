@@ -7,6 +7,7 @@ Changelog
 - filters `split` and `tee` now support `ClassificationData` as well
 - added `metadata-from-name` filter to extract meta-data from the current input file name
 - requiring seppl>=0.1.3 now
+- added `inspect` filter that allows inspecting data interactively as it passes through the pipeline
 
 
 0.2.0 (2024-02-27)

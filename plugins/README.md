@@ -30,6 +30,7 @@
 * [classification-label-map](classification-label-map.md)
 * [file-filter](file-filter.md)
 * [find-substr](find-substr.md)
+* [inspect](inspect.md)
 * [keyword](keyword.md)
 * [language](language.md)
 * [llama2-to-pairs](llama2-to-pairs.md)
