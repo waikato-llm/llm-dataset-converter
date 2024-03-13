@@ -12,6 +12,7 @@ from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output
 from ldc.api.translation import TranslationData, TranslationReader, BatchTranslationWriter
 from ldc.utils import str_to_column_index
+from ldc.text_utils import empty_str_if_none
 
 
 class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
@@ -346,7 +347,7 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC):
                     row.append(None)
             for lang in self.languages:
                 if lang in item.translations:
-                    row.append(item.translations[lang])
+                    row.append(empty_str_if_none(item.translations[lang]))
                 else:
                     row.append(None)
             try:

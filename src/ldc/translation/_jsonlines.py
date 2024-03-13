@@ -9,6 +9,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.translation import TranslationData, TranslationReader, StreamTranslationWriter
+from ldc.text_utils import empty_str_if_none
 
 DATA_EXAMPLE = '{ "translation": { "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." } }'
 DATA_DEFINITION_URL = "https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md"
@@ -256,7 +257,7 @@ class JsonLinesTranslationWriter(StreamTranslationWriter):
         with open(output, mode) as fp:
             writer = jsonlines.Writer(fp)
             for item in data:
-                d = {"translation": item.translations}
+                d = {"translation": empty_str_if_none(item.translations)}
                 try:
                     writer.write(d)
                 except KeyboardInterrupt as e:

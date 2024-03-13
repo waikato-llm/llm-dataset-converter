@@ -12,6 +12,7 @@ from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output
 from ldc.api.supervised.classification import ClassificationData, ClassificationReader, BatchClassificationWriter
 from ldc.utils import str_to_column_index
+from ldc.text_utils import empty_str_if_none
 
 
 class AbstractCsvLikeClassificationReader(ClassificationReader, abc.ABC):
@@ -364,12 +365,12 @@ class AbstractCsvLikeClassificationWriter(BatchClassificationWriter, abc.ABC):
                 else:
                     row.append(None)
             if self.no_header:
-                row.extend([item.text, item.label])
+                row.extend([empty_str_if_none(item.text), empty_str_if_none(item.label)])
             else:
                 if self.col_text is not None:
-                    row.append(item.text)
+                    row.append(empty_str_if_none(item.text))
                 if self.col_label is not None:
-                    row.append(item.label)
+                    row.append(empty_str_if_none(item.label))
             try:
                 self._output_writer.writerow(row)
             except:

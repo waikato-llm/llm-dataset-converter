@@ -12,6 +12,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import generate_output
 from ldc.api.translation import TranslationData, TranslationReader, BatchTranslationWriter
+from ldc.text_utils import empty_str_if_none
 
 DATA_EXAMPLE = '{ "en": "Others have dismissed him as a joke.", "ro": "Alții l-au numit o glumă." }'
 
@@ -264,7 +265,7 @@ class ParquetTranslationWriter(BatchTranslationWriter):
             d_content = []
             d_ids = []
             for row in data:
-                d_content.append(json.dumps(row.translations, ensure_ascii=False))
+                d_content.append(json.dumps(empty_str_if_none(row.translations), ensure_ascii=False))
                 if self.col_id is not None:
                     if (row.meta is not None) and ("id" in row.meta):
                         d_ids.append(row.meta["id"])

@@ -9,6 +9,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.pretrain import PretrainData, PretrainReader, StreamPretrainWriter
+from ldc.text_utils import empty_str_if_none
 
 
 class JsonLinesPretrainReader(PretrainReader):
@@ -286,7 +287,7 @@ class JsonLinesPretrainWriter(StreamPretrainWriter):
         with open(output, mode) as fp:
             writer = jsonlines.Writer(fp)
             for item in data:
-                d = {self.att_content: item.content}
+                d = {self.att_content: empty_str_if_none(item.content)}
                 if self.att_id is not None:
                     if (item.meta is not None) and ("id" in item.meta):
                         d[self.att_id] = item.meta["id"]

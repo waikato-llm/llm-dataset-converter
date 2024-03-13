@@ -9,6 +9,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.supervised.pairs import PairData, PairReader, StreamPairWriter
+from ldc.text_utils import empty_str_if_none
 
 
 class JsonLinesPairReader(PairReader):
@@ -318,11 +319,11 @@ class JsonLinesPairWriter(StreamPairWriter):
             for item in data:
                 d = dict()
                 if self.att_instruction is not None:
-                    d[self.att_instruction] = item.instruction
+                    d[self.att_instruction] = empty_str_if_none(item.instruction)
                 if self.att_input is not None:
-                    d[self.att_input] = item.input
+                    d[self.att_input] = empty_str_if_none(item.input)
                 if self.att_output is not None:
-                    d[self.att_output] = item.output
+                    d[self.att_output] = empty_str_if_none(item.output)
                 if self.att_id is not None:
                     if (item.meta is not None) and ("id" in item.meta):
                         d[self.att_id] = item.meta["id"]

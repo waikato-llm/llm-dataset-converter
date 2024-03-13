@@ -12,6 +12,7 @@ from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
 from ldc.utils import str_to_column_index
+from ldc.text_utils import empty_str_if_none
 
 
 class AbstractCsvLikePairsReader(PairReader, abc.ABC):
@@ -384,14 +385,14 @@ class AbstractCsvLikePairsWriter(BatchPairWriter, abc.ABC):
                 else:
                     row.append(None)
             if self.no_header:
-                row.extend([item.instruction, item.input, item.output])
+                row.extend([empty_str_if_none(item.instruction), empty_str_if_none(item.input), empty_str_if_none(item.output)])
             else:
                 if self.col_instruction is not None:
-                    row.append(item.instruction)
+                    row.append(empty_str_if_none(item.instruction))
                 if self.col_input is not None:
-                    row.append(item.input)
+                    row.append(empty_str_if_none(item.input))
                 if self.col_output is not None:
-                    row.append(item.output)
+                    row.append(empty_str_if_none(item.output))
             try:
                 self._output_writer.writerow(row)
             except:

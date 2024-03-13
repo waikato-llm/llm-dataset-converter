@@ -1,6 +1,7 @@
+import copy
 import re
 import string
-from typing import List, Tuple
+from typing import List, Tuple, Optional, Dict, Union
 
 from ldc.core import DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 
@@ -323,3 +324,52 @@ def replace_patterns(lines: List[str], find: List[str], replace: List[str]) -> T
         else:
             result.append(lines[i])
     return result, affected
+
+
+def empty_str_if_none(s: Union[Optional[str], List[str], Dict[str, str]]) -> Union[str, List[str], Dict[str, str]]:
+    """
+    If the provided string or values in the list/dict are None, the function will
+    update them with an empty string (returns new object, does not modify inpyt).
+
+    :param s: the string/list/dict to check
+    :type s: str
+    :return: the processed string/list/dict
+    :rtype: str or list or dict
+    """
+    result = s
+
+    if isinstance(s, str):
+        if s is None:
+            result = ""
+
+    elif isinstance(s, list):
+        update = False
+        for item in s:
+            if item is None:
+                update = True
+                break
+        if update:
+            result = list()
+            for item in s:
+                if item is None:
+                    result.append("")
+                else:
+                    result.append(item)
+
+    elif isinstance(s, dict):
+        update = False
+        for k in s:
+            if s[k] is None:
+                update = True
+                break
+        if update:
+            result = dict()
+            for k in s:
+                if s[k] is None:
+                    result[k] = ""
+                else:
+                    result[k] = s[k]
+            return result
+    else:
+        raise Exception("Must be either string, list of dict: %s" % str(type(s)))
+    return result

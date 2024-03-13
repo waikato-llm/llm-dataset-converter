@@ -10,7 +10,7 @@ from ldc.core import domain_suffix, DEFAULT_END_CHARS, DEFAULT_QUOTE_CHARS
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.pretrain import PretrainData, PretrainReader, StreamPretrainWriter
 from ldc.text_utils import assemble_preformatted, split_into_sentences, combine_sentences, remove_empty, \
-    remove_patterns, remove_blocks
+    remove_patterns, remove_blocks, empty_str_if_none
 
 METADATA_LINE = "line"
 
@@ -424,7 +424,7 @@ class TxtPretrainWriter(StreamPretrainWriter):
                 output = generate_output(fname, self.target, ".txt", self.session.options.compression)
                 self.logger().info("Writing to: %s" % output)
                 with open(output, "w") as fp:
-                    fp.write(d.content)
+                    fp.write(empty_str_if_none(d.content))
 
     def finalize(self):
         """

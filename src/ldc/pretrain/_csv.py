@@ -12,6 +12,7 @@ from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output
 from ldc.api.pretrain import PretrainData, PretrainReader, BatchPretrainWriter
 from ldc.utils import str_to_column_index
+from ldc.text_utils import empty_str_if_none
 
 
 class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
@@ -340,9 +341,9 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
 
         for item in data:
             if self.split_lines:
-                lines = item.content.split("\n")
+                lines = empty_str_if_none(item.content).split("\n")
             else:
-                lines = [item.content]
+                lines = [empty_str_if_none(item.content)]
             for i, line in enumerate(lines):
                 row = []
                 if self.col_id is not None:

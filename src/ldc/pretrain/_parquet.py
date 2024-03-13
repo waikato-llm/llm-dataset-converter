@@ -11,6 +11,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import generate_output
 from ldc.api.pretrain import PretrainData, PretrainReader, BatchPretrainWriter
+from ldc.text_utils import empty_str_if_none
 
 
 class ParquetPretrainReader(PretrainReader):
@@ -259,7 +260,7 @@ class ParquetPretrainWriter(BatchPretrainWriter):
             d_content = []
             d_ids = []
             for row in data:
-                d_content.append(row.content)
+                d_content.append(empty_str_if_none(row.content))
                 if self.col_id is not None:
                     if (row.meta is not None) and ("id" in row.meta):
                         d_ids.append(row.meta["id"])

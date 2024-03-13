@@ -11,6 +11,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import generate_output
 from ldc.api.supervised.classification import ClassificationData, ClassificationReader, BatchClassificationWriter
+from ldc.text_utils import empty_str_if_none
 
 
 class ParquetClassificationReader(ClassificationReader):
@@ -276,8 +277,8 @@ class ParquetClassificationWriter(BatchClassificationWriter):
             d_label = []
             d_ids = []
             for row in data:
-                d_text.append(row.text)
-                d_label.append(row.label)
+                d_text.append(empty_str_if_none(row.text))
+                d_label.append(empty_str_if_none(row.label))
                 if self.col_id is not None:
                     if (row.meta is not None) and ("id" in row.meta):
                         d_ids.append(row.meta["id"])

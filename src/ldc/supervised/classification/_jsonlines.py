@@ -9,6 +9,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.supervised.classification import ClassificationData, ClassificationReader, StreamClassificationWriter
+from ldc.text_utils import empty_str_if_none
 
 
 class JsonLinesClassificationReader(ClassificationReader):
@@ -304,9 +305,9 @@ class JsonLinesClassificationWriter(StreamClassificationWriter):
             for item in data:
                 d = dict()
                 if self.att_text is not None:
-                    d[self.att_text] = item.text
+                    d[self.att_text] = empty_str_if_none(item.text)
                 if self.att_label is not None:
-                    d[self.att_label] = item.label
+                    d[self.att_label] = empty_str_if_none(item.label)
                 if self.att_id is not None:
                     if (item.meta is not None) and ("id" in item.meta):
                         d[self.att_id] = item.meta["id"]

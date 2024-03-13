@@ -11,6 +11,7 @@ from seppl.io import locate_files
 from ldc.core import domain_suffix
 from ldc.api import generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
+from ldc.text_utils import empty_str_if_none
 
 
 class ParquetPairsReader(PairReader):
@@ -291,9 +292,9 @@ class ParquetPairsWriter(BatchPairWriter):
             d_output = []
             d_ids = []
             for row in data:
-                d_instruction.append(row.instruction)
-                d_input.append(row.input)
-                d_output.append(row.output)
+                d_instruction.append(empty_str_if_none(row.instruction))
+                d_input.append(empty_str_if_none(row.input))
+                d_output.append(empty_str_if_none(row.output))
                 if self.col_id is not None:
                     if (row.meta is not None) and ("id" in row.meta):
                         d_ids.append(row.meta["id"])

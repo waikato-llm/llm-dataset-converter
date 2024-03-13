@@ -10,6 +10,7 @@ from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.translation import TranslationData, TranslationReader, StreamTranslationWriter
 from ldc.utils import str_to_column_index
+from ldc.text_utils import empty_str_if_none
 
 
 PH_TAB = "{TAB}"
@@ -341,7 +342,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
             line = self.line_format
             line = line.replace(PH_LANG, lang)
             line = line.replace(PH_ID, str(id))
-            line = line.replace(PH_CONTENT, data.translations[lang])
+            line = line.replace(PH_CONTENT, empty_str_if_none(data.translations[lang]))
             fp.write(line)
             fp.write("\n")
 
