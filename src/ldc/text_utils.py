@@ -336,11 +336,13 @@ def empty_str_if_none(s: Union[Optional[str], List[str], Dict[str, str]]) -> Uni
     :return: the processed string/list/dict
     :rtype: str or list or dict
     """
+    if s is None:
+        return ""
+
     result = s
 
     if isinstance(s, str):
-        if s is None:
-            result = ""
+        return s
 
     elif isinstance(s, list):
         update = False
@@ -371,5 +373,5 @@ def empty_str_if_none(s: Union[Optional[str], List[str], Dict[str, str]]) -> Uni
                     result[k] = s[k]
             return result
     else:
-        raise Exception("Must be either string, list of dict: %s" % str(type(s)))
+        raise Exception("Must be either string, list or dict: %s" % str(type(s)))
     return result
