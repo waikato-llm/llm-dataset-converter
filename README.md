@@ -307,7 +307,7 @@ optional arguments:
 ### Generating help screens for plugins
 
 ```
-usage: llm-help [-h] [-m [PACKAGE [PACKAGE ...]]] [-e EXCLUDED_MODULES]
+usage: llm-help [-h] [-c [PACKAGE [PACKAGE ...]]] [-e EXCLUDED_CLASS_LISTERS]
                 [-p NAME] [-f FORMAT] [-L INT] [-o PATH] [-i FILE]
                 [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
@@ -315,11 +315,11 @@ Tool for outputting help for plugins in various formats.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -m [PACKAGE [PACKAGE ...]], --modules [PACKAGE [PACKAGE ...]]
-                        The names of the module packages, uses the default
-                        ones if not provided. (default: None)
-  -e EXCLUDED_MODULES, --excluded_modules EXCLUDED_MODULES
-                        The comma-separated list of modules to excluded.
+  -c [PACKAGE [PACKAGE ...]], --custom_class_listers [PACKAGE [PACKAGE ...]]
+                        The names of the custom class listers, uses the
+                        default ones if not provided. (default: None)
+  -e EXCLUDED_CLASS_LISTERS, --excluded_class_listers EXCLUDED_CLASS_LISTERS
+                        The comma-separated list of class listers to excluded.
                         (default: None)
   -p NAME, --plugin_name NAME
                         The name of the plugin to generate the help for,
@@ -346,20 +346,20 @@ optional arguments:
 ### Plugin registry
 
 ```
-usage: llm-registry [-h] [-m CUSTOM_MODULES] [-e EXCLUDED_MODULES]
-                    [-l {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}]
+usage: llm-registry [-h] [-c CUSTOM_CLASS_LISTERS] [-e EXCLUDED_CLASS_LISTERS]
+                    [-l {plugins,custom-class-listers,env-class-listers,downloaders,readers,filters,writers}]
 
 For inspecting/querying the registry.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -m CUSTOM_MODULES, --custom_modules CUSTOM_MODULES
-                        The comma-separated list of custom modules to use.
+  -c CUSTOM_CLASS_LISTERS, --custom_class_listers CUSTOM_CLASS_LISTERS
+                        The comma-separated list of custom class listers to
+                        use. (default: None)
+  -e EXCLUDED_CLASS_LISTERS, --excluded_class_listers EXCLUDED_CLASS_LISTERS
+                        The comma-separated list of class listers to excluded.
                         (default: None)
-  -e EXCLUDED_MODULES, --excluded_modules EXCLUDED_MODULES
-                        The comma-separated list of modules to excluded.
-                        (default: None)
-  -l {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}, --list {plugins,custom-modules,env-modules,downloaders,readers,filters,writers}
+  -l {plugins,custom-class-listers,env-class-listers,downloaders,readers,filters,writers}, --list {plugins,custom-class-listers,env-class-listers,downloaders,readers,filters,writers}
                         For outputting various lists on stdout. (default:
                         None)
 ```
