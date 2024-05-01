@@ -47,15 +47,15 @@ def _add_plugins_to_index(heading: str, plugins: dict, help_format: str, lines: 
         raise Exception("Unsupported format for index: %s" % help_format)
 
 
-def output_help(modules: List[str] = None, excluded_modules: Optional[List[str]] = None, plugin_name: str = None,
+def output_help(custom_class_listers: List[str] = None, excluded_class_listers: Optional[List[str]] = None, plugin_name: str = None,
                 help_format: str = HELP_FORMAT_TEXT, heading_level: int = 1, output: str = None, index: str = None):
     """
     Generates and outputs the help screen for the plugin.
 
-    :param modules: the modules to generate the entry points for
-    :type modules: list
-    :param excluded_modules: the list of modules to exclude
-    :type excluded_modules: list
+    :param custom_class_listers: the class listers to use
+    :type custom_class_listers: list
+    :param excluded_class_listers: the list of class listers to exclude
+    :type excluded_class_listers: list
     :param plugin_name: the plugin to generate the help for, None if for all
     :type plugin_name: str
     :param help_format: the format to output
@@ -67,7 +67,7 @@ def output_help(modules: List[str] = None, excluded_modules: Optional[List[str]]
     :param index: the index file to generate in the output directory, ignored if None
     :type index: str
     """
-    register_plugins(class_listers=modules, excluded_class_listers=excluded_modules)
+    register_plugins(custom_class_listers=custom_class_listers, excluded_class_listers=excluded_class_listers)
     if help_format not in HELP_FORMATS:
         raise Exception("Unknown help format: %s" % help_format)
     if (plugin_name is None) and ((output is None) or (not os.path.isdir(output))):
@@ -119,8 +119,8 @@ def main(args=None):
         description="Tool for outputting help for plugins in various formats.",
         prog=HELP,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-m", "--modules", metavar="PACKAGE", help="The names of the module packages, uses the default ones if not provided.", default=None, type=str, required=False, nargs="*")
-    parser.add_argument("-e", "--excluded_modules", type=str, default=None, help="The comma-separated list of modules to excluded.", required=False)
+    parser.add_argument("-c", "--custom_class_listers", metavar="PACKAGE", help="The names of the custom class listers, uses the default ones if not provided.", default=None, type=str, required=False, nargs="*")
+    parser.add_argument("-e", "--excluded_class_listers", type=str, default=None, help="The comma-separated list of class listers to excluded.", required=False)
     parser.add_argument("-p", "--plugin_name", metavar="NAME", help="The name of the plugin to generate the help for, generates it for all if not specified", default=None, type=str, required=False)
     parser.add_argument("-f", "--help_format", metavar="FORMAT", help="The output format to generate", choices=HELP_FORMATS, default=HELP_FORMAT_TEXT, required=False)
     parser.add_argument("-L", "--heading_level", metavar="INT", help="The level to use for the heading", default=1, type=int, required=False)
@@ -129,7 +129,7 @@ def main(args=None):
     add_logging_level(parser)
     parsed = parser.parse_args(args=args)
     set_logging_level(_logger, parsed.logging_level)
-    output_help(modules=parsed.modules, excluded_modules=parsed.excluded_modules,
+    output_help(custom_class_listers=parsed.custom_class_listers, excluded_class_listers=parsed.excluded_class_listers,
                 plugin_name=parsed.plugin_name, help_format=parsed.help_format,
                 heading_level=parsed.heading_level, output=parsed.output,
                 index=parsed.index)

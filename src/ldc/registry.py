@@ -112,16 +112,16 @@ def available_plugins() -> Dict[str, Plugin]:
     return result
 
 
-def register_plugins(class_listers: List[str] = None, excluded_class_listers: List[str] = None):
+def register_plugins(custom_class_listers: List[str] = None, excluded_class_listers: List[str] = None):
     """
     Registers all plugins.
 
-    :param class_listers: the list of class listers to use instead of env variable or default class listers
-    :type class_listers: list
+    :param custom_class_listers: the list of custom class listers to use instead of env variable or default class listers
+    :type custom_class_listers: list
     :param excluded_class_listers: the list of class listers to exclude
     :type excluded_class_listers: list
     """
-    REGISTRY.custom_class_listers = class_listers
+    REGISTRY.custom_class_listers = custom_class_listers
     REGISTRY.excluded_class_listers = excluded_class_listers
     available_plugins()
 
@@ -132,12 +132,12 @@ def _list(list_type: str, custom_class_listers: Optional[List[str]] = None, excl
 
     :param list_type: the type of list to generate
     :type list_type: str
-    :param default_class_listers: the list of class listers to use instead of env variable or default class listers
-    :type default_class_listers: list
+    :param custom_class_listers: the list of class listers to use instead of env variable or default class listers
+    :type custom_class_listers: list
     :param excluded_class_listers: the list of class listers to exclude
     :type excluded_class_listers: list
     """
-    register_plugins(class_listers=custom_class_listers, excluded_class_listers=excluded_class_listers)
+    register_plugins(custom_class_listers=custom_class_listers, excluded_class_listers=excluded_class_listers)
 
     if list_type in [LIST_PLUGINS, LIST_DOWNLOADERS, LIST_READERS, LIST_FILTERS, LIST_WRITERS]:
         if list_type == LIST_PLUGINS:
