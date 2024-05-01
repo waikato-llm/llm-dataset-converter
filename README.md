@@ -592,3 +592,54 @@ execute(
 * [OpenAI integration](https://github.com/waikato-llm/ldc-openai)
 * [PDF handling](https://github.com/waikato-llm/ldc-pdf)
 * [TinT](https://github.com/waikato-llm/ldc-tint)
+
+
+## Class listers
+
+The *llm-dataset-converter* uses the *class lister approach* provided 
+by the [seppl](https://github.com/waikato-datamining/seppl) library.
+
+Each module defines a function, typically called `list_classes` that returns
+a dictionary of names of superclasses associated with a list of modules that
+should be scanned for derived classes. Here is an example:
+
+```python
+from typing import List, Dict
+
+
+def list_classes() -> Dict[str, List[str]]:
+    return {
+        "ldc.api.Downloader": [
+            "mod.ule1",
+        ],
+        "ldc.api.Reader": [
+            "mod.ule2",
+            "mod.ule3",
+        ],
+        "ldc.api.Filter": [
+            "mod.ule4",
+        ],
+        "seppl.io.Writer": [
+            "mod.ule5",
+        ],
+    }
+```
+
+Such a class lister gets referenced in the `entry_points` section of the `setup.py` file:
+
+```python
+    entry_points={
+        "class_lister": [
+            "unique_string=module_name:function_name",
+        ],
+    },
+```
+
+`:function_name` can be omitted if `:list_classes`.
+
+The following environment variables can be used to influence the class listers:
+
+* `LDC_CLASS_LISTERS`
+* `LDC_CLASS_LISTERS_EXCL`
+
+Each variable is a comma-separated list of `module_name:function_name`, defining the class listers.
