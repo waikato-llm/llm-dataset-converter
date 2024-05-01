@@ -19,7 +19,7 @@ ENV_LDC_CLASS_LISTERS = "LDC_CLASS_LISTERS"
 ENV_LDC_CLASS_LISTERS_EXCL = "LDC_CLASS_LISTERS_EXCL"
 
 DEFAULT_LDC_CLASSLISTERS = [
-    "ldc.class_lister:list_classes"
+    "ldc.class_lister"
 ]
 
 REGISTRY = ClassListerRegistry(default_class_listers=DEFAULT_LDC_CLASSLISTERS,
