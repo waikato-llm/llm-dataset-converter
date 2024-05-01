@@ -9,6 +9,7 @@ Changelog
 - requiring seppl>=0.1.3 now
 - added `inspect` filter that allows inspecting data interactively as it passes through the pipeline
 - added `empty_str_if_none` helper method to `ldc.text_utils` to ensure no None/null values are output with writers
+- upgraded seppl to 0.2.0 and switched to using `seppl.ClassListerRegistry`
 
 
 0.2.0 (2024-02-27)
