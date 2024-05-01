@@ -67,7 +67,7 @@ def output_help(modules: List[str] = None, excluded_modules: Optional[List[str]]
     :param index: the index file to generate in the output directory, ignored if None
     :type index: str
     """
-    register_plugins(modules=modules, excluded_modules=excluded_modules)
+    register_plugins(class_listers=modules, excluded_class_listers=excluded_modules)
     if help_format not in HELP_FORMATS:
         raise Exception("Unknown help format: %s" % help_format)
     if (plugin_name is None) and ((output is None) or (not os.path.isdir(output))):

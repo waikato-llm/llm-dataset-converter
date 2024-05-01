@@ -36,7 +36,7 @@ setup(
         "pyarrow",
         "pyzstd",
         "huggingface-hub",
-        "seppl>=0.1.3",
+        "seppl>=0.2.0",
         "pyyaml",
         "wai.logging",
     ],
@@ -54,28 +54,9 @@ setup(
             "llm-paste=ldc.tool.paste:sys_main",
             "llm-registry=ldc.registry:sys_main",
         ],
-        "ldc.downloaders": [
-            "ldc_downloaders1=ldc.downloader:ldc.downloader.Downloader"
+        "class_lister": [
+            "ldc=ldc.class_lister",
         ],
-        "ldc.readers": [
-            "lcd_readers1=ldc.pretrain:ldc.api.Reader",
-            "lcd_readers2=ldc.supervised.classification:ldc.api.Reader",
-            "lcd_readers3=ldc.supervised.pairs:ldc.api.Reader",
-            "lcd_readers4=ldc.translation:ldc.api.Reader",
-        ],
-        "ldc.filters": [
-            "lcd_filters1=ldc.filter:ldc.api.Filter",
-            "lcd_filters2=ldc.pretrain:ldc.api.Filter",
-            "lcd_readers3=ldc.supervised.classification:ldc.api.Filter",
-            "lcd_readers4=ldc.supervised.pairs:ldc.api.Filter",
-            "lcd_filters5=ldc.translation:ldc.api.Filter",
-        ],
-        "ldc.writers": [
-            "lcd_writers1=ldc.pretrain:seppl.io.Writer",
-            "lcd_writers2=ldc.supervised.classification:seppl.io.Writer",
-            "lcd_writers3=ldc.supervised.pairs:seppl.io.Writer",
-            "lcd_writers4=ldc.translation:seppl.io.Writer",
-        ]
     },
 )
 
