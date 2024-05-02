@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.1 (????-??-??)
+0.2.1 (2024-05-02)
 ------------------
 
 - filters `split` and `tee` now support `ClassificationData` as well
