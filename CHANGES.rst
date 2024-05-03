@@ -1,12 +1,17 @@
 Changelog
 =========
 
+0.2.2 (2024-05-03)
+------------------
+
+- requiring seppl>=0.2.3 now
+
+
 0.2.1 (2024-05-02)
 ------------------
 
 - filters `split` and `tee` now support `ClassificationData` as well
 - added `metadata-from-name` filter to extract meta-data from the current input file name
-- requiring seppl>=0.1.3 now
 - added `inspect` filter that allows inspecting data interactively as it passes through the pipeline
 - added `empty_str_if_none` helper method to `ldc.text_utils` to ensure no None/null values are output with writers
 - upgraded seppl to 0.2.2 and switched to using `seppl.ClassListerRegistry`
