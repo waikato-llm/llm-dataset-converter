@@ -588,6 +588,7 @@ execute(
 
 * [Google integration](https://github.com/waikato-llm/ldc-google)
 * [HTML handling](https://github.com/waikato-llm/ldc-html)
+* [MS Word .doc integration](https://github.com/waikato-llm/ldc-doc)
 * [MS Word .docx integration](https://github.com/waikato-llm/ldc-docx)
 * [OpenAI integration](https://github.com/waikato-llm/ldc-openai)
 * [PDF handling](https://github.com/waikato-llm/ldc-pdf)
