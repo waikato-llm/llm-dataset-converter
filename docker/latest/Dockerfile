@@ -19,7 +19,7 @@ RUN apt-get update && \
        libxrender-dev \
        libxext6 \
        libgl1-mesa-glx \
-       libpq-dev && \
+       libpq-dev \
        antiword && \
     rm -rf /var/lib/apt/lists/*
 
