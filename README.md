@@ -308,7 +308,7 @@ optional arguments:
 
 ```
 usage: llm-help [-h] [-c [PACKAGE [PACKAGE ...]]] [-e EXCLUDED_CLASS_LISTERS]
-                [-p NAME] [-f FORMAT] [-L INT] [-o PATH] [-i FILE]
+                [-p NAME] [-f FORMAT] [-L INT] [-o PATH] [-i FILE] [-t TITLE]
                 [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Tool for outputting help for plugins in various formats.
@@ -333,11 +333,14 @@ optional arguments:
                         to stdout if not supplied; if pointing to a directory,
                         automatically generates file name from plugin name and
                         help format (default: None)
-  -i FILE, --index FILE
+  -i FILE, --index_file FILE
                         The file in the output directory to generate with an
                         overview of all plugins, grouped by type (in markdown
                         format, links them to the other generated files)
                         (default: None)
+  -t TITLE, --index_title TITLE
+                        The title to use in the index file (default: llm-
+                        dataset-converter plugins)
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
 ```
