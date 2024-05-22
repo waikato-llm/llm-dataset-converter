@@ -589,6 +589,7 @@ execute(
 
 ## Additional libraries
 
+* [Audio transcription using faster-whisper](https://github.com/waikato-llm/ldc-faster-whisper)
 * [Google integration](https://github.com/waikato-llm/ldc-google)
 * [HTML handling](https://github.com/waikato-llm/ldc-html)
 * [MS Word .doc integration](https://github.com/waikato-llm/ldc-doc)
