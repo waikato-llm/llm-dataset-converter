@@ -23,8 +23,8 @@ optional arguments:
                         Path to the Alpaca file(s) to read; glob syntax is
                         supported (default: None)
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
-                        Path to the text file(s) listing the data files to use
-                        (default: None)
+                        Path to the text file(s) listing the Alpaca files to
+                        use (default: None)
   --encoding ENC        The encoding to force instead of auto-detecting it,
                         e.g., 'utf-8' (default: None)
 ```

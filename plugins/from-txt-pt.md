@@ -31,7 +31,7 @@ optional arguments:
                         Path to the text file(s) to read; glob syntax is
                         supported (default: None)
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
-                        Path to the text file(s) listing the data files to use
+                        Path to the text file(s) listing the text files to use
                         (default: None)
   -s, --split_lines     Splits the text file on new lines and forwards them as
                         separate records; the index of the line gets stored in

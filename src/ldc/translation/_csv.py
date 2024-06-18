@@ -80,6 +80,15 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
         """
         return "Path to the text file(s) listing the data files to use"
 
+    def _get_default_glob(self) -> str:
+        """
+        Returns the default glob to use for locate_files.
+
+        :return: the glob, can be None
+        :rtype: str
+        """
+        raise NotImplementedError()
+
     def _create_argparser(self) -> argparse.ArgumentParser:
         """
         Creates an argument parser. Derived classes need to fill in the options.
@@ -134,7 +143,7 @@ class AbstractCsvLikeTranslationReader(TranslationReader, abc.ABC):
             for c in self.col_meta:
                 self.idx_meta.append(str_to_column_index(c))
 
-        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True, default_glob=self._get_default_glob())
 
     def _init_reader(self, current_input) -> csv.reader:
         """
@@ -430,6 +439,15 @@ class CsvTranslationReader(AbstractCsvLikeTranslationReader):
         """
         return "Path to the CSV file(s) to read; glob syntax is supported"
 
+    def _get_default_glob(self) -> str:
+        """
+        Returns the default glob to use for locate_files.
+
+        :return: the glob, can be None
+        :rtype: str
+        """
+        return "*.csv"
+
     def _init_reader(self, current_input) -> csv.reader:
         """
         Initializes and returns the CSV reader to use.
@@ -577,6 +595,15 @@ class TsvTranslationReader(AbstractCsvLikeTranslationReader):
         :rtype: str
         """
         return "Path to the TSV file(s) to read; glob syntax is supported"
+
+    def _get_default_glob(self) -> str:
+        """
+        Returns the default glob to use for locate_files.
+
+        :return: the glob, can be None
+        :rtype: str
+        """
+        return "*.tsv"
 
     def _init_reader(self, current_input) -> csv.reader:
         """

@@ -25,8 +25,8 @@ optional arguments:
                         Path to the JsonLines file(s) to read; glob syntax is
                         supported (default: None)
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
-                        Path to the text file(s) listing the data files to use
-                        (default: None)
+                        Path to the text file(s) listing the JsonLines files
+                        to use (default: None)
   --att_content ATT     The attribute with the text content (default: None)
   --att_id ATT          The attribute the record ID (gets stored under 'id' in
                         meta-data) (default: None)

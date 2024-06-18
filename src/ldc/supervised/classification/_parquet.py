@@ -79,7 +79,7 @@ class ParquetClassificationReader(ClassificationReader):
         """
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the data files to use", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the parquet files to use", required=False, nargs="*")
         parser.add_argument("--col_text", metavar="COL", type=str, default=None, help="The name of the column with the text", required=False)
         parser.add_argument("--col_label", metavar="COL", type=str, default=None, help="The name of the column with the label", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
@@ -106,7 +106,7 @@ class ParquetClassificationReader(ClassificationReader):
         Initializes the reading, e.g., for opening files or databases.
         """
         super().initialize()
-        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True, default_glob="*.parquet")
         if (self.col_text is None) and (self.col_label is None):
             raise Exception("No columns specified!")
 

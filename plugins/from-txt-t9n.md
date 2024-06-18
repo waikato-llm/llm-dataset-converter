@@ -27,7 +27,7 @@ optional arguments:
                         Path to the text file(s) to read; glob syntax is
                         supported (default: None)
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
-                        Path to the text file(s) listing the data files to use
+                        Path to the text file(s) listing the text files to use
                         (default: None)
   --col_id COL          The 1-based index of the column with the row IDs (gets
                         stored under 'id' in meta-data) (default: None)

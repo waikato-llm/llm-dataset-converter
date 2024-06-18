@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.2.4 (????-??-??)
+------------------
+
+- requiring seppl>=0.2.5 now
+- readers use default globs now, allowing the user to simply supply directories as input
+
+
 0.2.3 (2024-05-06)
 ------------------
 

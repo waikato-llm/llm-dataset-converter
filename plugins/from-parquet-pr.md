@@ -26,8 +26,8 @@ optional arguments:
                         Path to the parquet file(s) to read; glob syntax is
                         supported (default: None)
   -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
-                        Path to the text file(s) listing the data files to use
-                        (default: None)
+                        Path to the text file(s) listing the parquet files to
+                        use (default: None)
   --col_instruction COL
                         The name of the column with the instructions (default:
                         None)
