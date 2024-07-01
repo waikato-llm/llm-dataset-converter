@@ -4,7 +4,7 @@ Changelog
 0.2.4 (????-??-??)
 ------------------
 
-- requiring seppl>=0.2.5 now
+- requiring seppl>=0.2.6 now
 - readers use default globs now, allowing the user to simply supply directories as input
 
 
