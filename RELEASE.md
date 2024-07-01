@@ -32,3 +32,7 @@ Steps:
 * publish
 
 
+llm-dataset-converter-all
+=========================
+
+* increment minimum version to newly released one in `setup.py`
