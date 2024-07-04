@@ -1,4 +1,4 @@
-# split
+# split-records
 
 * domain(s): any
 * accepts: seppl.AnyData
@@ -7,9 +7,9 @@
 Splits the incoming records into the specified split ratios by setting the 'split' meta-data value. Also stores the split names in the current session.
 
 ```
-usage: split [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
-             [-r SPLIT_RATIOS [SPLIT_RATIOS ...]]
-             [-n SPLIT_NAMES [SPLIT_NAMES ...]]
+usage: split-records [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+                     [-N LOGGER_NAME] [-r SPLIT_RATIOS [SPLIT_RATIOS ...]]
+                     [-n SPLIT_NAMES [SPLIT_NAMES ...]]
 
 Splits the incoming records into the specified split ratios by setting the
 'split' meta-data value. Also stores the split names in the current session.

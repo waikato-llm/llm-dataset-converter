@@ -6,6 +6,7 @@ Changelog
 
 - requiring seppl>=0.2.6 now
 - readers use default globs now, allowing the user to simply supply directories as input
+- renamed `split` filter to `split-records` to avoid name clash with meta-data key `split` as parameter
 
 
 0.2.3 (2024-05-06)
