@@ -110,24 +110,25 @@ usage: llm-convert [-h|--help|--help-all|-help-plugin NAME] [-u INTERVAL]
 
 Tool for converting between large language model (LLM) dataset formats.
 
-readers:
+readers (20):
    from-alpaca, from-csv-cl, from-csv-pr, from-csv-pt, from-csv-t9n, 
    from-jsonlines-cl, from-jsonlines-pr, from-jsonlines-pt, 
    from-jsonlines-t9n, from-parquet-cl, from-parquet-pr, 
    from-parquet-pt, from-parquet-t9n, from-tsv-cl, from-tsv-pr, 
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n, from-xtuner
-filters:
+filters (38):
    assemble-sentences, change-case, classification-label-map, 
-   file-filter, find-substr, keyword, language, llama2-to-pairs, 
-   max-length-pt, max-records, metadata, metadata-from-name, 
-   pairs-to-llama2, pairs-to-pretrain, 
+   file-filter, find-substr, inspect, keyword, language, 
+   llama2-to-pairs, max-length-pt, max-records, metadata, 
+   metadata-from-name, pairs-to-llama2, pairs-to-pretrain, 
    pretrain-sentences-to-classification, pretrain-sentences-to-pairs, 
    randomize-records, record-files, record-window, remove-blocks, 
    remove-empty, remove-patterns, replace-patterns, require-languages, 
    reset-ids, sentences-pt, skip-duplicate-ids, skip-duplicate-text, 
-   split, split-pt, tee, text-length, text-stats, to-llama2-format, 
-   translation-to-pairs, translation-to-pretrain, update-pair-data
-writers:
+   split-pt, split-records, tee, text-length, text-stats, 
+   to-llama2-format, translation-to-pairs, translation-to-pretrain, 
+   update-pair-data
+writers (20):
    to-alpaca, to-csv-cl, to-csv-pr, to-csv-pt, to-csv-t9n, 
    to-jsonlines-cl, to-jsonlines-pr, to-jsonlines-pt, to-jsonlines-t9n, 
    to-parquet-cl, to-parquet-pr, to-parquet-pt, to-parquet-t9n, 
