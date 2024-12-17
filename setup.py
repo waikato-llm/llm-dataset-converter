@@ -30,6 +30,7 @@ setup(
     },
     packages=find_namespace_packages(where='src'),
     install_requires=[
+        "setuptools",
         "chardet",
         "pandas",
         "jsonlines",
