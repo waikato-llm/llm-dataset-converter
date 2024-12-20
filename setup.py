@@ -12,7 +12,7 @@ def _read(f):
     return open(f, 'rb').read()
 
 setup(
-    name="llm-dataset-converter",
+    name="llm_dataset_converter",
     description="Python3 library for converting between various LLM dataset formats.",
     long_description=(
             _read('DESCRIPTION.rst') + b'\n' +
