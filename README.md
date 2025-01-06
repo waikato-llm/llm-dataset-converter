@@ -384,6 +384,7 @@ https://waikato-llm.github.io/llm-dataset-converter-examples/
 ## Additional libraries
 
 * [Audio transcription using faster-whisper](https://github.com/waikato-llm/ldc-faster-whisper)
+* [gitingest](https://github.com/waikato-llm/ldc-gitingest)
 * [Google integration](https://github.com/waikato-llm/ldc-google)
 * [HTML handling](https://github.com/waikato-llm/ldc-html)
 * [MS Word .doc integration](https://github.com/waikato-llm/ldc-doc)
