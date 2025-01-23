@@ -37,7 +37,7 @@ setup(
         "pyarrow",
         "pyzstd",
         "huggingface-hub",
-        "seppl>=0.2.6",
+        "seppl>=0.2.9",
         "pyyaml",
         "wai.logging",
     ],
