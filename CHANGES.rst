@@ -6,6 +6,8 @@ Changelog
 
 - switched to underscores in project name
 - requiring seppl>=0.2.9 now
+- added support for aliases
+
 
 0.2.5 (2024-12-20)
 ------------------

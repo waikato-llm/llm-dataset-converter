@@ -1,6 +1,6 @@
 import os
 
-from seppl import OutputProducer, InputConsumer, classes_to_str
+from seppl import OutputProducer, InputConsumer, classes_to_str, get_aliases, has_aliases
 
 from ldc.core import DomainHandler
 from ldc.registry import available_plugins
@@ -43,6 +43,8 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
             result += "accepts: " + classes_to_str(plugin.accepts()) + "\n"
         if isinstance(plugin, OutputProducer):
             result += "generates: " + classes_to_str(plugin.generates()) + "\n"
+        if has_aliases(plugin):
+            result += "alias(es): " + ", ".join(get_aliases(plugin)) + "\n"
         result = result.strip()
         result += "\n\n"
         result += plugin.format_help() + "\n"
@@ -56,6 +58,8 @@ def generate_plugin_usage(plugin_name: str, help_format: str = HELP_FORMAT_TEXT,
             result += "* accepts: " + classes_to_str(plugin.accepts()) + "\n"
         if isinstance(plugin, OutputProducer):
             result += "* generates: " + classes_to_str(plugin.generates()) + "\n"
+        if has_aliases(plugin):
+            result += "* alias(es): " + ", ".join(get_aliases(plugin)) + "\n"
         result = result.strip()
         result += "\n\n"
         result += plugin.description() + "\n"

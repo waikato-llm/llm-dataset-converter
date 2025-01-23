@@ -5,7 +5,7 @@ from typing import List, Union, Optional
 
 import seppl
 
-from seppl import Plugin, get_class_name
+from seppl import Plugin, get_class_name, AliasSupporter
 from seppl import check_compatibility as seppl_check_compatibility
 
 
