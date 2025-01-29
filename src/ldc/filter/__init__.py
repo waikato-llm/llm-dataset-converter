@@ -1,5 +1,6 @@
 from ._assemble_sentences import AssembleSentences
 from ._change_case import ChangeCase, CASES, CASE_UNCHANGED, CASE_LOWER, CASE_UPPER, CASE_TITLE
+from ._discard_by_name import DiscardByName
 from ._file_filter import FileFilter
 from ._find_substr import FindSubstring
 from ._inspect import Inspect, MODES, MODE_NONINTERACTIVE, MODE_INTERACTIVE, OUTPUTS, OUTPUT_STDOUT, OUTPUT_STDERR, OUTPUT_LOGGER, OUTPUT_FILE

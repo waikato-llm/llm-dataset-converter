@@ -7,6 +7,7 @@ Changelog
 - switched to underscores in project name
 - requiring seppl>=0.2.9 now
 - added support for aliases
+- added `discard-by-name` filter, which uses the `file` filed in the meta-data for its matching
 
 
 0.2.5 (2024-12-20)
