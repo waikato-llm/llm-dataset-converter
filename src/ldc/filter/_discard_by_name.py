@@ -186,7 +186,7 @@ class DiscardByName(Filter):
             return data
         
         full_file_name = data.get_metadata()["file"] 
-        file_name = full_file_name
+        file_name = os.path.basename(full_file_name)
         if self.remove_ext:
             file_name = os.path.splitext(file_name)[0]
 
