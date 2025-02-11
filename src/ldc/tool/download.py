@@ -8,7 +8,7 @@ from wai.logging import init_logging
 from ldc.core import ENV_LLM_LOGLEVEL
 from ldc.api._downloader import Downloader
 from ldc.help import generate_plugin_usage
-from ldc.registry import available_downloaders
+from ldc.registry import available_downloaders, REGISTRY
 
 
 DOWNLOAD = "llm-download"
@@ -29,7 +29,7 @@ def _print_usage(plugin_details: bool = False):
     print()
     print("Tool for downloading data for large language models (LLMs).")
     print()
-    print("downloaders:\n" + enumerate_plugins(available_downloaders().keys(), prefix="   "))
+    print("downloaders:\n" + enumerate_plugins(available_downloaders().keys(), aliases=REGISTRY.all_aliases, prefix="   "))
     print()
     print("optional arguments:")
     print("  -h, --help            show basic help message and exit")

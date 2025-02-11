@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 import traceback
+from encodings.aliases import aliases
 
 from typing import List, Tuple, Optional, Dict
 
@@ -12,7 +13,7 @@ from ldc.core import check_compatibility, Session, ENV_LLM_LOGLEVEL
 from ldc.api import Filter, MultiFilter
 from ldc.help import generate_plugin_usage
 from ldc.api import COMPRESSION_FORMATS, Reader
-from ldc.registry import available_readers, available_filters, available_writers
+from ldc.registry import available_readers, available_filters, available_writers, REGISTRY
 
 
 CONVERT = "llm-convert"
@@ -56,9 +57,9 @@ def _print_usage(plugin_details: bool = False):
     print()
     print("Tool for converting between large language model (LLM) dataset formats.")
     print()
-    print("readers (%d):\n" % len(available_readers()) + enumerate_plugins(available_readers().keys(), prefix="   "))
-    print("filters (%d):\n" % len(available_filters()) + enumerate_plugins(available_filters().keys(), prefix="   "))
-    print("writers (%d):\n" % len(available_writers()) + enumerate_plugins(available_writers().keys(), prefix="   "))
+    print("readers (%d):\n" % len(available_readers()) + enumerate_plugins(available_readers().keys(), aliases=REGISTRY.all_aliases, prefix="   "))
+    print("filters (%d):\n" % len(available_filters()) + enumerate_plugins(available_filters().keys(), aliases=REGISTRY.all_aliases, prefix="   "))
+    print("writers (%d):\n" % len(available_writers()) + enumerate_plugins(available_writers().keys(), aliases=REGISTRY.all_aliases, prefix="   "))
     print()
     print("optional arguments:")
     print("  -h, --help              show basic help message and exit")
