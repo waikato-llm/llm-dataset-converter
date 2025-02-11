@@ -2,7 +2,6 @@ import argparse
 import logging
 import sys
 import traceback
-from encodings.aliases import aliases
 
 from typing import List, Tuple, Optional, Dict
 
