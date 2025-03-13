@@ -28,7 +28,8 @@ options:
                         How to output the data. (default: stdout)
   --output_file OUTPUT_FILE
                         The file to store the data in, in case of output
-                        'file'. (default: None)
+                        'file'. Supported placeholders: {HOME}, {CWD}, {TMP}
+                        (default: None)
   -L [{any,instruction,input,output,content,text} ...], --location [{any,instruction,input,output,content,text} ...]
                         Which textual data to output; classification:
                         any|text, pairs: any|instruction|input|output,

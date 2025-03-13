@@ -5,9 +5,11 @@ from typing import List, Union
 
 from wai.logging import LOGGING_WARNING
 
+from build.lib.seppl.placeholders import expand_placeholders
 from ldc.api import Filter
 from ldc.core import DOMAIN_ANY
 from seppl import get_metadata, AnyData, get_class_name
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 from ldc.api.supervised.pairs import PairData
 from ldc.api.supervised.classification import ClassificationData
 from ldc.api.pretrain import PretrainData
@@ -35,7 +37,7 @@ OUTPUTS = [
 ]
 
 
-class Inspect(Filter):
+class Inspect(Filter, PlaceholderSupporter):
     """
     Allows inspecting the data flowing through the pipeline.
     """
@@ -135,7 +137,7 @@ class Inspect(Filter):
         parser = super()._create_argparser()
         parser.add_argument("-m", "--mode", choices=MODES, default=MODE_INTERACTIVE, help="The mode to operate in.")
         parser.add_argument("-o", "--output", choices=OUTPUTS, default=OUTPUT_STDOUT, help="How to output the data.")
-        parser.add_argument("--output_file", type=str, default=None, help="The file to store the data in, in case of output '" + OUTPUT_FILE + "'.")
+        parser.add_argument("--output_file", type=str, default=None, help="The file to store the data in, in case of output '" + OUTPUT_FILE + "'. " + placeholder_list(obj=self))
         add_location_argument(parser, "Which textual data to output", default=None)
         parser.add_argument("-g", "--language", type=str, help="The language(s) to output", required=False, nargs="*")
         parser.add_argument("-k", "--meta-data-key", metavar="KEY", type=str, help="The meta-data value to output", required=False, nargs="*")
@@ -163,10 +165,11 @@ class Inspect(Filter):
         super().initialize()
         if (self.output == OUTPUT_FILE) and ((self.output_file is None) or (self.output_file == "")):
             raise Exception("No output file provided!")
-        if (self.output == OUTPUT_FILE) and (os.path.exists(self.output_file)):
-            if os.path.isdir(self.output_file):
-                raise Exception("Output file points to directory: %s" % self.output_file)
-            os.remove(self.output_file)
+        output_file = expand_placeholders(self.output_file)
+        if (self.output == OUTPUT_FILE) and (os.path.exists(output_file)):
+            if os.path.isdir(output_file):
+                raise Exception("Output file points to directory: %s" % output_file)
+            os.remove(output_file)
 
     def _assemble_data(self, data) -> str:
         """
@@ -217,7 +220,8 @@ class Inspect(Filter):
         elif self.output == OUTPUT_STDERR:
             print(data, file=sys.stderr)
         elif self.output == OUTPUT_FILE:
-            with open(self.output_file, "a") as fp:
+            output_file = expand_placeholders(self.output_file)
+            with open(output_file, "a") as fp:
                 fp.write(data)
                 fp.write("\n")
         else:
