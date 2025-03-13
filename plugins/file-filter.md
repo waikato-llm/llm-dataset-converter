@@ -22,8 +22,9 @@ options:
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
   -f FILE_LIST, --file_list FILE_LIST
-                        The file containing the files to be kept or discarded
-                        (default: None)
+                        The file containing the files to be kept or discarded;
+                        Supported placeholders: {HOME}, {CWD}, {TMP} (default:
+                        None)
   -a {keep,discard}, --action {keep,discard}
                         How to react when a record's 'file' meta-data value
                         matches a filename from the list. (default: keep)

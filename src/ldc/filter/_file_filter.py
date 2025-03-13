@@ -9,9 +9,10 @@ from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 
 
-class FileFilter(Filter):
+class FileFilter(Filter, PlaceholderSupporter):
     """
     Keeps or discards records based on allow/discard lists for files matched against the 'file' meta-data value.
     """
@@ -103,7 +104,7 @@ class FileFilter(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-f", "--file_list", type=str, default=None, help="The file containing the files to be kept or discarded", required=True)
+        parser.add_argument("-f", "--file_list", type=str, default=None, help="The file containing the files to be kept or discarded; " + placeholder_list(obj=self), required=True)
         parser.add_argument("-a", "--action", choices=FILTER_ACTIONS, default=FILTER_ACTION_KEEP, help="How to react when a record's 'file' meta-data value matches a filename from the list.")
         parser.add_argument("-m", "--missing_metadata_action", choices=FILTER_ACTIONS, default=FILTER_ACTION_KEEP, help="How to react when a record does not have the 'file' meta-data value.")
         parser.add_argument("-p", "--ignore_path", action="store_true", help="Whether to ignore the path in files when checking against the file list")
@@ -130,9 +131,10 @@ class FileFilter(Filter):
         """
         super().initialize()
         self._files = set()
-        if not os.path.exists(self.file_list):
-            raise Exception("File list does not exist: %s" % self.file_list)
-        with open(self.file_list, "r") as fp:
+        file_list = expand_placeholders(self.file_list)
+        if not os.path.exists(file_list):
+            raise Exception("File list does not exist: %s" % file_list)
+        with open(file_list, "r") as fp:
             lines = [x.strip() for x in fp.readlines()]
         for line in lines:
             self._files.add(strip_filename(line, strip_path=self.ignore_path, strip_extension=self.ignore_extension))
