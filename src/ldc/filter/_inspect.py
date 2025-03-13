@@ -5,7 +5,6 @@ from typing import List, Union
 
 from wai.logging import LOGGING_WARNING
 
-from build.lib.seppl.placeholders import expand_placeholders
 from ldc.api import Filter
 from ldc.core import DOMAIN_ANY
 from seppl import get_metadata, AnyData, get_class_name
