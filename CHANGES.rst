@@ -5,7 +5,7 @@ Changelog
 ------------------
 
 - switched to underscores in project name
-- requiring seppl>=0.2.12 now
+- requiring seppl>=0.2.13 now
 - added support for aliases
 - added `discard-by-name` filter, which uses the `file` filed in the meta-data for its matching
 - added placeholder support
