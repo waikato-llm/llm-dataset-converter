@@ -14,7 +14,7 @@ Converts records of prompt/response pairs to llama2-formatted pretrain ones.
 The 'instruction' (ie prompt) gets wrapped in [INST]...[/INST] and the
 'output' (ie response) follows that.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

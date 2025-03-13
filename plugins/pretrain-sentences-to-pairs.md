@@ -17,7 +17,7 @@ Converts sentences from pretrain records to prompt/response pairs by using one
 sentence as the prompt and the following X sentences as response. Can be used
 to generate artificial prompt/response datasets from just pretrain data.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

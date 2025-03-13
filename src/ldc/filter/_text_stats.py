@@ -16,6 +16,7 @@ from ldc.api.supervised.classification import ClassificationData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
 from ldc.api import Filter
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 
 
 @dataclass
@@ -57,7 +58,7 @@ class Statistics:
         return result
 
 
-class TextStatistics(Filter):
+class TextStatistics(Filter, PlaceholderSupporter):
     """
     Computes basic statics from the textual data passing through.
     """
@@ -144,7 +145,7 @@ class TextStatistics(Filter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="The JSON file to store the statistics in; outputs a textual representation on stdout when missing", required=False, default=None)
+        parser.add_argument("-o", "--output", type=str, help="The JSON file to store the statistics in; outputs a textual representation on stdout when missing; " + placeholder_list(obj=self), required=False, default=None)
         parser.add_argument("-d", "--detailed", action="store_true", help="Whether to output more detailed statistics, e.g., the counts per string length", required=False)
         add_location_argument(parser, "Which text to use")
         parser.add_argument("-g", "--language", type=str, help="The languages to inspect; inspects all if not specified", required=False, nargs="*")
@@ -274,8 +275,9 @@ class TextStatistics(Filter):
         if self.output is None:
             print(yaml.dump(stats))
         else:
-            self.logger().info("Writing stats to: %s" % self.output)
-            with open(self.output, "w") as fp:
+            output = expand_placeholders(self.output)
+            self.logger().info("Writing stats to: %s" % output)
+            with open(output, "w") as fp:
                 json.dump(stats, fp, indent=2)
 
     def finalize(self):

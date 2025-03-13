@@ -9,23 +9,23 @@ Removes empty lines.
 ```
 usage: remove-empty [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                     [-N LOGGER_NAME]
-                    [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
-                    [-g [LANGUAGE [LANGUAGE ...]]]
+                    [-L [{any,instruction,input,output,content,text} ...]]
+                    [-g [LANGUAGE ...]]
 
 Removes empty lines.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+  -L [{any,instruction,input,output,content,text} ...], --location [{any,instruction,input,output,content,text} ...]
                         Where to remove empty lines; classification: any|text,
                         pairs: any|instruction|input|output, pretrain:
                         any|content, translation: any|content (default: any)
-  -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
+  -g [LANGUAGE ...], --language [LANGUAGE ...]
                         The languages to inspect; inspects all if not
                         specified (default: None)
 ```

@@ -9,14 +9,14 @@ Keeps or discards data records based on sub-string(s) text matching. Search is p
 ```
 usage: find-substr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] -s SUB_STRING [SUB_STRING ...] [-r]
-                   [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
-                   [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
+                   [-L [{any,instruction,input,output,content,text} ...]]
+                   [-g [LANGUAGE ...]] [-a {keep,discard}]
 
 Keeps or discards data records based on sub-string(s) text matching. Search is
 performed in lower-case. Optionally, the sub-strings can represent regular
 expressions used for searching the strings.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -28,12 +28,12 @@ optional arguments:
                         None)
   -r, --is_regexp       Whether the sub-strings represent regular expressions
                         (default: False)
-  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+  -L [{any,instruction,input,output,content,text} ...], --location [{any,instruction,input,output,content,text} ...]
                         Where to look for the substrings; classification:
                         any|text, pairs: any|instruction|input|output,
                         pretrain: any|content, translation: any|content
                         (default: any)
-  -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
+  -g [LANGUAGE ...], --language [LANGUAGE ...]
                         The languages to inspect; inspects all if not
                         specified (default: None)
   -a {keep,discard}, --action {keep,discard}

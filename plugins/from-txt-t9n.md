@@ -7,27 +7,28 @@ Reads translation data from plain text files, with each line representing a reco
 
 ```
 usage: from-txt-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                    [-N LOGGER_NAME] [-i [INPUT [INPUT ...]]]
-                    [-I [INPUT_LIST [INPUT_LIST ...]]] [--col_id COL]
-                    [--col_lang COL] --col_content COL [--col_sep COL_SEP]
-                    [--lang_in_id] [--expr_lang EXPR_LANG] [--expr_id EXPR_ID]
-                    [--encoding ENC]
+                    [-N LOGGER_NAME] [-i [INPUT ...]] [-I [INPUT_LIST ...]]
+                    [--col_id COL] [--col_lang COL] --col_content COL
+                    [--col_sep COL_SEP] [--lang_in_id] [--expr_lang EXPR_LANG]
+                    [--expr_id EXPR_ID] [--encoding ENC]
 
 Reads translation data from plain text files, with each line representing a
 record for one specific language.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
-  -i [INPUT [INPUT ...]], --input [INPUT [INPUT ...]]
+  -i [INPUT ...], --input [INPUT ...]
                         Path to the text file(s) to read; glob syntax is
-                        supported (default: None)
-  -I [INPUT_LIST [INPUT_LIST ...]], --input_list [INPUT_LIST [INPUT_LIST ...]]
-                        Path to the text file(s) listing the text files to use
+                        supported; Supported placeholders: {HOME}, {CWD},
+                        {TMP} (default: None)
+  -I [INPUT_LIST ...], --input_list [INPUT_LIST ...]
+                        Path to the text file(s) listing the text files to
+                        use; Supported placeholders: {HOME}, {CWD}, {TMP}
                         (default: None)
   --col_id COL          The 1-based index of the column with the row IDs (gets
                         stored under 'id' in meta-data) (default: None)

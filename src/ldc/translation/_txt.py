@@ -6,6 +6,7 @@ from typing import Iterable, List, Union
 from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.translation import TranslationData, TranslationReader, StreamTranslationWriter
@@ -26,7 +27,7 @@ PH_CONTENT = "{CONTENT}"
 """ placeholder for the content/text. """
 
 
-class TxtTranslationReader(TranslationReader):
+class TxtTranslationReader(TranslationReader, PlaceholderSupporter):
     """
     Reader for plain text files.
     """
@@ -106,8 +107,8 @@ class TxtTranslationReader(TranslationReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the text files to use", required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help="Path to the text file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the text files to use; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The 1-based index of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("--col_lang", metavar="COL", type=str, default=None, help="The 1-based of the column with the language ID", required=False)
         parser.add_argument("--col_content", metavar="COL", type=str, default=None, help="The 1-based of the column with the text content", required=True)
@@ -229,7 +230,7 @@ class TxtTranslationReader(TranslationReader):
         return len(self._inputs) == 0
 
 
-class TxtTranslationWriter(StreamTranslationWriter):
+class TxtTranslationWriter(StreamTranslationWriter, PlaceholderSupporter):
     """
     Writer for the plain text files.
     """
@@ -295,7 +296,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path to the directory or file to write to", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path to the directory or file to write to; " + placeholder_list(obj=self), required=True)
         parser.add_argument("-d", "--num_digits", metavar="NUM", type=int, default=6, help="The number of digits to use for the filenames", required=False)
         parser.add_argument("-f", "--line_format", metavar="FORMAT", type=str, default="%s-%s: %s" % (PH_LANG, PH_ID, PH_CONTENT), help="The format for the lines in the text file", required=False)
         parser.add_argument("-b", "--buffer_size", metavar="SIZE", type=int, default=1000, help="The size of the record buffer when concatenating (to improve I/O throughput)", required=False)
@@ -321,11 +322,12 @@ class TxtTranslationWriter(StreamTranslationWriter):
         super().initialize()
         self._first_item = True
         self._fname_format = "%0" + str(self.num_digits) + "d.txt"
-        if os.path.exists(self.target) and os.path.isdir(self.target) and (not self.session.options.force_batch):
+        target = expand_placeholders(self.target)
+        if os.path.exists(target) and os.path.isdir(target) and (not self.session.options.force_batch):
             self._concatenate = False
         else:
             self._concatenate = True
-            if is_compressed(self.target):
+            if is_compressed(target):
                 raise Exception("Cannot use compression when concatenating due to streaming!")
         self._buffer.clear()
 
@@ -365,7 +367,7 @@ class TxtTranslationWriter(StreamTranslationWriter):
         """
         self.logger().debug("flushing buffer: %d" % len(self._buffer))
         mode = "w" if self._first_item else "a"
-        output_file = self.target
+        output_file = expand_placeholders(self.target)
         if self.session.options.force_batch and os.path.isdir(output_file):
             output_file = generate_output(self.session.current_input, output_file, ".txt", None)
         if self._first_item:
@@ -403,7 +405,8 @@ class TxtTranslationWriter(StreamTranslationWriter):
                     fname = self._fname_format % int(id_)
                 except:
                     fname = str(id_) + ".txt"
-                output = generate_output(fname, self.target, ".txt", self.session.options.compression)
+                target = expand_placeholders(self.target)
+                output = generate_output(fname, target, ".txt", self.session.options.compression)
                 self.logger().info("Writing to: %s" % output)
                 with open(output, "w") as fp:
                     self._write_data(fp, id_, d)

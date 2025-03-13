@@ -12,7 +12,7 @@ usage: to-jsonlines-cl [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Writes classification data in JsonLines-like JSON format.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -21,7 +21,8 @@ optional arguments:
                         name by default (default: None)
   -o OUTPUT, --output OUTPUT
                         Path of the JsonLines file to write (directory when
-                        processing multiple files) (default: None)
+                        processing multiple files); Supported placeholders:
+                        {HOME}, {CWD}, {TMP} (default: None)
   --att_text ATT        The attribute for the text data (default: None)
   --att_label ATT       The attribute for the label (default: None)
   --att_id ATT          The name of the attribute for the row IDs (uses 'id'

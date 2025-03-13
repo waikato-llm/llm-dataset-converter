@@ -16,7 +16,7 @@ Writes single-turn conversations in XTuner JSON format (https://github.com/Int
 ernLM/xtuner/blob/v0.1.13/docs/en/user_guides/dataset_format.md#single-turn-
 dialogue-dataset-format).
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -25,7 +25,8 @@ optional arguments:
                         name by default (default: None)
   -o OUTPUT, --output OUTPUT
                         Path of the XTuner file to write (directory when
-                        processing multiple files) (default: None)
+                        processing multiple files); Supported placeholders:
+                        {HOME}, {CWD}, {TMP} (default: None)
   --att_system ATT      The attribute for the system instructions (default:
                         None)
   --att_input ATT       The attribute for the inputs (default: None)

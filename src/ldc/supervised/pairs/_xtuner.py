@@ -5,11 +5,12 @@ from typing import Iterable, List, Union
 from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 from ldc.api import open_file, generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
 
 
-class XTunerReader(PairReader):
+class XTunerReader(PairReader, PlaceholderSupporter):
     """
     Reader for the XTuner JSON format.
     """
@@ -71,8 +72,8 @@ class XTunerReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the XTuner file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the XTuner files to use", required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help="Path to the XTuner file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the XTuner files to use; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("--att_system", metavar="ATT", type=str, default=None, help="The attribute with the system instructions", required=False)
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute with the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute with the outputs", required=False)
@@ -172,7 +173,7 @@ PLACEHOLDERS = [
 ]
 
 
-class XTunerWriter(BatchPairWriter):
+class XTunerWriter(BatchPairWriter, PlaceholderSupporter):
     """
     Writer for the XTuner JSON format.
     """
@@ -250,7 +251,7 @@ class XTunerWriter(BatchPairWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path of the XTuner file to write (directory when processing multiple files)", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path of the XTuner file to write (directory when processing multiple files); " + placeholder_list(obj=self), required=True)
         parser.add_argument("--att_system", metavar="ATT", type=str, default=None, help="The attribute for the system instructions", required=False)
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute for the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute for the outputs", required=False)
@@ -330,9 +331,10 @@ class XTunerWriter(BatchPairWriter):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
-        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, ".json"):
+        target = expand_placeholders(self.target)
+        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, target, ".json"):
             self.finalize()
-            self._current_output = generate_output(self.session.current_input, self.target, ".json", self.session.options.compression)
+            self._current_output = generate_output(self.session.current_input, target, ".json", self.session.options.compression)
             self.logger().info("Writing to: " + self._current_output)
             self._output = open_file(self._current_output, mode="wt")
 

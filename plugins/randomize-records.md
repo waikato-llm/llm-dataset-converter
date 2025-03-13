@@ -12,7 +12,7 @@ usage: randomize-records [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Batch filter that randomizes the order of the records.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

@@ -28,6 +28,7 @@
 * [assemble-sentences](assemble-sentences.md)
 * [change-case](change-case.md)
 * [classification-label-map](classification-label-map.md)
+* [discard-by-name](discard-by-name.md)
 * [file-filter](file-filter.md)
 * [find-substr](find-substr.md)
 * [inspect](inspect.md)

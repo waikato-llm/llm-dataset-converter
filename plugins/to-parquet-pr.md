@@ -12,7 +12,7 @@ usage: to-parquet-pr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Writes prompt/output pairs in Parquet database format.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -21,7 +21,8 @@ optional arguments:
                         name by default (default: None)
   -o OUTPUT, --output OUTPUT
                         Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
+                        processing multiple files); Supported placeholders:
+                        {HOME}, {CWD}, {TMP} (default: None)
   --col_instruction COL
                         The name of the column for the instructions (default:
                         None)

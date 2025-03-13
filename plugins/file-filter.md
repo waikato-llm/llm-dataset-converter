@@ -14,7 +14,7 @@ usage: file-filter [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Keeps or discards records based on allow/discard lists for files matched
 against the 'file' meta-data value.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

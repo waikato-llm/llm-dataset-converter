@@ -12,7 +12,7 @@ usage: require-languages [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Discards records if the required languages aren't present.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

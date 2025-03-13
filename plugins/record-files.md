@@ -13,7 +13,7 @@ usage: record-files [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Records the file names in the meta-data ('file') and outputs them, either to a
 file or stdout.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

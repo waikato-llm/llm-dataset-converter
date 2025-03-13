@@ -6,6 +6,7 @@ from typing import Iterable, List, Union
 from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.translation import TranslationData, TranslationReader, StreamTranslationWriter
@@ -15,7 +16,7 @@ DATA_EXAMPLE = '{ "translation": { "en": "Others have dismissed him as a joke.",
 DATA_DEFINITION_URL = "https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/README.md"
 
 
-class JsonLinesTranslationReader(TranslationReader):
+class JsonLinesTranslationReader(TranslationReader, PlaceholderSupporter):
     """
     Reader for the JsonLines JSON format.
     """
@@ -72,8 +73,8 @@ class JsonLinesTranslationReader(TranslationReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the JsonLines files to use", required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the JsonLines files to use; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("--att_meta", metavar="ATT", type=str, default=None, help="The attributes to store in the meta-data", required=False, nargs="*")
         parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
@@ -154,7 +155,7 @@ class JsonLinesTranslationReader(TranslationReader):
             self._current_input = None
 
 
-class JsonLinesTranslationWriter(StreamTranslationWriter):
+class JsonLinesTranslationWriter(StreamTranslationWriter, PlaceholderSupporter):
     """
     Writer for the JsonLines JSON format.
     """
@@ -211,7 +212,7 @@ class JsonLinesTranslationWriter(StreamTranslationWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path of the JsonLines file to write (directory when processing multiple files)", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path of the JsonLines file to write (directory when processing multiple files); " + placeholder_list(obj=self), required=True)
         parser.add_argument("-d", "--num_digits", metavar="NUM", type=int, default=6, help="The number of digits to use for the filenames", required=False)
         parser.add_argument("-b", "--buffer_size", metavar="SIZE", type=int, default=1000, help="The size of the record buffer when concatenating (to improve I/O throughput)", required=False)
         return parser
@@ -235,11 +236,12 @@ class JsonLinesTranslationWriter(StreamTranslationWriter):
         super().initialize()
         self._first_item = True
         self._fname_format = "%0" + str(self.num_digits) + "d.txt"
-        if os.path.exists(self.target) and os.path.isdir(self.target) and (not self.session.options.force_batch):
+        target = expand_placeholders(self.target)
+        if os.path.exists(target) and os.path.isdir(target) and (not self.session.options.force_batch):
             self._concatenate = False
         else:
             self._concatenate = True
-            if is_compressed(self.target):
+            if is_compressed(target):
                 raise Exception("Cannot use compression when concatenating due to streaming!")
         self._buffer.clear()
 
@@ -272,7 +274,7 @@ class JsonLinesTranslationWriter(StreamTranslationWriter):
         """
         self.logger().debug("flushing buffer: %d" % len(self._buffer))
         mode = "w" if self._first_item else "a"
-        output_file = self.target
+        output_file = expand_placeholders(self.target)
         if self.session.options.force_batch and os.path.isdir(output_file):
             output_file = generate_output(self.session.current_input, output_file, ".jsonl", None)
         if self._first_item:
@@ -304,7 +306,8 @@ class JsonLinesTranslationWriter(StreamTranslationWriter):
                         fname = str(item.meta["id"]) + ".jsonl"
                 else:
                     fname = self._fname_format % self.session.count
-                output = generate_output(fname, self.target, ".jsonl", self.session.options.compression)
+                target = expand_placeholders(self.target)
+                output = generate_output(fname, target, ".jsonl", self.session.options.compression)
                 self.logger().info("Writing to: %s" % output)
                 self._write([item], output, "w")
 

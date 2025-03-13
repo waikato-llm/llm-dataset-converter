@@ -15,7 +15,7 @@ Converts llama2 pretrain records to prompts/response ones. The 'instruction'
 is the string that follows the [/INST]. Splits on <s> to generate multiple
 prompt/response records.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

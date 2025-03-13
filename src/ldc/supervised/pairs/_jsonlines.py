@@ -6,13 +6,14 @@ from typing import Iterable, List, Union
 from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 from ldc.core import domain_suffix
 from ldc.api import open_file, generate_output, is_compressed
 from ldc.api.supervised.pairs import PairData, PairReader, StreamPairWriter
 from ldc.text_utils import empty_str_if_none
 
 
-class JsonLinesPairReader(PairReader):
+class JsonLinesPairReader(PairReader, PlaceholderSupporter):
     """
     Reader for the JsonLines JSON format.
     """
@@ -82,8 +83,8 @@ class JsonLinesPairReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the JsonLines files to use", required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help="Path to the JsonLines file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the JsonLines files to use; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("--att_instruction", metavar="ATT", type=str, default=None, help="The attribute with the instructions", required=False)
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute with the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute with the outputs", required=False)
@@ -191,7 +192,7 @@ class JsonLinesPairReader(PairReader):
             self._current_input = None
 
 
-class JsonLinesPairWriter(StreamPairWriter):
+class JsonLinesPairWriter(StreamPairWriter, PlaceholderSupporter):
     """
     Writer for the JsonLines JSON format.
     """
@@ -261,7 +262,7 @@ class JsonLinesPairWriter(StreamPairWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path of the JsonLines file to write (directory when processing multiple files)", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path of the JsonLines file to write (directory when processing multiple files); " + placeholder_list(obj=self), required=True)
         parser.add_argument("--att_instruction", metavar="ATT", type=str, default=None, help="The attribute for the instructions", required=False)
         parser.add_argument("--att_input", metavar="ATT", type=str, default=None, help="The attribute for the inputs", required=False)
         parser.add_argument("--att_output", metavar="ATT", type=str, default=None, help="The attribute for the outputs", required=False)
@@ -295,11 +296,12 @@ class JsonLinesPairWriter(StreamPairWriter):
             raise Exception("No attributes specified!")
         self._first_item = True
         self._fname_format = "%0" + str(self.num_digits) + "d.txt"
-        if os.path.exists(self.target) and os.path.isdir(self.target) and (not self.session.options.force_batch):
+        target = expand_placeholders(self.target)
+        if os.path.exists(target) and os.path.isdir(target) and (not self.session.options.force_batch):
             self._concatenate = False
         else:
             self._concatenate = True
-            if is_compressed(self.target):
+            if is_compressed(target):
                 raise Exception("Cannot use compression when concatenating due to streaming!")
         self._buffer.clear()
 
@@ -341,7 +343,7 @@ class JsonLinesPairWriter(StreamPairWriter):
         """
         self.logger().debug("flushing buffer: %d" % len(self._buffer))
         mode = "w" if self._first_item else "a"
-        output_file = self.target
+        output_file = expand_placeholders(self.target)
         if self.session.options.force_batch and os.path.isdir(output_file):
             output_file = generate_output(self.session.current_input, output_file, ".jsonl", None)
         if self._first_item:
@@ -373,7 +375,8 @@ class JsonLinesPairWriter(StreamPairWriter):
                         fname = str(item.meta["id"]) + ".jsonl"
                 else:
                     fname = self._fname_format % self.session.count
-                output = generate_output(fname, self.target, ".jsonl", self.session.options.compression)
+                target = expand_placeholders(self.target)
+                output = generate_output(fname, target, ".jsonl", self.session.options.compression)
                 self.logger().info("Writing to: %s" % output)
                 self._write([item], output, "w")
 

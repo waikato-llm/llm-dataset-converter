@@ -12,7 +12,7 @@ usage: record-window [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Only lets records pass that match the defined window and step size.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

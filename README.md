@@ -101,7 +101,8 @@ value of <1MB is recommended.
 ### Dataset conversion
 
 ```
-usage: llm-convert [-h|--help|--help-all|-help-plugin NAME] [-u INTERVAL]
+usage: llm-convert [-h|--help|--help-all|-help-plugin NAME]
+                   [-u INTERVAL] [-b|--force_batch] [-U|--unescape_unicode] [--placeholders FILE]
                    [-c {None,bz2,gz,xz,zstd}]
                    [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    reader
@@ -116,10 +117,10 @@ readers (20):
    from-jsonlines-t9n, from-parquet-cl, from-parquet-pr, 
    from-parquet-pt, from-parquet-t9n, from-tsv-cl, from-tsv-pr, 
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n, from-xtuner
-filters (38):
+filters (39):
    assemble-sentences, change-case, classification-label-map, 
-   file-filter, find-substr, inspect, keyword, language, 
-   llama2-to-pairs, max-length-pt, max-records, metadata, 
+   discard-by-name, file-filter, find-substr, inspect, keyword, 
+   language, llama2-to-pairs, max-length-pt, max-records, metadata, 
    metadata-from-name, pairs-to-llama2, pairs-to-pretrain, 
    pretrain-sentences-to-classification, pretrain-sentences-to-pairs, 
    randomize-records, record-files, record-window, remove-blocks, 
@@ -148,6 +149,8 @@ optional arguments:
                           directory to the writer (default: None)
   -b, --force_batch       processes the data in batches
   -U, --unescape_unicode  unescape unicode characters in the command-line
+  --placeholders FILE
+                        The file with custom placeholders to load (format: key=value).
 ```
 
 ### Download

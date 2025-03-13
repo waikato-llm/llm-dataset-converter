@@ -16,7 +16,7 @@ Converts sentences from pretrain records to text classification ones by using
 X sentences as text and the specified label. Can be used to generate
 classification datasets from just pretrain data.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

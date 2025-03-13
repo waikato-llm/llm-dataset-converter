@@ -11,7 +11,7 @@ usage: to-alpaca [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Writes prompt/output pairs in Alpaca-like JSON format.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -20,7 +20,8 @@ optional arguments:
                         name by default (default: None)
   -o OUTPUT, --output OUTPUT
                         Path of the Alpaca file to write (directory when
-                        processing multiple files) (default: None)
+                        processing multiple files); Supported placeholders:
+                        {HOME}, {CWD}, {TMP} (default: None)
   -p, --pretty_print    Whether to output the JSON in more human-readable
                         format. (default: False)
   -a, --ensure_ascii    Whether to ensure that the output is ASCII compatible.

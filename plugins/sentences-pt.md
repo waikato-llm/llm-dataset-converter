@@ -14,7 +14,7 @@ usage: sentences-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Splits pretrain text data into sentences and puts them on separate lines
 (using new-lines).
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

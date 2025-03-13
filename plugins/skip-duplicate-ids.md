@@ -13,7 +13,7 @@ usage: skip-duplicate-ids [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Suppresses records with IDs that have already passed through. Uses the 'id'
 value from the meta-data.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

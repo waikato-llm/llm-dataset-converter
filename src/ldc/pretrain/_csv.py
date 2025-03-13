@@ -6,16 +6,18 @@ import traceback
 from typing import Iterable, List, Union
 
 from wai.logging import LOGGING_WARNING
-from seppl import add_metadata
-from seppl.io import locate_files
-from ldc.core import domain_suffix
+
 from ldc.api import open_file, generate_output
 from ldc.api.pretrain import PretrainData, PretrainReader, BatchPretrainWriter
-from ldc.utils import str_to_column_index
+from ldc.core import domain_suffix
 from ldc.text_utils import empty_str_if_none
+from ldc.utils import str_to_column_index
+from seppl import add_metadata
+from seppl.io import locate_files
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 
 
-class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
+class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC, PlaceholderSupporter):
     """
     Ancestor for readers of CSV-like files.
     """
@@ -94,8 +96,8 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help=self._get_input_description(), required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help=self._get_input_list_description(), required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help=self._get_input_description() + "; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help=self._get_input_list_description() + "; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the text content", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name (or 1-based index if no header row) of the column with the row IDs (gets stored under 'id' in meta-data)", required=False)
         parser.add_argument("--col_meta", metavar="COL", type=str, default=None, help="The name (or 1-based index) of the columns to store in the meta-data", required=False, nargs="*")
@@ -228,7 +230,7 @@ class AbstractCsvLikePretrainReader(PretrainReader, abc.ABC):
             self._current_input = None
 
 
-class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
+class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC, PlaceholderSupporter):
     """
     Ancestor for writers of CSV-like files.
     """
@@ -280,7 +282,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help=self._get_output_description(), required=True)
+        parser.add_argument("-o", "--output", type=str, help=self._get_output_description() + "; " + placeholder_list(obj=self), required=True)
         parser.add_argument("-c", "--col_content", metavar="COL", type=str, default=None, help="The name of the column for the content when outputting a header row", required=False)
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column for the row IDs (uses 'id' from meta-data)", required=False)
         parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
@@ -335,9 +337,10 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC):
         :param data: the data to write as iterable of PretrainData
         :type data: Iterable
         """
-        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, self._get_extension()):
+        target = expand_placeholders(self.target)
+        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, target, self._get_extension()):
             self.finalize()
-            self._current_output = generate_output(self.session.current_input, self.target, self._get_extension(), self.session.options.compression)
+            self._current_output = generate_output(self.session.current_input, target, self._get_extension(), self.session.options.compression)
             self.logger().info("Writing to: " + self._current_output)
             self._output = open_file(self._current_output, mode="wt")
             self._output_writer = self._init_writer(self._output)

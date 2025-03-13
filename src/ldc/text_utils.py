@@ -326,14 +326,14 @@ def replace_patterns(lines: List[str], find: List[str], replace: List[str]) -> T
     return result, affected
 
 
-def empty_str_if_none(s: Union[Optional[str], List[str], Dict[str, str]]) -> Union[str, List[str], Dict[str, str]]:
+def empty_str_if_none(s: Union[Optional[str], bool, int, float, List[str], Dict[str, str]]) -> Union[str, bool, int, float, List[str], Dict[str, str]]:
     """
-    If the provided string or values in the list/dict are None, the function will
+    If the provided string/bool/int/float or values in the list/dict are None, the function will
     update them with an empty string (returns new object, does not modify inpyt).
 
-    :param s: the string/list/dict to check
+    :param s: the string/bool/int/float/list/dict to check
     :type s: str
-    :return: the processed string/list/dict
+    :return: the processed string/bool/int/float/list/dict
     :rtype: str or list or dict
     """
     if s is None:
@@ -341,7 +341,7 @@ def empty_str_if_none(s: Union[Optional[str], List[str], Dict[str, str]]) -> Uni
 
     result = s
 
-    if isinstance(s, str):
+    if isinstance(s, str) or isinstance(s, bool) or isinstance(s, int) or isinstance(s, float):
         return s
 
     elif isinstance(s, list):

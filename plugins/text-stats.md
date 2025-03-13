@@ -9,12 +9,12 @@ Computes basic statics from the textual data passing through.
 ```
 usage: text-stats [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                   [-N LOGGER_NAME] [-o OUTPUT] [-d]
-                  [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
-                  [-g [LANGUAGE [LANGUAGE ...]]]
+                  [-L [{any,instruction,input,output,content,text} ...]]
+                  [-g [LANGUAGE ...]]
 
 Computes basic statics from the textual data passing through.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -23,15 +23,16 @@ optional arguments:
                         name by default (default: None)
   -o OUTPUT, --output OUTPUT
                         The JSON file to store the statistics in; outputs a
-                        textual representation on stdout when missing
-                        (default: None)
+                        textual representation on stdout when missing;
+                        Supported placeholders: {HOME}, {CWD}, {TMP} (default:
+                        None)
   -d, --detailed        Whether to output more detailed statistics, e.g., the
                         counts per string length (default: False)
-  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+  -L [{any,instruction,input,output,content,text} ...], --location [{any,instruction,input,output,content,text} ...]
                         Which text to use; classification: any|text, pairs:
                         any|instruction|input|output, pretrain: any|content,
                         translation: any|content (default: any)
-  -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
+  -g [LANGUAGE ...], --language [LANGUAGE ...]
                         The languages to inspect; inspects all if not
                         specified (default: None)
 ```

@@ -12,7 +12,7 @@ usage: to-csv-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Writes translation data in CSV format.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -21,7 +21,8 @@ optional arguments:
                         name by default (default: None)
   -o OUTPUT, --output OUTPUT
                         Path of the CSV file to write (directory when
-                        processing multiple files) (default: None)
+                        processing multiple files); Supported placeholders:
+                        {HOME}, {CWD}, {TMP} (default: None)
   -g LANG [LANG ...], --languages LANG [LANG ...]
                         The language IDs (ISO 639-1) to output in separate
                         columns (default: None)

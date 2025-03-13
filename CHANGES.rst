@@ -8,6 +8,9 @@ Changelog
 - requiring seppl>=0.2.12 now
 - added support for aliases
 - added `discard-by-name` filter, which uses the `file` filed in the meta-data for its matching
+- added placeholder support
+- method `text_utils.empty_str_if_none` now handles bool/int/float as well
+
 
 
 0.2.5 (2024-12-20)

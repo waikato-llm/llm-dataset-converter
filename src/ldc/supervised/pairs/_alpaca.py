@@ -5,11 +5,12 @@ from typing import Iterable, List, Union
 from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 from ldc.api import open_file, generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
 
 
-class AlpacaReader(PairReader):
+class AlpacaReader(PairReader, PlaceholderSupporter):
     """
     Reader for the Alpaca JSON format.
     """
@@ -61,8 +62,8 @@ class AlpacaReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the Alpaca files to use", required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help="Path to the Alpaca file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the Alpaca files to use; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of auto-detecting it, e.g., 'utf-8'", required=False)
         return parser
 
@@ -125,7 +126,7 @@ class AlpacaReader(PairReader):
             self._current_input = None
 
 
-class AlpacaWriter(BatchPairWriter):
+class AlpacaWriter(BatchPairWriter, PlaceholderSupporter):
     """
     Writer for the Alpaca JSON format.
     """
@@ -178,7 +179,7 @@ class AlpacaWriter(BatchPairWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path of the Alpaca file to write (directory when processing multiple files)", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path of the Alpaca file to write (directory when processing multiple files); " + placeholder_list(obj=self), required=True)
         parser.add_argument("-p", "--pretty_print", action="store_true", help="Whether to output the JSON in more human-readable format.", required=False)
         parser.add_argument("-a", "--ensure_ascii", action="store_true", help="Whether to ensure that the output is ASCII compatible.", required=False)
         return parser
@@ -202,9 +203,10 @@ class AlpacaWriter(BatchPairWriter):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
-        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, ".json"):
+        target = expand_placeholders(self.target)
+        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, target, ".json"):
             self.finalize()
-            self._current_output = generate_output(self.session.current_input, self.target, ".json", self.session.options.compression)
+            self._current_output = generate_output(self.session.current_input, target, ".json", self.session.options.compression)
             self.logger().info("Writing to: " + self._current_output)
             self._output = open_file(self._current_output, mode="wt")
 

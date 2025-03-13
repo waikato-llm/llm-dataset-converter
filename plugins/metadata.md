@@ -15,7 +15,7 @@ Keeps or discards data records based on meta-data comparisons. Performs the
 following comparison: METADATA_VALUE COMPARISON VALUE. Records that do not
 have the required field get discarded automatically.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

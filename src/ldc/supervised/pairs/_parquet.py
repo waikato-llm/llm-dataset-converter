@@ -8,13 +8,14 @@ import pyarrow.parquet as pq
 from wai.logging import LOGGING_WARNING
 from seppl import add_metadata
 from seppl.io import locate_files
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 from ldc.core import domain_suffix
 from ldc.api import generate_output
 from ldc.api.supervised.pairs import PairData, PairReader, BatchPairWriter
 from ldc.text_utils import empty_str_if_none
 
 
-class ParquetPairsReader(PairReader):
+class ParquetPairsReader(PairReader, PlaceholderSupporter):
     """
     Reader for Parquet database files.
     """
@@ -81,8 +82,8 @@ class ParquetPairsReader(PairReader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the parquet files to use", required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help="Path to the parquet file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the parquet files to use; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column with the instructions", required=False)
         parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column with the inputs", required=False)
         parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column with the outputs", required=False)
@@ -184,7 +185,7 @@ class ParquetPairsReader(PairReader):
             self._current_input = None
 
 
-class ParquetPairsWriter(BatchPairWriter):
+class ParquetPairsWriter(BatchPairWriter, PlaceholderSupporter):
     """
     Writer for Parquet database files.
     """
@@ -246,7 +247,7 @@ class ParquetPairsWriter(BatchPairWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output", type=str, help="Path of the CSV file to write (directory when processing multiple files)", required=True)
+        parser.add_argument("-o", "--output", type=str, help="Path of the CSV file to write (directory when processing multiple files); " + placeholder_list(obj=self), required=True)
         parser.add_argument("--col_instruction", metavar="COL", type=str, default=None, help="The name of the column for the instructions", required=False)
         parser.add_argument("--col_input", metavar="COL", type=str, default=None, help="The name of the column for the inputs", required=False)
         parser.add_argument("--col_output", metavar="COL", type=str, default=None, help="The name of the column for the outputs", required=False)
@@ -282,9 +283,10 @@ class ParquetPairsWriter(BatchPairWriter):
         :param data: the data to write as iterable of PairData
         :type data: Iterable
         """
-        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, self.target, ".parquet"):
+        target = expand_placeholders(self.target)
+        if self._has_input_changed(update=True) and self._output_needs_changing(self._current_output, target, ".parquet"):
             self.finalize()
-            self._current_output = generate_output(self.session.current_input, self.target, ".parquet", self.session.options.compression)
+            self._current_output = generate_output(self.session.current_input, target, ".parquet", self.session.options.compression)
             self.logger().info("Writing to: " + self._current_output)
             # create dictionary
             d_instruction = []

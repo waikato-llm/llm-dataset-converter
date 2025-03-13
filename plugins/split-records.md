@@ -14,7 +14,7 @@ usage: split-records [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Splits the incoming records into the specified split ratios by setting the
 'split' meta-data value. Also stores the split names in the current session.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

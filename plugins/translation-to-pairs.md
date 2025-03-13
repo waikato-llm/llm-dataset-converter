@@ -16,7 +16,7 @@ usage: translation-to-pairs [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Converts records of translation data to pair ones, using specific languages
 for instruction, input (optional) and output.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

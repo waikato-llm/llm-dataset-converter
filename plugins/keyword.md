@@ -9,13 +9,13 @@ Keeps or discards data records based on keyword(s). Search is performed in lower
 ```
 usage: keyword [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
                -k KEYWORD [KEYWORD ...]
-               [-L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]]
-               [-g [LANGUAGE [LANGUAGE ...]]] [-a {keep,discard}]
+               [-L [{any,instruction,input,output,content,text} ...]]
+               [-g [LANGUAGE ...]] [-a {keep,discard}]
 
 Keeps or discards data records based on keyword(s). Search is performed in
 lower-case.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -24,12 +24,12 @@ optional arguments:
                         name by default (default: None)
   -k KEYWORD [KEYWORD ...], --keyword KEYWORD [KEYWORD ...]
                         The keywords to look for (lower case) (default: None)
-  -L [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]], --location [{any,instruction,input,output,content,text} [{any,instruction,input,output,content,text} ...]]
+  -L [{any,instruction,input,output,content,text} ...], --location [{any,instruction,input,output,content,text} ...]
                         Where to look for the keywords; classification:
                         any|text, pairs: any|instruction|input|output,
                         pretrain: any|content, translation: any|content
                         (default: any)
-  -g [LANGUAGE [LANGUAGE ...]], --language [LANGUAGE [LANGUAGE ...]]
+  -g [LANGUAGE ...], --language [LANGUAGE ...]
                         The languages to inspect; inspects all if not
                         specified (default: None)
   -a {keep,discard}, --action {keep,discard}

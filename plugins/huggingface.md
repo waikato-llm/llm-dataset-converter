@@ -5,12 +5,11 @@ For downloading files and datasets from Huggingface (https://huggingface.co/).
 ```
 usage: huggingface [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                    [-N LOGGER_NAME] -i REPO_ID [-t {None,model,dataset,space}]
-                   [-f [FILENAME [FILENAME ...]]] [-r REVISION]
-                   [-o OUTPUT_DIR]
+                   [-f [FILENAME ...]] [-r REVISION] [-o OUTPUT_DIR]
 
 For downloading files and datasets from Huggingface (https://huggingface.co/).
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
@@ -22,7 +21,7 @@ optional arguments:
                         download (default: None)
   -t {None,model,dataset,space}, --repo_type {None,model,dataset,space}
                         The type of the repository (default: None)
-  -f [FILENAME [FILENAME ...]], --filename [FILENAME [FILENAME ...]]
+  -f [FILENAME ...], --filename [FILENAME ...]
                         The name of the file to download rather than the full
                         dataset (default: None)
   -r REVISION, --revision REVISION

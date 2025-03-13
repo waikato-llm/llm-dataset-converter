@@ -4,9 +4,10 @@ import json
 
 from wai.logging import LOGGING_WARNING
 from ldc.api.supervised.classification import ClassificationData, ClassificationFilter
+from seppl.placeholders import PlaceholderSupporter, placeholder_list, expand_placeholders
 
 
-class ClassificationLabelMap(ClassificationFilter):
+class ClassificationLabelMap(ClassificationFilter, PlaceholderSupporter):
     """
     Generates a label string/int map and can also replace the label with the integer index.
     """
@@ -55,7 +56,7 @@ class ClassificationLabelMap(ClassificationFilter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-L", "--label_map", type=str, help="The JSON file to store the label map in.", default=None, required=False)
+        parser.add_argument("-L", "--label_map", type=str, help="The JSON file to store the label map in. " + placeholder_list(obj=self), default=None, required=False)
         parser.add_argument("-u", "--update_label", action="store_true", help="Whether to update the string labels with the integer index.", required=False)
         return parser
 
@@ -106,5 +107,5 @@ class ClassificationLabelMap(ClassificationFilter):
         if self.label_map is None:
             self.logger().info("label map:\n%s" % json.dumps(self._mapping))
         else:
-            with open(self.label_map, "w") as fp:
+            with open(expand_placeholders(self.label_map), "w") as fp:
                 json.dump(self._mapping, fp, indent=2)
