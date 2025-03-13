@@ -8,6 +8,7 @@ Writes pretrain data in CSV format.
 ```
 usage: to-csv-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                  [-N LOGGER_NAME] -o OUTPUT [-c COL] [--col_id COL] [-n] [-s]
+                 [--encoding ENC]
 
 Writes pretrain data in CSV format.
 
@@ -30,4 +31,6 @@ options:
   -n, --no_header       For suppressing the header row (default: False)
   -s, --split_lines     Splits the text content on new lines and stores them
                         as separate records. (default: False)
+  --encoding ENC        The encoding to force instead of using the default,
+                        e.g., 'utf-8' (default: None)
 ```

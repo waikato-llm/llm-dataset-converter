@@ -8,7 +8,7 @@ Writes classification data in TSV format.
 ```
 usage: to-tsv-cl [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                  [-N LOGGER_NAME] -o OUTPUT [--col_text COL] [--col_label COL]
-                 [--col_id COL] [-n]
+                 [--col_id COL] [-n] [--encoding ENC]
 
 Writes classification data in TSV format.
 
@@ -28,4 +28,6 @@ options:
   --col_id COL          The name of the column for the row IDs (uses 'id' from
                         meta-data) (default: None)
   -n, --no_header       For suppressing the header row (default: False)
+  --encoding ENC        The encoding to force instead of using the default,
+                        e.g., 'utf-8' (default: None)
 ```

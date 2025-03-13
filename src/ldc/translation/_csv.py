@@ -239,7 +239,8 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC, Placehol
     """
 
     def __init__(self, target: str = None, no_header: bool = False, no_col_id: bool = False,
-                 languages: List[str] = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 languages: List[str] = None, encoding: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 
@@ -251,6 +252,8 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC, Placehol
         :type no_col_id: bool
         :param languages: the list of languages to output
         :type languages: list
+        :param encoding: the encoding to use, None for default
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -261,6 +264,7 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC, Placehol
         self.languages = languages
         self.no_header = no_header
         self.no_col_id = no_col_id
+        self.encoding = encoding
         self._current_output = None
         self._output = None
         self._output_writer = None
@@ -286,6 +290,7 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC, Placehol
         parser.add_argument("-g", "--languages", metavar="LANG", type=str, default=None, help="The language IDs (ISO 639-1) to output in separate columns", required=True, nargs="+")
         parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
         parser.add_argument("--no_col_id", action="store_true", help="For suppressing the column with the row IDs", required=False)
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of using the default, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -300,6 +305,7 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC, Placehol
         self.languages = ns.languages
         self.no_header = ns.no_header
         self.no_col_id = ns.no_col_id
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -340,7 +346,7 @@ class AbstractCsvLikeTranslationWriter(BatchTranslationWriter, abc.ABC, Placehol
             self.finalize()
             self._current_output = generate_output(self.session.current_input, target, self._get_extension(), self.session.options.compression)
             self.logger().info("Writing to: " + self._current_output)
-            self._output = open_file(self._current_output, mode="wt")
+            self._output = open_file(self._current_output, mode="wt", encoding=self.encoding)
             self._output_writer = self._init_writer(self._output)
             if not self.no_header:
                 row = []

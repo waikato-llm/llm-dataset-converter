@@ -10,6 +10,7 @@ Changelog
 - added `discard-by-name` filter, which uses the `file` filed in the meta-data for its matching
 - added placeholder support
 - method `text_utils.empty_str_if_none` now handles bool/int/float as well
+- CSV/TSV writers now have an `--encoding` option to use a specific encoding other than the default, e.g., UTF-8
 
 
 

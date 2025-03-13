@@ -8,7 +8,7 @@ Writes translation data in TSV format.
 ```
 usage: to-tsv-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                   [-N LOGGER_NAME] -o OUTPUT -g LANG [LANG ...] [-n]
-                  [--no_col_id]
+                  [--no_col_id] [--encoding ENC]
 
 Writes translation data in TSV format.
 
@@ -29,4 +29,6 @@ options:
   -n, --no_header       For suppressing the header row (default: False)
   --no_col_id           For suppressing the column with the row IDs (default:
                         False)
+  --encoding ENC        The encoding to force instead of using the default,
+                        e.g., 'utf-8' (default: None)
 ```

@@ -9,6 +9,7 @@ Writes prompt/output pairs in CSV format.
 usage: to-csv-pr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                  [-N LOGGER_NAME] -o OUTPUT [--col_instruction COL]
                  [--col_input COL] [--col_output COL] [--col_id COL] [-n]
+                 [--encoding ENC]
 
 Writes prompt/output pairs in CSV format.
 
@@ -31,4 +32,6 @@ options:
   --col_id COL          The name of the column for the row IDs (uses 'id' from
                         meta-data) (default: None)
   -n, --no_header       For suppressing the header row (default: False)
+  --encoding ENC        The encoding to force instead of using the default,
+                        e.g., 'utf-8' (default: None)
 ```

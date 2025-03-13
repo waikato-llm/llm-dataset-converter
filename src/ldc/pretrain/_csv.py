@@ -236,7 +236,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC, PlaceholderSup
     """
 
     def __init__(self, target: str = None, col_content: str = None, no_header: bool = False, col_id: str = None,
-                 split_lines: bool = False, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 split_lines: bool = False, encoding: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the writer.
 
@@ -250,6 +250,8 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC, PlaceholderSup
         :type col_id: str
         :param split_lines: whether to split the lines of the text into separate records
         :type split_lines: bool
+        :param encoding: the encoding to use, None for default
+        :type encoding: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -261,6 +263,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC, PlaceholderSup
         self.no_header = no_header
         self.col_id = col_id
         self.split_lines = split_lines
+        self.encoding = encoding
         self._current_output = None
         self._output = None
         self._output_writer = None
@@ -287,6 +290,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC, PlaceholderSup
         parser.add_argument("--col_id", metavar="COL", type=str, default=None, help="The name of the column for the row IDs (uses 'id' from meta-data)", required=False)
         parser.add_argument("-n", "--no_header", action="store_true", help="For suppressing the header row", required=False)
         parser.add_argument("-s", "--split_lines", action="store_true", help="Splits the text content on new lines and stores them as separate records.")
+        parser.add_argument("--encoding", metavar="ENC", type=str, default=None, help="The encoding to force instead of using the default, e.g., 'utf-8'", required=False)
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -302,6 +306,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC, PlaceholderSup
         self.no_header = ns.no_header
         self.col_id = ns.col_id
         self.split_lines = ns.split_lines
+        self.encoding = ns.encoding
 
     def initialize(self):
         """
@@ -342,7 +347,7 @@ class AbstractCsvLikePretrainWriter(BatchPretrainWriter, abc.ABC, PlaceholderSup
             self.finalize()
             self._current_output = generate_output(self.session.current_input, target, self._get_extension(), self.session.options.compression)
             self.logger().info("Writing to: " + self._current_output)
-            self._output = open_file(self._current_output, mode="wt")
+            self._output = open_file(self._current_output, mode="wt", encoding=self.encoding)
             self._output_writer = self._init_writer(self._output)
             if not self.no_header:
                 row = []
