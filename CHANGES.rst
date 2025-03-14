@@ -13,7 +13,6 @@ Changelog
 - CSV/TSV writers now have an `--encoding` option to use a specific encoding other than the default, e.g., UTF-8
 
 
-
 0.2.5 (2024-12-20)
 ------------------
 
