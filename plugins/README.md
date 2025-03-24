@@ -53,6 +53,7 @@
 * [require-languages](require-languages.md)
 * [reset-ids](reset-ids.md)
 * [sentences-pt](sentences-pt.md)
+* [set-placeholder](set-placeholder.md)
 * [skip-duplicate-ids](skip-duplicate-ids.md)
 * [skip-duplicate-text](skip-duplicate-text.md)
 * [split-pt](split-pt.md)

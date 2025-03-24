@@ -21,6 +21,7 @@ from ._remove_empty import RemoveEmpty
 from ._remove_patterns import RemovePatterns
 from ._replace_patterns import ReplacePatterns
 from ._reset_ids import ResetIDs
+from ._set_placeholder import SetPlaceholder
 from ._skip_duplicate_ids import SkipDuplicateIDs
 from ._skip_duplicate_text import SkipDuplicateText
 from ._split_records import SplitRecords
