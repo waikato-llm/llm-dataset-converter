@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - added `set-placeholder` filter for dynamically setting (temporary) placeholders at runtime
+- using `wai_logging` instead of `wai.logging` now
 
 
 0.2.6 (2025-03-14)
