@@ -19,6 +19,7 @@ from ._record_window import RecordWindow
 from ._remove_blocks import RemoveBlocks
 from ._remove_empty import RemoveEmpty
 from ._remove_patterns import RemovePatterns
+from ._remove_strings import RemoveStrings
 from ._replace_patterns import ReplacePatterns
 from ._reset_ids import ResetIDs
 from ._set_placeholder import SetPlaceholder

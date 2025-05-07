@@ -49,6 +49,7 @@
 * [remove-blocks](remove-blocks.md)
 * [remove-empty](remove-empty.md)
 * [remove-patterns](remove-patterns.md)
+* [remove-strings](remove-strings.md)
 * [replace-patterns](replace-patterns.md)
 * [require-languages](require-languages.md)
 * [reset-ids](reset-ids.md)

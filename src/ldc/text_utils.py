@@ -247,6 +247,31 @@ def remove_patterns(lines: List[str], expr_remove: List[str]) -> Tuple[List[str]
     return result, affected
 
 
+def remove_strings(lines: List[str], remove: List[str]) -> Tuple[List[str], int]:
+    """
+    Removes the specified sub-strings from the lines (inline).
+
+    :param lines: the lines to process
+    :type lines: list
+    :param remove: the list of sub-strings to remove
+    :type remove: list
+    :return: the tuple of processed lines and counter of how many lines were affected
+    :rtype: tuple
+    """
+    result = []
+    affected = 0
+    for i in range(len(lines)):
+        new_line = lines[i]
+        for r in remove:
+            new_line = new_line.replace(r, "")
+        if len(lines[i]) != len(new_line):
+            result.append(new_line)
+            affected += 1
+        else:
+            result.append(lines[i])
+    return result, affected
+
+
 def remove_empty(lines: List[str]) -> List[str]:
     """
     Removes empty lines from the list and returns an updated list.
