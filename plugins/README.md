@@ -59,6 +59,7 @@
 * [skip-duplicate-text](skip-duplicate-text.md)
 * [split-pt](split-pt.md)
 * [split-records](split-records.md)
+* [strip-strings](strip-strings.md)
 * [tee](tee.md)
 * [text-length](text-length.md)
 * [text-stats](text-stats.md)

@@ -7,6 +7,7 @@ Changelog
 - added `set-placeholder` filter for dynamically setting (temporary) placeholders at runtime
 - using `wai_logging` instead of `wai.logging` now
 - added `remove-strings` filter that just removes sub-strings
+- added `strip-strings` filter for stripping whitespaces from start/end of strings
 
 
 0.2.6 (2025-03-14)

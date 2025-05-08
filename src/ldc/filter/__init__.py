@@ -26,6 +26,7 @@ from ._set_placeholder import SetPlaceholder
 from ._skip_duplicate_ids import SkipDuplicateIDs
 from ._skip_duplicate_text import SkipDuplicateText
 from ._split_records import SplitRecords
+from ._strip_strings import StripStrings
 from ._tee import Tee
 from ._text_length import TextLength
 from ._text_stats import TextStatistics

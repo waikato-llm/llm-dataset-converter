@@ -400,3 +400,24 @@ def empty_str_if_none(s: Union[Optional[str], bool, int, float, List[str], Dict[
     else:
         raise Exception("Must be either string, list or dict: %s" % str(type(s)))
     return result
+
+
+def strip_strings(lines: List[str]) -> Tuple[List[str], int]:
+    """
+    Strips whitespaces from lines (inline).
+
+    :param lines: the lines to process
+    :type lines: list
+    :return: the tuple of processed lines and counter of how many lines were affected
+    :rtype: tuple
+    """
+    result = []
+    affected = 0
+    for i in range(len(lines)):
+        new_line = lines[i].strip()
+        if len(lines[i]) != len(new_line):
+            result.append(new_line)
+            affected += 1
+        else:
+            result.append(lines[i])
+    return result, affected
