@@ -8,6 +8,7 @@ Changelog
 - using `wai_logging` instead of `wai.logging` now
 - added `remove-strings` filter that just removes sub-strings
 - added `strip-strings` filter for stripping whitespaces from start/end of strings
+- requiring `seppl>=0.2.17` now to avoid deprecated use of pkg_resources
 
 
 0.2.6 (2025-03-14)
