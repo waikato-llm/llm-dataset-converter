@@ -8,8 +8,8 @@ Keeps or discards data records based on sub-string(s) text matching. Search is p
 
 ```
 usage: find-substr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                   [-N LOGGER_NAME] -s SUB_STRING [SUB_STRING ...] [-r]
-                   [-L [{any,instruction,input,output,content,text} ...]]
+                   [-N LOGGER_NAME] [--skip] -s SUB_STRING [SUB_STRING ...]
+                   [-r] [-L [{any,instruction,input,output,content,text} ...]]
                    [-g [LANGUAGE ...]] [-a {keep,discard}]
 
 Keeps or discards data records based on sub-string(s) text matching. Search is
@@ -23,6 +23,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -s SUB_STRING [SUB_STRING ...], --sub_string SUB_STRING [SUB_STRING ...]
                         The substrings to look for (lower case) (default:
                         None)

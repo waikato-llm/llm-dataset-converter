@@ -8,7 +8,7 @@ Removes text blocks, using strings identifying start/end of blocks.
 
 ```
 usage: remove-blocks [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                     [-N LOGGER_NAME]
+                     [-N LOGGER_NAME] [--skip]
                      [--block_removal_start [BLOCK_REMOVAL_START ...]]
                      [--block_removal_end [BLOCK_REMOVAL_END ...]]
                      [-L [{any,instruction,input,output,content,text} ...]]
@@ -23,6 +23,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   --block_removal_start [BLOCK_REMOVAL_START ...]
                         The starting strings for blocks to remove (default:
                         None)

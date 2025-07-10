@@ -8,6 +8,7 @@ Splits pretrain text data into separate records on new lines. Automatically skip
 
 ```
 usage: split-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
+                [--skip]
 
 Splits pretrain text data into separate records on new lines. Automatically
 skips empty lines.
@@ -19,4 +20,6 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
 ```

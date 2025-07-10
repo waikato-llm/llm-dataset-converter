@@ -8,8 +8,9 @@ Discards files based on list of image names and/or regular expressions that imag
 
 ```
 usage: discard-by-name [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                       [-N LOGGER_NAME] [-i [NAMES ...]] [-I NAMES_FILE]
-                       [-r [REGEXPS ...]] [-R REGEXPS_FILE] [-e] [-V]
+                       [-N LOGGER_NAME] [--skip] [-i [NAMES ...]]
+                       [-I NAMES_FILE] [-r [REGEXPS ...]] [-R REGEXPS_FILE]
+                       [-e] [-V]
 
 Discards files based on list of image names and/or regular expressions that
 image names must match.
@@ -21,6 +22,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -i [NAMES ...], --names [NAMES ...]
                         The image name(s) to drop. (default: None)
   -I NAMES_FILE, --names_file NAMES_FILE

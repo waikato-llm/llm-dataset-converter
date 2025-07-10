@@ -9,7 +9,8 @@ Converts sentences from pretrain records to text classification ones by using X 
 ```
 usage: pretrain-sentences-to-classification [-h]
                                             [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                                            [-N LOGGER_NAME] [-c END_CHARS]
+                                            [-N LOGGER_NAME] [--skip]
+                                            [-c END_CHARS]
                                             [-r NUM_SENTENCES_TEXT] [-L LABEL]
 
 Converts sentences from pretrain records to text classification ones by using
@@ -23,6 +24,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -c END_CHARS, --end_chars END_CHARS
                         The characters signifying the end of a sentence.
                         (default: .!?;:))

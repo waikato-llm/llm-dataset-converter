@@ -8,7 +8,8 @@ Splits the incoming records into the specified split ratios by setting the 'spli
 
 ```
 usage: split-records [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                     [-N LOGGER_NAME] [-r SPLIT_RATIOS [SPLIT_RATIOS ...]]
+                     [-N LOGGER_NAME] [--skip]
+                     [-r SPLIT_RATIOS [SPLIT_RATIOS ...]]
                      [-n SPLIT_NAMES [SPLIT_NAMES ...]]
 
 Splits the incoming records into the specified split ratios by setting the
@@ -21,6 +22,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -r SPLIT_RATIOS [SPLIT_RATIOS ...], --split_ratios SPLIT_RATIOS [SPLIT_RATIOS ...]
                         The split ratios to use for generating the splits
                         (must sum up to 100) (default: None)

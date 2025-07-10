@@ -7,8 +7,8 @@ Writes classification data in TSV format.
 
 ```
 usage: to-tsv-cl [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                 [-N LOGGER_NAME] -o OUTPUT [--col_text COL] [--col_label COL]
-                 [--col_id COL] [-n] [--encoding ENC]
+                 [-N LOGGER_NAME] [--skip] -o OUTPUT [--col_text COL]
+                 [--col_label COL] [--col_id COL] [-n] [--encoding ENC]
 
 Writes classification data in TSV format.
 
@@ -19,6 +19,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -o OUTPUT, --output OUTPUT
                         Path of the TSV file to write (directory when
                         processing multiple files); Supported placeholders:

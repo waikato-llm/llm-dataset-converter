@@ -9,7 +9,8 @@ When providing an output file, all incoming content will be concatenated in this
 
 ```
 usage: to-txt-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                  [-N LOGGER_NAME] -o OUTPUT [-d NUM] [-f FORMAT] [-b SIZE]
+                  [-N LOGGER_NAME] [--skip] -o OUTPUT [-d NUM] [-f FORMAT]
+                  [-b SIZE]
 
 Writes translation data to plain text files. When providing an output
 directory, either uses the current session counter as the filename or, if
@@ -24,6 +25,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -o OUTPUT, --output OUTPUT
                         Path to the directory or file to write to; Supported
                         placeholders: {HOME}, {CWD}, {TMP} (default: None)

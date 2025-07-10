@@ -8,7 +8,7 @@ Keeps or discards data records based on text length constraints. None values get
 
 ```
 usage: text-length [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                   [-N LOGGER_NAME] [-m MIN_LENGTH] [-M MAX_LENGTH]
+                   [-N LOGGER_NAME] [--skip] [-m MIN_LENGTH] [-M MAX_LENGTH]
                    [-L [{any,instruction,input,output,content,text} ...]]
                    [-g [LANGUAGE ...]]
 
@@ -22,6 +22,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -m MIN_LENGTH, --min_length MIN_LENGTH
                         The minimum text length, ignored if <0 (default: -1)
   -M MAX_LENGTH, --max_length MAX_LENGTH

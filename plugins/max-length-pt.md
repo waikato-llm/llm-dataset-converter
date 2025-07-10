@@ -8,7 +8,7 @@ Splits pretrain text into segments of at most the specified length (uses word bo
 
 ```
 usage: max-length-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                     [-N LOGGER_NAME] [-m MAX_LENGTH] [-s]
+                     [-N LOGGER_NAME] [--skip] [-m MAX_LENGTH] [-s]
 
 Splits pretrain text into segments of at most the specified length (uses word
 boundary).
@@ -20,6 +20,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -m MAX_LENGTH, --max_length MAX_LENGTH
                         The maximum text length, use <=0 for unbounded.
                         (default: -1)

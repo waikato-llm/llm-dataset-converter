@@ -8,7 +8,7 @@ Keeps or discards records based on allow/discard lists for files matched against
 
 ```
 usage: file-filter [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                   [-N LOGGER_NAME] -f FILE_LIST [-a {keep,discard}]
+                   [-N LOGGER_NAME] [--skip] -f FILE_LIST [-a {keep,discard}]
                    [-m {keep,discard}] [-p] [-e]
 
 Keeps or discards records based on allow/discard lists for files matched
@@ -21,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -f FILE_LIST, --file_list FILE_LIST
                         The file containing the files to be kept or discarded;
                         Supported placeholders: {HOME}, {CWD}, {TMP} (default:

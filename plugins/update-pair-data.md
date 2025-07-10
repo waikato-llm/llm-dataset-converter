@@ -8,7 +8,7 @@ Updates the pair data according to the format strings, allowing for tweaking or 
 
 ```
 usage: update-pair-data [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                        [-N LOGGER_NAME]
+                        [-N LOGGER_NAME] [--skip]
                         [--format_instruction FORMAT_INSTRUCTION]
                         [--format_input FORMAT_INPUT]
                         [--format_output FORMAT_OUTPUT]
@@ -23,6 +23,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   --format_instruction FORMAT_INSTRUCTION
                         The format for the instruction content, use
                         placeholder {instruction} for current value; available

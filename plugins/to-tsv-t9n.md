@@ -7,7 +7,7 @@ Writes translation data in TSV format.
 
 ```
 usage: to-tsv-t9n [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                  [-N LOGGER_NAME] -o OUTPUT -g LANG [LANG ...] [-n]
+                  [-N LOGGER_NAME] [--skip] -o OUTPUT -g LANG [LANG ...] [-n]
                   [--no_col_id] [--encoding ENC]
 
 Writes translation data in TSV format.
@@ -19,6 +19,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -o OUTPUT, --output OUTPUT
                         Path of the TSV file to write (directory when
                         processing multiple files); Supported placeholders:

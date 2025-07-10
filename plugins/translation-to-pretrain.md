@@ -8,7 +8,7 @@ Converts records of translation data to pretrain ones, extracting a specific lan
 
 ```
 usage: translation-to-pretrain [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                               [-N LOGGER_NAME] [--lang LANG]
+                               [-N LOGGER_NAME] [--skip] [--lang LANG]
 
 Converts records of translation data to pretrain ones, extracting a specific
 language.
@@ -20,5 +20,7 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   --lang LANG           The ID of the language to convert (default: None)
 ```

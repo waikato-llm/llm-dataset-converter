@@ -8,7 +8,8 @@ Only lets records pass that match the defined window and step size.
 
 ```
 usage: record-window [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                     [-N LOGGER_NAME] [-f FROM_INDEX] [-t TO_INDEX] [-s STEP]
+                     [-N LOGGER_NAME] [--skip] [-f FROM_INDEX] [-t TO_INDEX]
+                     [-s STEP]
 
 Only lets records pass that match the defined window and step size.
 
@@ -19,6 +20,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -f FROM_INDEX, --from_index FROM_INDEX
                         The 1-based lower bound of the window, ignored if not
                         supplied. (default: None)

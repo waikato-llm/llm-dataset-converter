@@ -8,8 +8,8 @@ Keeps or discards data records based on meta-data comparisons. Performs the foll
 
 ```
 usage: metadata [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
-                -f FIELD -v VALUE [-c {lt,le,eq,ne,ge,gt,contains,matches}]
-                [-a {keep,discard}]
+                [--skip] -f FIELD -v VALUE
+                [-c {lt,le,eq,ne,ge,gt,contains,matches}] [-a {keep,discard}]
 
 Keeps or discards data records based on meta-data comparisons. Performs the
 following comparison: METADATA_VALUE COMPARISON VALUE. Records that do not
@@ -22,6 +22,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -f FIELD, --field FIELD
                         The meta-data field to use in the comparison (default:
                         None)

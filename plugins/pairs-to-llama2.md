@@ -8,7 +8,7 @@ Converts records of prompt/response pairs to llama2-formatted pretrain ones. The
 
 ```
 usage: pairs-to-llama2 [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                       [-N LOGGER_NAME] [-p PREFIX]
+                       [-N LOGGER_NAME] [--skip] [-p PREFIX]
 
 Converts records of prompt/response pairs to llama2-formatted pretrain ones.
 The 'instruction' (ie prompt) gets wrapped in [INST]...[/INST] and the
@@ -21,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -p PREFIX, --prefix PREFIX
                         The prefix to use for the instruction. (default: None)
 ```

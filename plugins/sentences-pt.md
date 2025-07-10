@@ -8,7 +8,7 @@ Splits pretrain text data into sentences and puts them on separate lines (using 
 
 ```
 usage: sentences-pt [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                    [-N LOGGER_NAME] [-c END_CHARS] [-q QUOTE_CHARS]
+                    [-N LOGGER_NAME] [--skip] [-c END_CHARS] [-q QUOTE_CHARS]
                     [-m MAX_SENTENCES] [-s]
 
 Splits pretrain text data into sentences and puts them on separate lines
@@ -21,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -c END_CHARS, --end_chars END_CHARS
                         The characters signifying the end of a sentence.
                         (default: .!?;:))

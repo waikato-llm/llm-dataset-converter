@@ -7,7 +7,7 @@ Writes prompt/output pairs in Alpaca-like JSON format.
 
 ```
 usage: to-alpaca [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                 [-N LOGGER_NAME] -o OUTPUT [-p] [-a]
+                 [-N LOGGER_NAME] [--skip] -o OUTPUT [-p] [-a]
 
 Writes prompt/output pairs in Alpaca-like JSON format.
 
@@ -18,6 +18,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -o OUTPUT, --output OUTPUT
                         Path of the Alpaca file to write (directory when
                         processing multiple files); Supported placeholders:

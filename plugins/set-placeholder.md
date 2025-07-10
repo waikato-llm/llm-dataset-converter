@@ -8,7 +8,7 @@ Sets the placeholder to the specified value when data passes through. The value 
 
 ```
 usage: set-placeholder [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                       [-N LOGGER_NAME] -p PLACEHOLDER -v VALUE
+                       [-N LOGGER_NAME] [--skip] -p PLACEHOLDER -v VALUE
 
 Sets the placeholder to the specified value when data passes through. The
 value can contain other placeholders, which get expanded each time data passes
@@ -21,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -p PLACEHOLDER, --placeholder PLACEHOLDER
                         The name of the placeholder, without curly brackets.
                         (default: None)

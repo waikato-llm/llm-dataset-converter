@@ -8,7 +8,7 @@ Computes basic statics from the textual data passing through.
 
 ```
 usage: text-stats [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                  [-N LOGGER_NAME] [-o OUTPUT] [-d]
+                  [-N LOGGER_NAME] [--skip] [-o OUTPUT] [-d]
                   [-L [{any,instruction,input,output,content,text} ...]]
                   [-g [LANGUAGE ...]]
 
@@ -21,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -o OUTPUT, --output OUTPUT
                         The JSON file to store the statistics in; outputs a
                         textual representation on stdout when missing;

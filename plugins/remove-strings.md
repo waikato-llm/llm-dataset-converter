@@ -8,7 +8,7 @@ Removes strings from text.
 
 ```
 usage: remove-strings [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                      [-N LOGGER_NAME] [-r [REMOVE ...]]
+                      [-N LOGGER_NAME] [--skip] [-r [REMOVE ...]]
                       [-L [{any,instruction,input,output,content,text} ...]]
                       [-g [LANGUAGE ...]]
 
@@ -21,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -r [REMOVE ...], --remove [REMOVE ...]
                         Strings to remove from the text (gets applied before
                         skipping empty lines). (default: None)

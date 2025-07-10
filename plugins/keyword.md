@@ -8,7 +8,7 @@ Keeps or discards data records based on keyword(s). Search is performed in lower
 
 ```
 usage: keyword [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-N LOGGER_NAME]
-               -k KEYWORD [KEYWORD ...]
+               [--skip] -k KEYWORD [KEYWORD ...]
                [-L [{any,instruction,input,output,content,text} ...]]
                [-g [LANGUAGE ...]] [-a {keep,discard}]
 
@@ -22,6 +22,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -k KEYWORD [KEYWORD ...], --keyword KEYWORD [KEYWORD ...]
                         The keywords to look for (lower case) (default: None)
   -L [{any,instruction,input,output,content,text} ...], --location [{any,instruction,input,output,content,text} ...]

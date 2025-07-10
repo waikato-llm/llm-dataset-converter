@@ -8,7 +8,8 @@ Extracts a sub-string from the current input file name and stores it in the meta
 
 ```
 usage: metadata-from-name [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                          [-N LOGGER_NAME] [-r REGEXP] [-k METADATA_KEY]
+                          [-N LOGGER_NAME] [--skip] [-r REGEXP]
+                          [-k METADATA_KEY]
 
 Extracts a sub-string from the current input file name and stores it in the
 meta-data.
@@ -20,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -r REGEXP, --regexp REGEXP
                         The regular expression apply to the current input
                         name, with the 1st group being used as the meta-data

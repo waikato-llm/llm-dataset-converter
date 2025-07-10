@@ -8,7 +8,7 @@ Suppresses records with IDs that have already passed through. Uses the 'id' valu
 
 ```
 usage: skip-duplicate-ids [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                          [-N LOGGER_NAME]
+                          [-N LOGGER_NAME] [--skip]
 
 Suppresses records with IDs that have already passed through. Uses the 'id'
 value from the meta-data.
@@ -20,4 +20,6 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
 ```

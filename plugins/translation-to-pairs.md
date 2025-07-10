@@ -8,7 +8,7 @@ Converts records of translation data to pair ones, using specific languages for 
 
 ```
 usage: translation-to-pairs [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                            [-N LOGGER_NAME]
+                            [-N LOGGER_NAME] [--skip]
                             [--lang_instruction LANG_INSTRUCTION]
                             [--lang_input LANG_INPUT]
                             [--lang_output LANG_OUTPUT]
@@ -23,6 +23,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   --lang_instruction LANG_INSTRUCTION
                         The ID of the language to use for the instruction
                         (default: None)

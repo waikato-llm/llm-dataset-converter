@@ -7,8 +7,9 @@ Writes prompt/output pairs in Parquet database format.
 
 ```
 usage: to-parquet-pr [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                     [-N LOGGER_NAME] -o OUTPUT [--col_instruction COL]
-                     [--col_input COL] [--col_output COL] [--col_id COL]
+                     [-N LOGGER_NAME] [--skip] -o OUTPUT
+                     [--col_instruction COL] [--col_input COL]
+                     [--col_output COL] [--col_id COL]
 
 Writes prompt/output pairs in Parquet database format.
 
@@ -19,6 +20,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -o OUTPUT, --output OUTPUT
                         Path of the CSV file to write (directory when
                         processing multiple files); Supported placeholders:

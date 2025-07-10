@@ -8,7 +8,7 @@ Removes substrings that match the supplied regular expression patterns.
 
 ```
 usage: remove-patterns [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                       [-N LOGGER_NAME] [-r [EXPR_REMOVE ...]]
+                       [-N LOGGER_NAME] [--skip] [-r [EXPR_REMOVE ...]]
                        [-L [{any,instruction,input,output,content,text} ...]]
                        [-g [LANGUAGE ...]]
 
@@ -21,6 +21,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -r [EXPR_REMOVE ...], --expr_remove [EXPR_REMOVE ...]
                         Regular expressions for removing sub-strings from the
                         text (gets applied before skipping empty lines); uses
