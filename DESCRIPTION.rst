@@ -55,3 +55,8 @@ Filtering::
         --output alpaca_data_cleaned-filtered.json
 
 
+
+Examples can be found here:
+
+https://github.com/waikato-llm/llm-dataset-converter-examples
+
