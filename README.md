@@ -117,18 +117,18 @@ readers (20):
    from-jsonlines-t9n, from-parquet-cl, from-parquet-pr, 
    from-parquet-pt, from-parquet-t9n, from-tsv-cl, from-tsv-pr, 
    from-tsv-pt, from-tsv-t9n, from-txt-pt, from-txt-t9n, from-xtuner
-filters (39):
+filters (42):
    assemble-sentences, change-case, classification-label-map, 
    discard-by-name, file-filter, find-substr, inspect, keyword, 
    language, llama2-to-pairs, max-length-pt, max-records, metadata, 
    metadata-from-name, pairs-to-llama2, pairs-to-pretrain, 
    pretrain-sentences-to-classification, pretrain-sentences-to-pairs, 
    randomize-records, record-files, record-window, remove-blocks, 
-   remove-empty, remove-patterns, replace-patterns, require-languages, 
-   reset-ids, sentences-pt, skip-duplicate-ids, skip-duplicate-text, 
-   split-pt, split-records, tee, text-length, text-stats, 
-   to-llama2-format, translation-to-pairs, translation-to-pretrain, 
-   update-pair-data
+   remove-empty, remove-patterns, remove-strings, replace-patterns, 
+   require-languages, reset-ids, sentences-pt, set-placeholder, 
+   skip-duplicate-ids, skip-duplicate-text, split-pt, split-records, 
+   strip-strings, tee, text-length, text-stats, to-llama2-format, 
+   translation-to-pairs, translation-to-pretrain, update-pair-data
 writers (20):
    to-alpaca, to-csv-cl, to-csv-pr, to-csv-pt, to-csv-t9n, 
    to-jsonlines-cl, to-jsonlines-pr, to-jsonlines-pt, to-jsonlines-t9n, 
