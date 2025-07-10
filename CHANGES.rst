@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.7 (????-??-??)
+0.2.7 (2025-07-11)
 ------------------
 
 - added `set-placeholder` filter for dynamically setting (temporary) placeholders at runtime
