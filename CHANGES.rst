@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.8 (????-??-??)
+------------------
+
+- requiring seppl>=0.2.20 now for improved help requests in `llm-convert` tool
+
+
 0.2.7 (2025-07-11)
 ------------------
 

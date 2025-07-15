@@ -97,8 +97,12 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
     :return: tuple of (reader, filter, writer, session), the filter can be None
     :rtype: tuple
     """
+    partial = False
+    all_plugins = _available_plugins()
+    handlers = list(all_plugins.keys())
+
     # help requested?
-    help_requested, plugin_details, plugin_name = is_help_requested(args)
+    help_requested, plugin_details, plugin_name = is_help_requested(args, handlers=handlers, partial=partial)
     if help_requested:
         if plugin_name is not None:
             generate_plugin_usage(plugin_name)
@@ -106,7 +110,7 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
             _print_usage(plugin_details=plugin_details)
         sys.exit(0)
 
-    parsed = split_args(args, list(_available_plugins().keys()))
+    parsed = split_args(args, handlers, partial=partial)
 
     # global options?
     # see print_usage() method above
@@ -127,7 +131,7 @@ def _parse_args(args: List[str], require_reader: bool = True, require_writer: bo
             session.logger.info("Loading custom placeholders from: %s" % session.options.placeholders)
             load_user_defined_placeholders(session.options.placeholders)
 
-    plugins = args_to_objects(parsed, _available_plugins(), allow_global_options=True, unescape=session.options.unescape_unicode)
+    plugins = args_to_objects(parsed, all_plugins, allow_global_options=True, unescape=session.options.unescape_unicode)
     reader = None
     writer = None
     filters = []
