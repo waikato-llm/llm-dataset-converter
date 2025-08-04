@@ -4,16 +4,16 @@
 * accepts: seppl.AnyData
 * generates: seppl.AnyData
 
-Splits the incoming records into the specified split ratios by setting the 'split' meta-data value. Also stores the split names in the current session.
+Splits the incoming records into the specified split ratios by setting a meta-data value (default: split).
 
 ```
 usage: split-records [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                      [-N LOGGER_NAME] [--skip]
                      [-r SPLIT_RATIOS [SPLIT_RATIOS ...]]
-                     [-n SPLIT_NAMES [SPLIT_NAMES ...]]
+                     [-n SPLIT_NAMES [SPLIT_NAMES ...]] [-f FIELD]
 
-Splits the incoming records into the specified split ratios by setting the
-'split' meta-data value. Also stores the split names in the current session.
+Splits the incoming records into the specified split ratios by setting a meta-
+data value (default: split).
 
 options:
   -h, --help            show this help message and exit
@@ -31,4 +31,7 @@ options:
                         The split names to use for the generated splits, get
                         stored in the meta-data under the key 'split'.
                         (default: None)
+  -f FIELD, --field FIELD
+                        The meta-data field to use for storing the split
+                        (default: split)
 ```
