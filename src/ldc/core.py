@@ -5,7 +5,7 @@ from typing import List, Union, Optional
 
 import seppl
 
-from seppl import Plugin, get_class_name, AliasSupporter
+from seppl import Plugin, get_class_name
 from seppl import check_compatibility as seppl_check_compatibility
 
 
@@ -24,38 +24,6 @@ DOMAIN_SUFFIX_LOOKUP = {
     DOMAIN_PRETRAIN: "pt",
     DOMAIN_TRANSLATION: "t9n",
 }
-
-
-COMPARISON_LESSTHAN = "lt"
-COMPARISON_LESSOREQUAL = "le"
-COMPARISON_EQUAL = "eq"
-COMPARISON_NOTEQUAL = "ne"
-COMPARISON_GREATEROREQUAL = "ge"
-COMPARISON_GREATERTHAN = "gt"
-COMPARISON_CONTAINS = "contains"
-COMPARISON_MATCHES = "matches"
-
-COMPARISONS = [
-    COMPARISON_LESSTHAN,
-    COMPARISON_LESSOREQUAL,
-    COMPARISON_EQUAL,
-    COMPARISON_NOTEQUAL,
-    COMPARISON_GREATEROREQUAL,
-    COMPARISON_GREATERTHAN,
-]
-COMPARISON_HELP = COMPARISON_LESSTHAN + ": less than, " \
-    + COMPARISON_LESSOREQUAL + ": less or equal, " \
-    + COMPARISON_EQUAL + ": equal, " \
-    + COMPARISON_NOTEQUAL + ": not equal, " \
-    + COMPARISON_GREATERTHAN + ": greater than, " \
-    + COMPARISON_GREATEROREQUAL + ": greater of equal"
-
-COMPARISONS_EXT = COMPARISONS[:]
-COMPARISONS_EXT.append(COMPARISON_CONTAINS)
-COMPARISONS_EXT.append(COMPARISON_MATCHES)
-COMPARISON_EXT_HELP = COMPARISON_HELP + ", " \
-                      + COMPARISON_CONTAINS + ": substring match, " \
-                      + COMPARISON_MATCHES + ": regexp match"
 
 LOCATION_ANY = "any"
 LOCATION_INSTRUCTION = "instruction"

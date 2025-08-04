@@ -1,15 +1,16 @@
 import argparse
-import re
 from typing import List, Tuple
 
+from seppl import MetaDataHandler
 from wai.logging import LOGGING_WARNING
-from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
-from ldc.core import COMPARISONS_EXT, COMPARISON_LESSTHAN, COMPARISON_LESSOREQUAL, COMPARISON_EQUAL, COMPARISON_NOTEQUAL, \
-    COMPARISON_GREATEROREQUAL, COMPARISON_GREATERTHAN, COMPARISON_CONTAINS, COMPARISON_MATCHES, COMPARISON_EXT_HELP
+
+from ldc.api import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
+from ldc.api import compare_values, COMPARISONS_EXT, COMPARISON_EQUAL, COMPARISON_CONTAINS, COMPARISON_MATCHES, \
+    COMPARISON_EXT_HELP
 from ldc.api.pretrain import PretrainData
 from ldc.api.supervised.pairs import PairData
 from ldc.api.translation import TranslationData
-from ldc.api import Filter, FILTER_ACTIONS, FILTER_ACTION_DISCARD, FILTER_ACTION_KEEP
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 
 
 class MetaData(Filter):
@@ -162,12 +163,8 @@ class MetaData(Filter):
         """
         result = data
 
-        if isinstance(data, PairData):
-            meta = data.meta
-        elif isinstance(data, PretrainData):
-            meta = data.meta
-        elif isinstance(data, TranslationData):
-            meta = data.meta
+        if isinstance(data, MetaDataHandler):
+            meta = data.get_metadata()
         else:
             raise Exception("Unhandled type of data: %s" % str(type(data)))
 
@@ -185,30 +182,7 @@ class MetaData(Filter):
 
         v1 = meta[self.field]
         v2 = self.value
-        if self.comparison in [COMPARISON_CONTAINS, COMPARISON_MATCHES]:
-            v1 = str(v1)
-        else:
-            v1, v2 = self._ensure_same_type(v1, v2)
-
-        # compare
-        if self.comparison == COMPARISON_LESSTHAN:
-            comp_result = v1 < v2
-        elif self.comparison == COMPARISON_LESSOREQUAL:
-            comp_result = v1 <= v2
-        elif self.comparison == COMPARISON_EQUAL:
-            comp_result = v1 == v2
-        elif self.comparison == COMPARISON_NOTEQUAL:
-            comp_result = v1 != v2
-        elif self.comparison == COMPARISON_GREATERTHAN:
-            comp_result = v1 > v2
-        elif self.comparison == COMPARISON_GREATEROREQUAL:
-            comp_result = v1 >= v2
-        elif self.comparison == COMPARISON_CONTAINS:
-            comp_result = v2 in v1
-        elif self.comparison == COMPARISON_MATCHES:
-            comp_result = re.search(v2, v1) is not None
-        else:
-            raise Exception("Unhandled comparison: %s" % self.comparison)
+        comp_result = compare_values(v1, self.comparison, v2)
 
         if self.action == FILTER_ACTION_KEEP:
             if not comp_result:
@@ -226,7 +200,7 @@ class MetaData(Filter):
 
         info = "keeping" if (result is not None) else "discarding"
         comp = str(meta[self.field] + " " + self.comparison + " " + str(self.value) + " = " + str(comp_result))
-        self.logger().debug("Comparison result '%s': %s" % (comp, info))
+        self.logger().debug("Field '%s': '%s' --> %s" % (self.field, comp, info))
 
         return result
 
