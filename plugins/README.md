@@ -60,6 +60,7 @@
 * [split-pt](split-pt.md)
 * [split-records](split-records.md)
 * [strip-strings](strip-strings.md)
+* [sub-process](sub-process.md)
 * [tee](tee.md)
 * [text-length](text-length.md)
 * [text-stats](text-stats.md)
